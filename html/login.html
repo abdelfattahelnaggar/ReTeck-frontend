@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Login to your account" />
+    <title>Login - RETECH</title>
+    <link rel="icon" href="../images/recycle-symbol.png" type="image/x-icon" />
+
+    <!-- Resource hints for faster loading -->
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+
+    <!-- Preload critical resources -->
+    <link
+      rel="preload"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      as="style"
+    />
+    <link
+      rel="preload"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      as="style"
+    />
+    <link rel="preload" href="../css/main.css" as="style" />
+    <link rel="preload" href="../css/login.css" as="style" />
+    <link
+      rel="preload"
+      href="../images/green-earth.png"
+      as="image"
+      fetchpriority="high"
+    />
+
+    <!--bootstrap-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!--fontawesome-->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/login.css" />
+  </head>
+  <body>
+    <div class="top-bar">
+      <div class="container">
+        <div class="d-flex justify-content-between align-items-center py-3">
+          <a class="navbar-brand" href="index.html">
+            <h3 class="m-0">♻️ RETECH</h3>
+          </a>
+
+          <div class="d-flex align-items-center">
+            <a
+              href="signup.html"
+              class="btn btn-outline-success me-2 d-flex align-items-center justify-content-center"
+              style="min-width: 100px; height: 38px"
+            >
+              <i class="fas fa-user-plus me-2"></i>Sign Up
+            </a>
+            <a
+              href="login.html"
+              class="btn btn-success d-flex align-items-center justify-content-center active"
+              style="min-width: 100px; height: 38px"
+            >
+              <i class="fas fa-sign-in-alt me-2"></i>Login
+            </a>
+
+            <div id="userProfile" class="dropdown d-none">
+              <button
+                class="btn btn-outline-success dropdown-toggle"
+                type="button"
+                id="userDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <span class="user-avatar-small me-2"></span>
+                <span id="userName">User Name</span>
+              </button>
+              <ul
+                class="dropdown-menu dropdown-menu-end"
+                aria-labelledby="userDropdown"
+              >
+                <li>
+                  <div class="dropdown-header d-flex align-items-center gap-2">
+                    <div class="user-dropdown-avatar"></div>
+                    <div>
+                      <h6 class="mb-0" id="dropdownUserName">User Name</h6>
+                      <small
+                        class="text-muted"
+                        id="dropdownUserEmail"
+                        style="font-size: 0.75rem"
+                        >user@example.com</small
+                      >
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="profile.html"
+                    ><i class="fas fa-user me-2"></i>Profile</a
+                  >
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item" href="#" onclick="logout()"
+                    ><i class="fas fa-sign-out-alt me-2"></i>Logout</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#mainNavigation"
+          aria-controls="mainNavigation"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNavigation">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about-us.html">About Us</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="servicesDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Services
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
+                <li>
+                  <a class="dropdown-item" href="recycle-phone.html"
+                    >Recycle Phones</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="recycle-laptop.html"
+                    >Recycle Laptops</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="recycle-kitchen.html"
+                    >Recycle Kitchen Appliances</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="recycle-electronics.html"
+                    >Recycle Electronics</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="faq.html">FAQ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="contact-us.html">Contact Us</a>
+            </li>
+          </ul>
+          <div class="d-flex align-items-center">
+            <div class="points-display-navbar auth-required d-none">
+              <div class="d-flex align-items-center">
+                <i class="fas fa-leaf text-success me-2"></i>
+                <div class="d-flex align-items-baseline">
+                  <span class="points-label">Points:</span>
+                  <span class="points-value" id="navbarPoints">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container login-container">
+      <div class="row w-100">
+        <div class="col-md-6 mx-auto">
+          <div class="card login-card">
+            <div class="card-header bg-success text-white p-4 text-center">
+              <i class="fas fa-leaf fa-2x mb-2"></i>
+              <h4 class="mb-0">Welcome to RETECH</h4>
+              <p class="text-white-50 mt-2 mb-0">
+                Login to continue your recycling journey
+              </p>
+            </div>
+            <div class="card-body p-4">
+              <div
+                id="loginAlert"
+                class="alert login-alert d-none"
+                role="alert"
+              >
+                <span id="loginAlertMessage"></span>
+              </div>
+
+              <form id="loginForm" class="needs-validation" novalidate>
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email address</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light">
+                      <i class="fas fa-envelope text-muted"></i>
+                    </span>
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="email"
+                      placeholder="Enter your email"
+                      required
+                      value="user@example.com"
+                    />
+                  </div>
+                  <div class="invalid-feedback">
+                    Please enter a valid email address.
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <label for="password" class="form-label">Password</label>
+                  <div class="password-field">
+                    <div class="input-group">
+                      <span class="input-group-text bg-light">
+                        <i class="fas fa-lock text-muted"></i>
+                      </span>
+                      <input
+                        type="password"
+                        class="form-control"
+                        id="password"
+                        placeholder="Enter your password"
+                        required
+                      />
+                      <span
+                        class="toggle-password"
+                        role="button"
+                        tabindex="0"
+                        aria-label="Show password"
+                      >
+                        <i class="fas fa-eye"></i>
+                      </span>
+                    </div>
+                    <div class="invalid-feedback">
+                      Please enter your password.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-4 form-check">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="rememberMe"
+                  />
+                  <label class="form-check-label" for="rememberMe"
+                    >Remember me</label
+                  >
+                </div>
+
+                <div class="d-grid gap-2">
+                  <button
+                    id="loginButton"
+                    type="submit"
+                    class="btn btn-success login-btn py-3 shadow-sm"
+                  >
+                    <span><i class="fas fa-sign-in-alt me-2"></i>Sign In</span>
+                    <span
+                      id="loginSpinner"
+                      class="spinner-border spinner-border-sm ms-2 d-none"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                  </button>
+                </div>
+              </form>
+
+              <div class="mt-4 text-center">
+                <p>
+                  Don't have an account?
+                  <a
+                    href="signup.html"
+                    class="btn btn-outline-success btn-sm ms-2"
+                  >
+                    <i class="fas fa-user-plus me-1"></i>Sign up
+                  </a>
+                </p>
+                <p class="text-muted small">
+                  <a href="#" class="text-decoration-none text-success">
+                    <i class="fas fa-lock me-1"></i>Forgot your password?
+                  </a>
+                </p>
+                <div class="mt-3 pt-3 border-top">
+                  <p class="text-muted small mb-1">For demo purposes:</p>
+                  <div class="d-flex justify-content-center gap-3">
+                    <div>
+                      <strong>Customer:</strong> user@example.com / user123
+                      <span class="badge bg-light text-dark ms-1">Alt+F</span>
+                    </div>
+                    <div>
+                      <strong>Admin:</strong> admin@retech.com / admin123
+                      <span class="badge bg-light text-dark ms-1">Alt+A</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer mt-auto">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3 mb-4 mb-md-0">
+            <h3><b>RETECH</b></h3>
+            <p>
+              Making the world cleaner one device at a time through responsible
+              recycling and sustainability.
+            </p>
+            <div class="social-icons">
+              <a href="#" aria-label="Facebook"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" aria-label="Twitter"
+                ><i class="fab fa-twitter"></i
+              ></a>
+              <a href="#" aria-label="Instagram"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" aria-label="LinkedIn"
+                ><i class="fab fa-linkedin-in"></i
+              ></a>
+            </div>
+          </div>
+          <div class="col-md-2 mb-4 mb-md-0">
+            <h5>Services</h5>
+            <ul class="list-unstyled">
+              <li>
+                <a href="recycle-phone.html"
+                  ><i class="fas fa-mobile-alt me-2"></i>Recycle Phones</a
+                >
+              </li>
+              <li>
+                <a href="recycle-laptop.html"
+                  ><i class="fas fa-laptop me-2"></i>Recycle Laptops</a
+                >
+              </li>
+              <li>
+                <a href="recycle-kitchen.html"
+                  ><i class="fas fa-blender me-2"></i>Recycle Kitchen
+                  Appliances</a
+                >
+              </li>
+              <li>
+                <a href="recycle-electronics.html"
+                  ><i class="fas fa-tv me-2"></i>Recycle Electronics</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-2 mb-4 mb-md-0">
+            <h5>Company</h5>
+            <ul class="list-unstyled">
+              <li>
+                <a href="about-us.html"
+                  ><i class="fas fa-info-circle me-2"></i>About Us</a
+                >
+              </li>
+              <li>
+                <a href="contact-us.html"
+                  ><i class="fas fa-phone me-2"></i>Contact Us</a
+                >
+              </li>
+              <li>
+                <a href="faq.html"
+                  ><i class="fas fa-question-circle me-2"></i>FAQ</a
+                >
+              </li>
+              <li>
+                <a href="#"
+                  ><i class="fas fa-shield-alt me-2"></i>Privacy Policy</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-5">
+            <div class="footer-newsletter">
+              <h5>Stay Connected</h5>
+              <p>Subscribe to our newsletter for updates and eco-tips</p>
+              <div class="input-group">
+                <input
+                  type="email"
+                  class="form-control"
+                  placeholder="Your email address"
+                  aria-label="Email"
+                />
+                <button class="btn btn-success" type="button">Subscribe</button>
+              </div>
+              <small class="text-muted mt-2 d-block"
+                >We respect your privacy and will never share your
+                information.</small
+              >
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>
+            ©
+            <script>
+              document.write(new Date().getFullYear());
+            </script>
+            RETECH. All rights reserved. | <a href="#">Terms of Service</a> |
+            <a href="#">Privacy Policy</a>
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle (includes Popper) -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      defer
+    ></script>
+
+    <!-- Custom JavaScript -->
+    <script src="../js/main.js" defer></script>
+    <script src="../js/utils.js" type="text/javascript" defer></script>
+    <script src="../js/login.js" type="text/javascript" defer></script>
+    <script src="../js/auth.js" type="text/javascript" defer></script>
+  </body>
+</html>

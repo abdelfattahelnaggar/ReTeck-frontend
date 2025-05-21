@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Admin Dashboard - RETECH" />
+    <title>Admin Dashboard - RETECH</title>
+    <link rel="icon" href="../images/recycle-symbol.png" type="image/x-icon" />
+
+    <!-- Resource hints for faster loading -->
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+    <link rel="dns-prefetch" href="https://cdn.datatables.net" />
+
+    <!-- Preload critical resources -->
+    <link
+      rel="preload"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      as="style"
+    />
+    <link
+      rel="preload"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      as="style"
+    />
+    <link rel="preload" href="../css/main.css" as="style" />
+    <link rel="preload" href="../css/admin-dashboard.css" as="style" />
+
+    <!--bootstrap-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!--fontawesome-->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <!-- DataTables CSS -->
+    <link
+      href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/admin-dashboard.css" />
+    <link rel="stylesheet" href="../css/admin-filters.css" />
+  </head>
+  <body>
+    <div class="admin-layout">
+      <!-- Sidebar -->
+      <div class="admin-sidebar">
+        <div class="sidebar-brand">
+          <h3><span class="retech">RETECH</span></h3>
+        </div>
+        <div class="sidebar-menu">
+          <ul>
+            <li>
+              <a
+                href="#dashboard"
+                class="dashboard-nav-link"
+                id="dashboardNavLink"
+                data-section="dashboard"
+              >
+                <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#quotes"
+                class="quotes-nav-link"
+                id="quotesNavLink"
+                data-section="quotes"
+              >
+                <i class="fas fa-quote-right"></i> <span>Quotes</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#inventory"
+                class="inventory-nav-link"
+                id="inventoryNavLink"
+                data-section="inventory"
+              >
+                <i class="fas fa-boxes"></i> <span>Inventory</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#users"
+                class="users-nav-link"
+                id="usersNavLink"
+                data-section="users"
+              >
+                <i class="fas fa-users"></i> <span>Users</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#vouchers"
+                class="vouchers-nav-link"
+                id="vouchersNavLink"
+                data-section="vouchers"
+              >
+                <i class="fas fa-ticket-alt"></i> <span>Vouchers</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#settings"
+                class="settings-nav-link"
+                id="settingsNavLink"
+                data-section="settings"
+              >
+                <i class="fas fa-user-cog"></i> <span>Settings</span>
+              </a>
+            </li>
+            <li class="mt-4">
+              <a href="#" id="sidebarLogoutBtn">
+                <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="admin-main">
+        <div class="admin-header">
+          <div class="d-flex justify-content-between align-items-center w-100">
+            <div class="d-flex align-items-center">
+              <h4 class="mb-0" id="pageTitle">Dashboard</h4>
+              <span class="ms-3 text-muted d-none d-lg-block"
+                >Welcome back, <span id="headerAdminName">Admin</span></span
+              >
+            </div>
+            <div class="d-flex align-items-center">
+              <!-- Placeholder for any future header elements -->
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-content">
+          <!-- Dashboard Section -->
+          <div id="dashboardSection" class="content-section">
+            <div class="row mb-4">
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="dashboard-card">
+                  <div class="card-body">
+                    <div class="icon bg-gradient-primary text-white">
+                      <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <div class="count" id="pendingRequestsCount">0</div>
+                    <div class="label">Pending Requests</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="dashboard-card">
+                  <div class="card-body">
+                    <div class="icon bg-gradient-success text-white">
+                      <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="count" id="quotedRequestsCount">0</div>
+                    <div class="label">Quoted Requests</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="dashboard-card">
+                  <div class="card-body">
+                    <div class="icon bg-gradient-info text-white">
+                      <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="count" id="completedRequestsCount">0</div>
+                    <div class="label">Completed Requests</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="dashboard-card">
+                  <div class="card-body">
+                    <div class="icon bg-gradient-warning text-white">
+                      <i class="fas fa-users"></i>
+                    </div>
+                    <div class="count" id="totalUsersCount">0</div>
+                    <div class="label">Total Users</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12">
+                <div class="card table-card">
+                  <div
+                    class="card-header d-flex justify-content-between align-items-center"
+                  >
+                    <h5 class="mb-0">Recent Quote Requests</h5>
+                    <button
+                      class="btn btn-sm btn-light"
+                      id="viewAllQuotesBtn"
+                      data-section="quotes"
+                    >
+                      View All
+                    </button>
+                  </div>
+                  <div class="card-body p-0">
+                    <div class="table-responsive">
+                      <table class="table" id="recentQuotesTable">
+                        <thead>
+                          <tr>
+                            <th>Customer</th>
+                            <th>Device</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody id="recentQuotesTableBody">
+                          <!-- Will be populated by JavaScript -->
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quotes Section -->
+          <div id="quotesSection" class="content-section d-none">
+            <div class="card table-card">
+              <div
+                class="card-header d-flex justify-content-between align-items-center"
+              >
+                <h5 class="mb-0">
+                  <i class="fas fa-file-invoice-dollar"></i> All Quote Requests
+                </h5>
+                <div class="btn-filter-container">
+                  <div
+                    class="btn-group"
+                    role="group"
+                    aria-label="Quote filter options"
+                  >
+                    <button
+                      type="button"
+                      class="btn btn-sm quote-filter"
+                      data-filter="all"
+                    >
+                      <i class="fas fa-th-list me-1"></i>All
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-sm quote-filter"
+                      data-filter="Pending"
+                    >
+                      <i class="fas fa-clock me-1"></i>Pending
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-sm quote-filter"
+                      data-filter="Quoted"
+                    >
+                      <i class="fas fa-coins me-1"></i>Quoted
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-sm quote-filter"
+                      data-filter="Accepted"
+                    >
+                      <i class="fas fa-check me-1"></i>Accepted
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-sm quote-filter"
+                      data-filter="Completed"
+                    >
+                      <i class="fas fa-check-double me-1"></i>Completed
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-sm quote-filter"
+                      data-filter="Rejected"
+                    >
+                      <i class="fas fa-times me-1"></i>Rejected
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table" id="allQuotesTable">
+                  <thead>
+                    <tr>
+                      <th><i class="fas fa-user me-2"></i>Customer</th>
+                      <th><i class="fas fa-laptop me-2"></i>Device</th>
+                      <th><i class="fas fa-calendar-alt me-2"></i>Date</th>
+                      <th><i class="fas fa-tag me-2"></i>Status</th>
+                      <th><i class="fas fa-cogs me-2"></i>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="allQuotesTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Inventory Section -->
+          <div id="inventorySection" class="content-section d-none">
+            <div class="card table-card">
+              <div
+                class="card-header d-flex justify-content-between align-items-center"
+              >
+                <h5 class="mb-0">
+                  <i class="fas fa-boxes"></i> Device Inventory
+                </h5>
+                <div class="btn-filter-container">
+                  <div
+                    class="btn-group"
+                    role="group"
+                    aria-label="Inventory filter options"
+                  >
+                    <button
+                      type="button"
+                      class="btn btn-sm inventory-filter"
+                      data-filter="all"
+                    >
+                      <i class="fas fa-th-list me-1"></i>All
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-sm inventory-filter"
+                      data-filter="Smartphone"
+                    >
+                      <i class="fas fa-mobile-alt me-1"></i>Phones
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-sm inventory-filter"
+                      data-filter="Laptop"
+                    >
+                      <i class="fas fa-laptop me-1"></i>Laptops
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-sm inventory-filter"
+                      data-filter="Tablet"
+                    >
+                      <i class="fas fa-tablet-alt me-1"></i>Tablets
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-sm inventory-filter"
+                      data-filter="Other"
+                    >
+                      <i class="fas fa-microchip me-1"></i>Other
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table" id="inventoryTable">
+                  <thead>
+                    <tr>
+                      <th><i class="fas fa-cube me-2"></i>Device</th>
+                      <th><i class="fas fa-tag me-2"></i>Category</th>
+                      <th><i class="fas fa-info-circle me-2"></i>Condition</th>
+                      <th>
+                        <i class="fas fa-calendar-alt me-2"></i>Received Date
+                      </th>
+                      <th><i class="fas fa-user me-2"></i>Recycled By</th>
+                      <th><i class="fas fa-cogs me-2"></i>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="inventoryTableBody">
+                    <!-- Will be populated by JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Inventory Stats Row -->
+            <div class="row mt-4">
+              <div class="col-md-3">
+                <div class="dashboard-card">
+                  <div class="card-body">
+                    <div class="icon bg-gradient-primary text-white">
+                      <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="count" id="phonesCount">0</div>
+                    <div class="label">Phones</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="dashboard-card">
+                  <div class="card-body">
+                    <div class="icon bg-gradient-info text-white">
+                      <i class="fas fa-laptop"></i>
+                    </div>
+                    <div class="count" id="laptopsCount">0</div>
+                    <div class="label">Laptops</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="dashboard-card">
+                  <div class="card-body">
+                    <div class="icon bg-gradient-success text-white">
+                      <i class="fas fa-tablet-alt"></i>
+                    </div>
+                    <div class="count" id="tabletsCount">0</div>
+                    <div class="label">Tablets</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="dashboard-card">
+                  <div class="card-body">
+                    <div class="icon bg-gradient-warning text-white">
+                      <i class="fas fa-microchip"></i>
+                    </div>
+                    <div class="count" id="otherDevicesCount">0</div>
+                    <div class="label">Other Devices</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Users Section -->
+          <div id="usersSection" class="content-section d-none">
+            <div class="card table-card">
+              <div class="card-header">
+                <h5 class="mb-0">
+                  <i class="fas fa-users me-2"></i>
+                  User Management
+                </h5>
+              </div>
+              <div class="card-body p-0">
+                <div class="table-responsive">
+                  <table class="table table-hover" id="usersTable" width="100%">
+                    <thead>
+                      <tr>
+                        <th><i class="fas fa-user me-2"></i>Name</th>
+                        <th>
+                          <i class="fas fa-recycle me-2"></i>Recycled Devices
+                        </th>
+                        <th><i class="fas fa-tag me-2"></i>Role</th>
+                        <th><i class="fas fa-file-alt me-2"></i>Requests</th>
+                        <th><i class="fas fa-coins me-2"></i>Points</th>
+                        <th><i class="fas fa-cogs me-2"></i>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                      <!-- Will be populated by JavaScript -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- User Stats Row -->
+            <div class="row mt-4">
+              <div class="col-md-4">
+                <div class="dashboard-card">
+                  <div class="card-body">
+                    <div class="icon bg-gradient-primary text-white">
+                      <i class="fas fa-users"></i>
+                    </div>
+                    <div class="count" id="activeUsersCount">-</div>
+                    <div class="label">Active Users</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="dashboard-card">
+                  <div class="card-body">
+                    <div class="icon bg-gradient-info text-white">
+                      <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="count" id="totalPointsAwarded">-</div>
+                    <div class="label">Total Points</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="dashboard-card">
+                  <div class="card-body">
+                    <div class="icon bg-gradient-success text-white">
+                      <i class="fas fa-recycle"></i>
+                    </div>
+                    <div class="count" id="recycleItemsCount">-</div>
+                    <div class="label">Total Devices</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vouchers Section -->
+          <div id="vouchersSection" class="content-section d-none">
+            <div class="card table-card">
+              <div
+                class="card-header d-flex justify-content-between align-items-center"
+              >
+                <h5 class="mb-0">
+                  <i class="fas fa-ticket-alt"></i> Vouchers Management
+                </h5>
+              </div>
+              <div class="card-body">
+                <form id="addVoucherForm" class="row g-3 mb-4">
+                  <div class="col-md-3">
+                    <label for="voucherMarket" class="form-label"
+                      >Market Name</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="voucherMarket"
+                      placeholder="Enter market name"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-3">
+                    <label for="voucherValue" class="form-label"
+                      >Required Points</label
+                    >
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="voucherValue"
+                      placeholder="Points required"
+                      min="1"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-2">
+                    <label for="voucherCurrency" class="form-label"
+                      >Currency</label
+                    >
+                    <select class="form-control" id="voucherCurrency" required>
+                      <option value="$">USD ($)</option>
+                      <option value="E£">EGP (E£)</option>
+                      <option value="€">EUR (€)</option>
+                    </select>
+                  </div>
+                  <div class="col-md-2">
+                    <label for="voucherDiscount" class="form-label"
+                      >Discount Amount</label
+                    >
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="voucherDiscount"
+                      placeholder="Amount"
+                      min="1"
+                      step="0.01"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                      <i class="fas fa-plus me-1"></i> Add Voucher
+                    </button>
+                  </div>
+                </form>
+                <div class="table-responsive">
+                  <table class="table" id="vouchersTable">
+                    <thead>
+                      <tr>
+                        <th>Market Name</th>
+                        <th>Required Points</th>
+                        <th>Discount Value</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="vouchersTableBody">
+                      <!-- Will be populated by JavaScript -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Settings Section -->
+          <div id="settingsSection" class="content-section d-none">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-header">
+                    <h5 class="mb-0">
+                      <i class="fas fa-user-circle"></i> Admin Profile
+                    </h5>
+                  </div>
+                  <div class="card-body">
+                    <form id="adminSettingsForm">
+                      <div class="mb-3">
+                        <label for="adminFullName" class="form-label">
+                          <i class="fas fa-user me-1"></i> Full Name
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="adminFullName"
+                          placeholder="Enter your full name"
+                        />
+                        <div class="form-text text-muted">
+                          Your name will be displayed throughout the admin
+                          dashboard.
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label for="adminEmail" class="form-label">
+                          <i class="fas fa-envelope me-1"></i> Email Address
+                        </label>
+                        <input
+                          type="email"
+                          class="form-control"
+                          id="adminEmail"
+                          placeholder="Enter your email"
+                          readonly
+                        />
+                        <div class="form-text text-muted">
+                          Your primary email address associated with this
+                          account.
+                        </div>
+                      </div>
+                      <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save me-1"></i> Save Changes
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-header">
+                    <h5 class="mb-0">
+                      <i class="fas fa-lock"></i> Change Password
+                    </h5>
+                  </div>
+                  <div class="card-body">
+                    <form id="changePasswordForm">
+                      <div class="mb-3">
+                        <label for="currentPassword" class="form-label">
+                          <i class="fas fa-key me-1"></i> Current Password
+                        </label>
+                        <input
+                          type="password"
+                          class="form-control"
+                          id="currentPassword"
+                          placeholder="Enter current password"
+                          required
+                        />
+                        <div class="form-text text-muted">
+                          Enter your current password for verification.
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label for="newPassword" class="form-label">
+                          <i class="fas fa-lock me-1"></i> New Password
+                        </label>
+                        <input
+                          type="password"
+                          class="form-control"
+                          id="newPassword"
+                          placeholder="Enter new password"
+                          required
+                        />
+                        <div class="form-text text-muted">
+                          Create a strong password with at least 8 characters.
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label for="confirmNewPassword" class="form-label">
+                          <i class="fas fa-check-circle me-1"></i> Confirm New
+                          Password
+                        </label>
+                        <input
+                          type="password"
+                          class="form-control"
+                          id="confirmNewPassword"
+                          placeholder="Confirm new password"
+                          required
+                        />
+                        <div class="form-text text-muted">
+                          Re-enter your new password to confirm.
+                        </div>
+                      </div>
+                      <button type="submit" class="btn btn-success">
+                        <i class="fas fa-key me-1"></i> Update Password
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quote Details Modal -->
+    <div
+      class="modal fade quote-details-modal"
+      id="quoteDetailsModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Quote Request Details</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="detail-section">
+              <h6><i class="fas fa-user"></i> Customer Information</h6>
+              <div class="detail-item">
+                <div class="detail-label">Name:</div>
+                <div class="detail-value" id="modalCustomerName">John Doe</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Email:</div>
+                <div class="detail-value" id="modalCustomerEmail">
+                  john@example.com
+                </div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Phone:</div>
+                <div class="detail-value" id="modalCustomerPhone">
+                  555-123-4567
+                </div>
+              </div>
+            </div>
+
+            <div class="detail-section">
+              <h6><i class="fas fa-mobile-alt"></i> Device Information</h6>
+              <div class="detail-item">
+                <div class="detail-label">Category:</div>
+                <div class="detail-value" id="modalDeviceCategory">Phone</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Device:</div>
+                <div class="detail-value" id="modalDeviceName">iPhone 12</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Condition:</div>
+                <div class="detail-value" id="modalDeviceCondition">Good</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Status:</div>
+                <div class="detail-value">
+                  <span class="badge badge-pending" id="modalRequestStatus"
+                    >Pending</span
+                  >
+                </div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Request Date:</div>
+                <div class="detail-value" id="modalRequestDate">
+                  May 15, 2023
+                </div>
+              </div>
+
+              <div id="modalDeviceSpecs"></div>
+
+              <div id="modalDeviceImages" class="device-images">
+                <!-- Will be populated by JavaScript -->
+              </div>
+            </div>
+
+            <div class="detail-section" id="quoteFormSection">
+              <h6><i class="fas fa-coins"></i> Provide Points Offer</h6>
+              <form id="provideQuoteForm">
+                <div class="mb-3">
+                  <label for="quoteAmount" class="form-label"
+                    >Points to Offer</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="quoteAmount"
+                    placeholder="Enter points amount"
+                    min="0"
+                    step="1"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="quoteNotes" class="form-label">Notes</label>
+                  <textarea
+                    class="form-control"
+                    id="quoteNotes"
+                    rows="3"
+                    placeholder="Enter any notes about this points offer"
+                  ></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="quoteValidDays" class="form-label"
+                    >Valid for (days)</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="quoteValidDays"
+                    value="30"
+                    min="1"
+                    max="90"
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  class="btn btn-success"
+                  id="submitQuoteBtn"
+                >
+                  Submit Points Offer
+                </button>
+              </form>
+            </div>
+
+            <div class="detail-section d-none" id="existingQuoteSection">
+              <h6><i class="fas fa-coins"></i> Points Offer Information</h6>
+              <div class="detail-item">
+                <div class="detail-label">Points Offered:</div>
+                <div class="detail-value">
+                  <span id="modalExistingAmount">350</span> points
+                </div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Provided On:</div>
+                <div class="detail-value" id="modalQuoteDate">May 16, 2023</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Valid Until:</div>
+                <div class="detail-value" id="modalValidUntil">
+                  June 15, 2023
+                </div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Notes:</div>
+                <div class="detail-value" id="modalExistingNotes">
+                  This is a fair points offer for your device based on its
+                  condition.
+                </div>
+              </div>
+            </div>
+
+            <div class="quote-actions">
+              <button
+                type="button"
+                class="btn btn-success d-none"
+                id="markCompletedBtn"
+              >
+                <i class="fas fa-check-circle me-2"></i>Mark as Completed
+              </button>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Device Details Modal -->
+    <div
+      class="modal fade device-details-modal"
+      id="deviceDetailsModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Device Details</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="detail-section">
+              <h6><i class="fas fa-mobile-alt"></i> Device Information</h6>
+              <div class="detail-item">
+                <div class="detail-label">Category:</div>
+                <div class="detail-value" id="modalDeviceType">Smartphone</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Brand & Model:</div>
+                <div class="detail-value" id="modalDeviceModel">iPhone 12</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Condition:</div>
+                <div class="detail-value" id="modalDeviceCondition">Good</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Received Date:</div>
+                <div class="detail-value" id="modalDeviceDate">
+                  May 15, 2023
+                </div>
+              </div>
+            </div>
+
+            <div class="detail-section">
+              <h6><i class="fas fa-user"></i> Recycled By</h6>
+              <div class="detail-item">
+                <div class="detail-label">User:</div>
+                <div class="detail-value" id="modalDeviceUser">John Doe</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Email:</div>
+                <div class="detail-value" id="modalDeviceUserEmail">
+                  john@example.com
+                </div>
+              </div>
+            </div>
+
+            <div class="detail-section">
+              <h6><i class="fas fa-microchip"></i> Device Specifications</h6>
+              <div id="modalDeviceSpecs" class="specs-list">
+                <!-- Will be populated by JavaScript -->
+              </div>
+            </div>
+
+            <div class="detail-section">
+              <h6><i class="fas fa-images"></i> Device Images</h6>
+              <div id="modalDeviceImageGallery" class="device-images">
+                <!-- Will be populated by JavaScript -->
+              </div>
+            </div>
+
+            <div class="detail-section" id="deviceValueSection">
+              <h6>
+                <i class="fas fa-money-bill-wave"></i> Value & Recycling Info
+              </h6>
+              <div class="detail-item">
+                <div class="detail-label">Quoted Value:</div>
+                <div class="detail-value">
+                  $<span id="modalDeviceValue">0.00</span>
+                </div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Points Awarded:</div>
+                <div class="detail-value" id="modalDevicePoints">0</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Recycling ID:</div>
+                <div class="detail-value" id="modalDeviceId">REC12345</div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-primary me-2"
+              id="printDeviceDetailsBtn"
+            >
+              <i class="fas fa-print me-1"></i> Print Details
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle (includes Popper) -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      defer
+    ></script>
+    <!-- DataTables JS -->
+    <script
+      src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"
+      defer
+    ></script>
+    <script
+      src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"
+      defer
+    ></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
+
+    <!-- Custom JavaScript -->
+    <script src="../js/main.js" defer></script>
+    <script src="../js/utils.js" defer></script>
+
+    <!-- Admin modular scripts -->
+    <script src="../js/admin/admin-auth.js" defer></script>
+    <script src="../js/admin/admin-utils.js" defer></script>
+    <script src="../js/admin/admin-dashboard.js" defer></script>
+    <script src="../js/admin/admin-quotes.js" defer></script>
+    <script src="../js/admin/admin-inventory.js" defer></script>
+    <script src="../js/admin/admin-users.js" defer></script>
+    <script src="../js/admin/admin-settings.js" defer></script>
+    <script src="../js/admin/admin-main.js" defer></script>
+    <script src="../js/admin/admin-vouchers.js" defer></script>
+
+    <!-- Fix for logout functionality -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Add CSS for logout confirmation overlay
+        const style = document.createElement("style");
+        style.textContent = `
+          .logout-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+          }
+          
+          .logout-message {
+            background: linear-gradient(135deg, #4361ee, #4895ef);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: messageAppear 0.5s forwards;
+            transform: translateY(20px);
+            opacity: 0;
+          }
+          
+          .logout-confirm-dialog {
+            background: white;
+            border-radius: 10px;
+            width: 350px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            animation: dialogAppear 0.3s forwards;
+            transform: scale(0.9);
+            opacity: 0;
+          }
+          
+          .logout-confirm-header {
+            background: linear-gradient(135deg, #4361ee, #4895ef);
+            color: white;
+            padding: 15px 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          }
+          
+          .logout-confirm-body {
+            padding: 20px;
+            text-align: center;
+          }
+          
+          .logout-icon {
+            font-size: 3rem;
+            color: #f72585;
+            margin-bottom: 15px;
+            animation: pulse 1.5s infinite;
+          }
+          
+          .logout-confirm-footer {
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            gap: 10px;
+          }
+          
+          .logout-confirm-footer button {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+          }
+          
+          .btn-cancel {
+            background: #e9ecef;
+            color: #495057;
+          }
+          
+          .btn-cancel:hover {
+            background: #dee2e6;
+          }
+          
+          .btn-logout {
+            background: linear-gradient(135deg, #4361ee, #4895ef);
+            color: white;
+          }
+          
+          .btn-logout:hover {
+            background: linear-gradient(135deg, #3a56e2, #3d8de9);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(67, 97, 238, 0.3);
+          }
+          
+          @keyframes messageAppear {
+            to {
+              transform: translateY(0);
+              opacity: 1;
+            }
+          }
+          
+          @keyframes dialogAppear {
+            to {
+              transform: scale(1);
+              opacity: 1;
+            }
+          }
+          
+          @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+          }
+        `;
+        document.head.appendChild(style);
+
+        // Fix logout functionality
+        const logoutButtons = document.querySelectorAll(
+          "#adminLogoutBtn, #sidebarLogoutBtn"
+        );
+
+        logoutButtons.forEach((button) => {
+          // Remove any existing event listeners by cloning
+          const newButton = button.cloneNode(true);
+          button.parentNode.replaceChild(newButton, button);
+
+          // Add direct event listener
+          newButton.addEventListener("click", function (e) {
+            e.preventDefault();
+            console.log("Logout button clicked");
+
+            // Create confirmation overlay
+            const overlay = document.createElement("div");
+            overlay.className = "logout-overlay";
+
+            // Create confirmation dialog
+            const dialog = document.createElement("div");
+            dialog.className = "logout-confirm-dialog";
+
+            // Dialog header
+            const header = document.createElement("div");
+            header.className = "logout-confirm-header";
+            header.innerHTML =
+              '<span><i class="fas fa-sign-out-alt me-2"></i>Confirm Logout</span>';
+
+            // Dialog body
+            const body = document.createElement("div");
+            body.className = "logout-confirm-body";
+            body.innerHTML = `
+              <div class="logout-icon">
+                <i class="fas fa-exclamation-circle"></i>
+              </div>
+              <h5>Are you sure you want to log out?</h5>
+              <p class="text-muted">You will need to login again to access your account.</p>
+            `;
+
+            // Dialog footer with buttons
+            const footer = document.createElement("div");
+            footer.className = "logout-confirm-footer";
+
+            // Cancel button
+            const cancelBtn = document.createElement("button");
+            cancelBtn.className = "btn-cancel";
+            cancelBtn.innerHTML = '<i class="fas fa-times me-1"></i>Cancel';
+            cancelBtn.addEventListener("click", () => {
+              // Fade out the overlay
+              overlay.style.opacity = "0";
+              // Remove after animation
+              setTimeout(() => {
+                document.body.removeChild(overlay);
+              }, 300);
+            });
+
+            // Logout button
+            const logoutBtn = document.createElement("button");
+            logoutBtn.className = "btn-logout";
+            logoutBtn.innerHTML =
+              '<i class="fas fa-sign-out-alt me-1"></i>Logout';
+            logoutBtn.addEventListener("click", () => {
+              // Remove the dialog
+              overlay.removeChild(dialog);
+
+              // Show logout message
+              const message = document.createElement("div");
+              message.className = "logout-message";
+              message.innerHTML =
+                '<i class="fas fa-sign-out-alt me-2"></i>Logging you out...';
+              overlay.appendChild(message);
+
+              // Clear auth data from localStorage
+              localStorage.removeItem("isLoggedIn");
+              localStorage.removeItem("userEmail");
+              localStorage.removeItem("userRole");
+              localStorage.removeItem("adminLoggedIn");
+              localStorage.removeItem("loginTimestamp");
+
+              // Redirect to login page after a short delay
+              setTimeout(() => {
+                window.location.href = "login.html";
+              }, 1000);
+            });
+
+            // Add buttons to footer
+            footer.appendChild(cancelBtn);
+            footer.appendChild(logoutBtn);
+
+            // Build dialog structure
+            dialog.appendChild(header);
+            dialog.appendChild(body);
+            dialog.appendChild(footer);
+            overlay.appendChild(dialog);
+
+            // Add overlay to the page
+            document.body.appendChild(overlay);
+
+            // Fade in the overlay
+            setTimeout(() => {
+              overlay.style.opacity = "1";
+            }, 10);
+          });
+        });
+      });
+    </script>
+
+    <!-- Fix for navigation buttons -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Fix for Dashboard button
+        const dashboardBtn = document.getElementById("dashboardNavLink");
+        if (dashboardBtn) {
+          // Remove any existing event listeners
+          const newDashboardBtn = dashboardBtn.cloneNode(true);
+          dashboardBtn.parentNode.replaceChild(newDashboardBtn, dashboardBtn);
+
+          // Add new direct event listener
+          newDashboardBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            console.log("Dashboard button clicked directly");
+
+            // Hide all sections
+            const sections = document.querySelectorAll(".content-section");
+            sections.forEach((section) => {
+              section.classList.add("d-none");
+            });
+
+            // Show dashboard section
+            const dashboardSection =
+              document.getElementById("dashboardSection");
+            if (dashboardSection) {
+              dashboardSection.classList.remove("d-none");
+              console.log("Dashboard section displayed");
+
+              // Update page title
+              const pageTitle = document.getElementById("pageTitle");
+              if (pageTitle) {
+                pageTitle.textContent = "Dashboard";
+              }
+
+              // Update active state in navigation
+              const navLinks = document.querySelectorAll(".sidebar-menu a");
+              navLinks.forEach((link) => {
+                link.classList.remove("active");
+              });
+              newDashboardBtn.classList.add("active");
+
+              // Optionally refresh dashboard data if needed
+              if (typeof loadDashboardStats === "function") {
+                setTimeout(() => {
+                  loadDashboardStats();
+                  console.log("Dashboard data refreshed");
+                }, 100);
+              }
+            } else {
+              console.error("Dashboard section not found");
+            }
+          });
+        }
+
+        // Fix for Quotes button
+        const quotesBtn = document.getElementById("quotesNavLink");
+        if (quotesBtn) {
+          // Remove any existing event listeners
+          const newQuotesBtn = quotesBtn.cloneNode(true);
+          quotesBtn.parentNode.replaceChild(newQuotesBtn, quotesBtn);
+
+          // Add new direct event listener
+          newQuotesBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            console.log("Quotes button clicked directly");
+
+            // Hide all sections
+            const sections = document.querySelectorAll(".content-section");
+            sections.forEach((section) => {
+              section.classList.add("d-none");
+            });
+
+            // Show quotes section
+            const quotesSection = document.getElementById("quotesSection");
+            if (quotesSection) {
+              quotesSection.classList.remove("d-none");
+              console.log("Quotes section displayed");
+
+              // Update page title
+              const pageTitle = document.getElementById("pageTitle");
+              if (pageTitle) {
+                pageTitle.textContent = "Quotes";
+              }
+
+              // Update active state in navigation
+              const navLinks = document.querySelectorAll(".sidebar-menu a");
+              navLinks.forEach((link) => {
+                link.classList.remove("active");
+              });
+              newQuotesBtn.classList.add("active");
+
+              // Refresh quotes data if needed
+              if (typeof loadAllQuotes === "function") {
+                setTimeout(() => {
+                  loadAllQuotes();
+                  console.log("Quotes data refreshed");
+                }, 100);
+              }
+            } else {
+              console.error("Quotes section not found");
+            }
+          });
+        }
+
+        // Fix for Users button
+        const usersBtn = document.getElementById("usersNavLink");
+        if (usersBtn) {
+          // Remove any existing event listeners
+          const newUsersBtn = usersBtn.cloneNode(true);
+          usersBtn.parentNode.replaceChild(newUsersBtn, usersBtn);
+
+          // Add new direct event listener
+          newUsersBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            console.log("Users button clicked directly");
+
+            // Hide all sections
+            const sections = document.querySelectorAll(".content-section");
+            sections.forEach((section) => {
+              section.classList.add("d-none");
+            });
+
+            // Show users section
+            const usersSection = document.getElementById("usersSection");
+            if (usersSection) {
+              usersSection.classList.remove("d-none");
+              console.log("Users section displayed");
+
+              // Update page title
+              const pageTitle = document.getElementById("pageTitle");
+              if (pageTitle) {
+                pageTitle.textContent = "Users";
+              }
+
+              // Update active state in navigation
+              const navLinks = document.querySelectorAll(".sidebar-menu a");
+              navLinks.forEach((link) => {
+                link.classList.remove("active");
+              });
+              newUsersBtn.classList.add("active");
+
+              // Refresh users data if needed
+              if (typeof loadUsers === "function") {
+                setTimeout(() => {
+                  loadUsers();
+                  console.log("Users data refreshed");
+                }, 100);
+              }
+            } else {
+              console.error("Users section not found");
+            }
+          });
+        }
+
+        // Fix for Inventory button
+        const inventoryBtn = document.getElementById("inventoryNavLink");
+        if (inventoryBtn) {
+          // Remove any existing event listeners
+          const newInventoryBtn = inventoryBtn.cloneNode(true);
+          inventoryBtn.parentNode.replaceChild(newInventoryBtn, inventoryBtn);
+
+          // Add new direct event listener
+          newInventoryBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            console.log("Inventory button clicked directly");
+
+            // Hide all sections
+            const sections = document.querySelectorAll(".content-section");
+            sections.forEach((section) => {
+              section.classList.add("d-none");
+            });
+
+            // Show inventory section
+            const inventorySection =
+              document.getElementById("inventorySection");
+            if (inventorySection) {
+              inventorySection.classList.remove("d-none");
+              console.log("Inventory section displayed");
+
+              // Update page title
+              const pageTitle = document.getElementById("pageTitle");
+              if (pageTitle) {
+                pageTitle.textContent = "Inventory";
+              }
+
+              // Update active state in navigation
+              const navLinks = document.querySelectorAll(".sidebar-menu a");
+              navLinks.forEach((link) => {
+                link.classList.remove("active");
+              });
+              newInventoryBtn.classList.add("active");
+
+              // Refresh inventory data if needed
+              if (typeof loadInventory === "function") {
+                setTimeout(() => {
+                  loadInventory();
+                  console.log("Inventory data refreshed");
+                }, 100);
+              }
+            } else {
+              console.error("Inventory section not found");
+            }
+          });
+        }
+
+        // Fix for Settings button
+        const settingsBtn = document.getElementById("settingsNavLink");
+        const settingsDropdownBtn = document.querySelector(
+          'a[data-section="settings"]'
+        );
+
+        // Function to handle settings button click
+        const handleSettingsClick = function (e) {
+          e.preventDefault();
+          console.log("Settings button clicked directly");
+
+          // Hide all sections
+          const sections = document.querySelectorAll(".content-section");
+          sections.forEach((section) => {
+            section.classList.add("d-none");
+          });
+
+          // Show settings section
+          const settingsSection = document.getElementById("settingsSection");
+          if (settingsSection) {
+            settingsSection.classList.remove("d-none");
+            console.log("Settings section displayed");
+
+            // Update page title
+            const pageTitle = document.getElementById("pageTitle");
+            if (pageTitle) {
+              pageTitle.textContent = "Settings";
+            }
+
+            // Update active state in navigation
+            const navLinks = document.querySelectorAll(".sidebar-menu a");
+            navLinks.forEach((link) => {
+              link.classList.remove("active");
+            });
+
+            // If clicked from sidebar, highlight the sidebar link
+            if (settingsBtn) {
+              settingsBtn.classList.add("active");
+            }
+
+            // Initialize settings form fields if needed
+            if (typeof addFormFieldAnimations === "function") {
+              setTimeout(() => {
+                addFormFieldAnimations();
+                console.log("Settings form fields initialized");
+              }, 100);
+            }
+          } else {
+            console.error("Settings section not found");
+          }
+        };
+
+        // Add click handler to sidebar settings button
+        if (settingsBtn) {
+          // Remove any existing event listeners
+          const newSettingsBtn = settingsBtn.cloneNode(true);
+          settingsBtn.parentNode.replaceChild(newSettingsBtn, settingsBtn);
+
+          // Add new direct event listener
+          newSettingsBtn.addEventListener("click", handleSettingsClick);
+        }
+
+        // Add click handler to dropdown settings button
+        if (settingsDropdownBtn) {
+          // Remove any existing event listeners
+          const newSettingsDropdownBtn = settingsDropdownBtn.cloneNode(true);
+          settingsDropdownBtn.parentNode.replaceChild(
+            newSettingsDropdownBtn,
+            settingsDropdownBtn
+          );
+
+          // Add new direct event listener
+          newSettingsDropdownBtn.addEventListener("click", handleSettingsClick);
+        }
+
+        // Handle direct URL hash navigation
+        const handleUrlHash = () => {
+          const hash = window.location.hash;
+          if (hash === "#dashboard" || hash === "" || hash === "#") {
+            const dashboardBtn = document.getElementById("dashboardNavLink");
+            if (dashboardBtn) {
+              setTimeout(() => {
+                dashboardBtn.click();
+              }, 300);
+            }
+          } else if (hash === "#quotes") {
+            const quotesBtn = document.getElementById("quotesNavLink");
+            if (quotesBtn) {
+              setTimeout(() => {
+                quotesBtn.click();
+              }, 300);
+            }
+          } else if (hash === "#inventory") {
+            const inventoryBtn = document.getElementById("inventoryNavLink");
+            if (inventoryBtn) {
+              setTimeout(() => {
+                inventoryBtn.click();
+              }, 300);
+            }
+          } else if (hash === "#users") {
+            const usersBtn = document.getElementById("usersNavLink");
+            if (usersBtn) {
+              setTimeout(() => {
+                usersBtn.click();
+              }, 300);
+            }
+          } else if (hash === "#settings") {
+            const settingsBtn = document.getElementById("settingsNavLink");
+            if (settingsBtn) {
+              setTimeout(() => {
+                settingsBtn.click();
+              }, 300);
+            } else if (settingsDropdownBtn) {
+              setTimeout(() => {
+                settingsDropdownBtn.click();
+              }, 300);
+            }
+          }
+        };
+
+        // Initial hash handling
+        handleUrlHash();
+
+        // Listen for hash changes
+        window.addEventListener("hashchange", handleUrlHash);
+      });
+    </script>
+  </body>
+</html>

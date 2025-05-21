@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About Us - RETECH</title>
+    <link rel="icon" href="../images/recycle-symbol.png" type="image/x-icon" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/about-us.css" />
+  </head>
+  <body>
+    <div class="top-bar">
+      <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+          <a class="navbar-brand" href="index.html">♻️ RETECH</a>
+
+          <div class="d-flex align-items-center">
+            <!-- Auth buttons - will be shown/hidden based on login state -->
+            <div id="authButtons">
+              <a class="btn btn-outline-success me-2" href="login.html"
+                ><i class="fas fa-sign-in-alt me-2"></i>Login</a
+              >
+              <a class="btn btn-success" href="signup.html"
+                ><i class="fas fa-user-plus me-2"></i>SignUp</a
+              >
+            </div>
+
+            <!-- User profile - will be shown when logged in -->
+            <div id="userProfile" class="d-none">
+              <div class="dropdown">
+                <button
+                  class="btn btn-outline-primary dropdown-toggle d-flex align-items-center"
+                  type="button"
+                  id="userDropdown"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <span class="user-avatar-small me-2">
+                    <!-- Will be filled with user image or initials -->
+                  </span>
+                  <span class="user-name" id="userName">Account</span>
+                </button>
+                <ul
+                  class="dropdown-menu dropdown-menu-end"
+                  aria-labelledby="userDropdown"
+                >
+                  <div class="user-dropdown-header">
+                    <div class="user-dropdown-avatar">
+                      <!-- Will be filled with user image or initials -->
+                    </div>
+                    <div class="user-dropdown-info">
+                      <div class="name" id="dropdownUserName">Account</div>
+                      <div class="email" id="dropdownUserEmail">
+                        user@example.com
+                      </div>
+                    </div>
+                  </div>
+                  <li>
+                    <a class="dropdown-item" href="profile.html"
+                      ><i class="fas fa-user me-2"></i>Profile</a
+                    >
+                  </li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li>
+                    <a class="dropdown-item" href="#" data-action="logout"
+                      ><i class="fas fa-sign-out-alt me-2"></i>Logout</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#mainNavigation"
+          aria-controls="mainNavigation"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNavigation">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">
+                <i class="fas fa-home me-1"></i>Home
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="about-us.html">
+                <i class="fas fa-info-circle me-1"></i>About Us
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="servicesDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i class="fas fa-recycle me-1"></i>Services
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
+                <li>
+                  <a class="dropdown-item" href="recycle-phone.html">
+                    <i class="fas fa-mobile-alt me-2"></i>Recycle Phones
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="recycle-laptop.html">
+                    <i class="fas fa-laptop me-2"></i>Recycle Laptops
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="recycle-kitchen.html">
+                    <i class="fas fa-blender me-2"></i>Recycle Kitchen
+                    Appliances
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="recycle-electronics.html">
+                    <i class="fas fa-tv me-2"></i>Recycle Electronics
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="faq.html">
+                <i class="fas fa-question-circle me-1"></i>FAQ
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="contact-us.html">
+                <i class="fas fa-envelope me-1"></i>Contact Us
+              </a>
+            </li>
+          </ul>
+          <div class="d-flex align-items-center">
+            <div class="points-display-navbar auth-required d-none">
+              <div class="d-flex align-items-center">
+                <i class="fas fa-leaf text-success me-2"></i>
+                <div class="d-flex align-items-baseline">
+                  <span class="points-label">Points:</span>
+                  <span class="points-value" id="navbarPoints">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container my-5">
+      <!-- Hero Section -->
+      <section class="about-hero">
+        <div class="container text-center">
+          <h1 class="display-4">About RETECH</h1>
+          <p class="lead">
+            Leading the way in sustainable electronic recycling since 2020,
+            we're committed to creating a greener future through responsible
+            e-waste management.
+          </p>
+        </div>
+      </section>
+
+      <!-- Our Mission & Vision Section -->
+      <section class="about-section">
+        <div class="container">
+          <h2 class="section-title">Our Mission & Vision</h2>
+          <div class="row g-4">
+            <div class="col-md-6">
+              <div class="card mission-card h-100">
+                <div class="card-body p-4">
+                  <div class="mission-icon">
+                    <i class="fas fa-leaf fa-2x"></i>
+                  </div>
+                  <h3 class="card-title">Our Mission</h3>
+                  <p class="card-text">
+                    At RETECH, our mission is to create a sustainable future by
+                    promoting responsible recycling of electronic devices. We
+                    strive to reduce electronic waste in landfills, recover
+                    valuable materials from old devices, and protect sensitive
+                    data through secure disposal methods.
+                  </p>
+                  <ul class="mission-points">
+                    <li>
+                      <i class="fas fa-check-circle text-success me-2"></i
+                      >Reduce e-waste in landfills
+                    </li>
+                    <li>
+                      <i class="fas fa-check-circle text-success me-2"></i
+                      >Recover valuable materials
+                    </li>
+                    <li>
+                      <i class="fas fa-check-circle text-success me-2"></i
+                      >Protect sensitive data
+                    </li>
+                  </ul>
+                  <p class="card-text mission-footer">
+                    Founded in 2020 by a group of environmental engineers and
+                    tech enthusiasts passionate about making a difference.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card vision-card h-100">
+                <div class="card-body p-4">
+                  <div class="vision-icon">
+                    <i class="fas fa-lightbulb fa-2x"></i>
+                  </div>
+                  <h3 class="card-title">Our Vision</h3>
+                  <p class="card-text">
+                    We envision a world where electronic waste is minimized, and
+                    the valuable resources within our devices are continuously
+                    recirculated into the manufacturing process. Our goal is to
+                    make recycling electronics as easy as buying them.
+                  </p>
+                  <div class="vision-image">
+                    <img
+                      src="../images/green-earth.png"
+                      alt="Sustainable Future"
+                      class="img-fluid rounded"
+                    />
+                  </div>
+                  <p class="card-text vision-footer">
+                    Today, we've grown into a nationwide service helping
+                    individuals and businesses responsibly dispose of electronic
+                    devices.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Our Journey Timeline -->
+      <section class="about-section journey-section">
+        <div class="container">
+          <h2 class="section-title">Our Journey</h2>
+          <div class="timeline">
+            <div class="row timeline-item" data-aos="fade-left">
+              <div class="col-md-6 offset-md-6">
+                <div class="timeline-content">
+                  <div class="timeline-date">2020</div>
+                  <h4>RETECH Founded</h4>
+                  <p>
+                    Started with a small team of 5 passionate environmental
+                    engineers and tech enthusiasts with a vision to make
+                    electronics recycling accessible.
+                  </p>
+                  <div class="timeline-icon">
+                    <i class="fas fa-rocket"></i>
+                  </div>
+                  <span class="timeline-connector"></span>
+                </div>
+              </div>
+            </div>
+            <div class="row timeline-item" data-aos="fade-right">
+              <div class="col-md-6">
+                <div class="timeline-content">
+                  <div class="timeline-date">2021</div>
+                  <h4>First Recycling Center</h4>
+                  <p>
+                    Opened our first dedicated recycling center and processed
+                    over 10,000 devices in the first year of operation.
+                  </p>
+                  <div class="timeline-icon">
+                    <i class="fas fa-building"></i>
+                  </div>
+                  <span class="timeline-connector"></span>
+                </div>
+              </div>
+            </div>
+            <div class="row timeline-item" data-aos="fade-left">
+              <div class="col-md-6 offset-md-6">
+                <div class="timeline-content">
+                  <div class="timeline-date">2022</div>
+                  <h4>Nationwide Expansion</h4>
+                  <p>
+                    Expanded our services nationwide and partnered with major
+                    electronics retailers to provide convenient drop-off
+                    locations.
+                  </p>
+                  <div class="timeline-icon">
+                    <i class="fas fa-map-marked-alt"></i>
+                  </div>
+                  <span class="timeline-connector"></span>
+                </div>
+              </div>
+            </div>
+            <div class="row timeline-item" data-aos="fade-right">
+              <div class="col-md-6">
+                <div class="timeline-content">
+                  <div class="timeline-date">2023</div>
+                  <h4>Green Initiative Launch</h4>
+                  <p>
+                    Launched our tree planting initiative - for every 100
+                    devices recycled, we plant a tree to further our
+                    environmental commitment.
+                  </p>
+                  <div class="timeline-icon">
+                    <i class="fas fa-seedling"></i>
+                  </div>
+                  <span class="timeline-connector"></span>
+                </div>
+              </div>
+            </div>
+            <div class="row timeline-item" data-aos="fade-left">
+              <div class="col-md-6 offset-md-6">
+                <div class="timeline-content">
+                  <div class="timeline-date">2024</div>
+                  <h4>Future Vision</h4>
+                  <p>
+                    Expanding digital platform with new features to make
+                    recycling even more convenient while reducing our own carbon
+                    footprint.
+                  </p>
+                  <div class="timeline-icon">
+                    <i class="fas fa-globe"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Journey Stats -->
+          <div class="journey-stats mt-5">
+            <div class="row text-center">
+              <div class="col-md-3 col-6 mb-4">
+                <div class="journey-stat">
+                  <div class="journey-stat-icon">
+                    <i class="fas fa-users"></i>
+                  </div>
+                  <div class="journey-stat-number" data-count="35">0</div>
+                  <div class="journey-stat-label">Team Members</div>
+                </div>
+              </div>
+              <div class="col-md-3 col-6 mb-4">
+                <div class="journey-stat">
+                  <div class="journey-stat-icon">
+                    <i class="fas fa-store"></i>
+                  </div>
+                  <div class="journey-stat-number" data-count="12">0</div>
+                  <div class="journey-stat-label">Recycling Centers</div>
+                </div>
+              </div>
+              <div class="col-md-3 col-6 mb-4">
+                <div class="journey-stat">
+                  <div class="journey-stat-icon">
+                    <i class="fas fa-handshake"></i>
+                  </div>
+                  <div class="journey-stat-number" data-count="25">0</div>
+                  <div class="journey-stat-label">Retail Partners</div>
+                </div>
+              </div>
+              <div class="col-md-3 col-6 mb-4">
+                <div class="journey-stat">
+                  <div class="journey-stat-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                  </div>
+                  <div class="journey-stat-number" data-count="200">0</div>
+                  <div class="journey-stat-label">Cities Serviced</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Our Process Section -->
+      <section class="about-section">
+        <div class="container">
+          <h2 class="section-title">Our Recycling Process</h2>
+          <div class="row g-4">
+            <div class="col-md-4">
+              <div class="process-step">
+                <div class="process-icon">
+                  <i class="fas fa-clipboard-check fa-2x"></i>
+                </div>
+                <h4>1. Assessment</h4>
+                <p>
+                  We evaluate your device and provide a fair quote based on its
+                  condition, age, and recyclable components.
+                </p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="process-step">
+                <div class="process-icon">
+                  <i class="fas fa-shield-alt fa-2x"></i>
+                </div>
+                <h4>2. Data Wiping</h4>
+                <p>
+                  We securely erase all personal data from devices using
+                  industry-standard methods to protect your privacy.
+                </p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="process-step">
+                <div class="process-icon">
+                  <i class="fas fa-recycle fa-2x"></i>
+                </div>
+                <h4>3. Recycling</h4>
+                <p>
+                  Devices are carefully disassembled and materials are sorted
+                  for proper recycling or environmentally safe disposal.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Team Section -->
+      <section class="about-section">
+        <div class="container">
+          <h2 class="section-title">Our Team</h2>
+          <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+              <div class="team-member" data-aos="fade-up">
+                <img
+                  src="../images/CEO.png"
+                  alt="Abdelfattah Elnaggar"
+                  class="team-image"
+                />
+                <h4>Abdelfattah Elnaggar</h4>
+                <p class="text-muted">Founder & CEO</p>
+                <p>
+                  Environmental engineer with over 15 years of experience in
+                  sustainable waste management.
+                </p>
+                <div class="social-icons">
+                  <a href="#" aria-label="LinkedIn"
+                    ><i class="fab fa-linkedin-in"></i
+                  ></a>
+                  <a href="#" aria-label="Twitter"
+                    ><i class="fab fa-twitter"></i
+                  ></a>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="team-member" data-aos="fade-up" data-aos-delay="100">
+                <img
+                  src="../images/CEO.png"
+                  alt="Sarah Johnson"
+                  class="team-image"
+                />
+                <h4>Abdelfattah Elnaggar</h4>
+                <p class="text-muted">Co-Founder & CTO</p>
+                <p>
+                  Former tech industry executive passionate about extending the
+                  lifecycle of electronic devices.
+                </p>
+                <div class="social-icons">
+                  <a href="#" aria-label="LinkedIn"
+                    ><i class="fab fa-linkedin-in"></i
+                  ></a>
+                  <a href="#" aria-label="Twitter"
+                    ><i class="fab fa-twitter"></i
+                  ></a>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="team-member" data-aos="fade-up" data-aos-delay="200">
+                <img
+                  src="../images/CEO.png"
+                  alt="Michael Chen"
+                  class="team-image"
+                />
+                <h4>Abdelfattah Elnaggar</h4>
+                <p class="text-muted">Head of Operations</p>
+                <p>
+                  Supply chain expert who ensures our recycling processes are
+                  efficient, ethical, and environmentally sound.
+                </p>
+                <div class="social-icons">
+                  <a href="#" aria-label="LinkedIn"
+                    ><i class="fab fa-linkedin-in"></i
+                  ></a>
+                  <a href="#" aria-label="Twitter"
+                    ><i class="fab fa-twitter"></i
+                  ></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Environmental Impact Section -->
+      <section class="about-section">
+        <div class="container">
+          <h2 class="section-title">Our Environmental Impact</h2>
+          <div class="impact-stats">
+            <div class="row text-center">
+              <div
+                class="col-md-3 col-6 mb-4"
+                data-aos="fade-up"
+                data-aos-delay="100"
+              >
+                <div class="impact-stat" data-count="100">
+                  <i class="fas fa-trash-alt mb-3 fa-2x"></i>
+                  <div class="impact-stat-number">0</div>
+                  <div class="impact-stat-label">Tons of e-waste diverted</div>
+                </div>
+              </div>
+              <div
+                class="col-md-3 col-6 mb-4"
+                data-aos="fade-up"
+                data-aos-delay="200"
+              >
+                <div class="impact-stat" data-count="5000">
+                  <i class="fas fa-tree mb-3 fa-2x"></i>
+                  <div class="impact-stat-number">0</div>
+                  <div class="impact-stat-label">Trees planted</div>
+                </div>
+              </div>
+              <div
+                class="col-md-3 col-6 mb-4"
+                data-aos="fade-up"
+                data-aos-delay="300"
+              >
+                <div class="impact-stat" data-count="15000">
+                  <i class="fas fa-mobile-alt mb-3 fa-2x"></i>
+                  <div class="impact-stat-number">0</div>
+                  <div class="impact-stat-label">Devices recycled</div>
+                </div>
+              </div>
+              <div
+                class="col-md-3 col-6 mb-4"
+                data-aos="fade-up"
+                data-aos-delay="400"
+              >
+                <div class="impact-stat" data-count="500">
+                  <i class="fas fa-cloud mb-3 fa-2x"></i>
+                  <div class="impact-stat-number">0</div>
+                  <div class="impact-stat-label">Tons of CO₂ saved</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-5">
+            <div class="col-lg-6">
+              <h3>Environmental Benefits</h3>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  <i class="fas fa-check-circle text-success me-2"></i>
+                  Reduced carbon emissions by proper e-waste management
+                </li>
+                <li class="list-group-item">
+                  <i class="fas fa-check-circle text-success me-2"></i>
+                  Conservation of natural resources through material recovery
+                </li>
+                <li class="list-group-item">
+                  <i class="fas fa-check-circle text-success me-2"></i>
+                  Prevention of toxic materials leaching into soil and water
+                </li>
+                <li class="list-group-item">
+                  <i class="fas fa-check-circle text-success me-2"></i>
+                  Reduced energy consumption compared to mining raw materials
+                </li>
+              </ul>
+            </div>
+            <div class="col-lg-6">
+              <h3>Social Impact</h3>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  <i class="fas fa-check-circle text-success me-2"></i>
+                  Creation of green jobs in the recycling industry
+                </li>
+                <li class="list-group-item">
+                  <i class="fas fa-check-circle text-success me-2"></i>
+                  Educational programs on responsible e-waste management
+                </li>
+                <li class="list-group-item">
+                  <i class="fas fa-check-circle text-success me-2"></i>
+                  Partnerships with schools and organizations for awareness
+                </li>
+                <li class="list-group-item">
+                  <i class="fas fa-check-circle text-success me-2"></i>
+                  Providing refurbished electronics to underserved communities
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Call to Action Section -->
+      <section class="cta-section">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-lg-7">
+              <h2 class="cta-title">Ready to Recycle With Us?</h2>
+              <p class="cta-text">
+                Join thousands of environmentally conscious individuals and
+                companies who trust RETECH with their electronic recycling
+                needs. Together, we can make a significant impact on reducing
+                e-waste.
+              </p>
+              <div class="cta-benefits mb-4">
+                <div class="d-flex align-items-center mb-2">
+                  <i class="fas fa-check-circle text-light me-2"></i>
+                  <span>Free pickup for qualifying items</span>
+                </div>
+                <div class="d-flex align-items-center mb-2">
+                  <i class="fas fa-check-circle text-light me-2"></i>
+                  <span>Competitive quotes for your devices</span>
+                </div>
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-check-circle text-light me-2"></i>
+                  <span>Secure data destruction guaranteed</span>
+                </div>
+              </div>
+              <div class="cta-buttons">
+                <a href="recycle-phone.html" class="btn btn-light btn-lg me-3">
+                  <i class="fas fa-recycle me-2"></i>Recycle Your Device
+                </a>
+                <a href="signup.html" class="btn btn-outline-light btn-lg">
+                  <i class="fas fa-user-plus me-2"></i>Create an Account
+                </a>
+              </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block mt-4 mt-lg-0">
+              <div class="cta-image-container text-center">
+                <img
+                  src="../images/green-earth.png"
+                  alt="Recycling Impact"
+                  class="cta-image img-fluid"
+                />
+                <div class="cta-stat">
+                  <div class="cta-stat-number">
+                    <span id="ctaCounter">15,000+</span>
+                  </div>
+                  <div class="cta-stat-label">Devices Recycled</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3 mb-4 mb-md-0">
+            <h3><b>RETECH</b></h3>
+            <p>
+              Making the world cleaner one device at a time through responsible
+              recycling and sustainability.
+            </p>
+            <div class="social-icons">
+              <a href="#" aria-label="Facebook"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" aria-label="Twitter"
+                ><i class="fab fa-twitter"></i
+              ></a>
+              <a href="#" aria-label="Instagram"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" aria-label="LinkedIn"
+                ><i class="fab fa-linkedin-in"></i
+              ></a>
+            </div>
+          </div>
+          <div class="col-md-2 mb-4 mb-md-0">
+            <h5>Services</h5>
+            <ul class="list-unstyled">
+              <li>
+                <a href="recycle-phone.html"
+                  ><i class="fas fa-mobile-alt me-2"></i>Recycle Phones</a
+                >
+              </li>
+              <li>
+                <a href="recycle-laptop.html"
+                  ><i class="fas fa-laptop me-2"></i>Recycle Laptops</a
+                >
+              </li>
+              <li>
+                <a href="recycle-kitchen.html"
+                  ><i class="fas fa-blender me-2"></i>Recycle Kitchen
+                  Appliances</a
+                >
+              </li>
+              <li>
+                <a href="recycle-electronics.html"
+                  ><i class="fas fa-tv me-2"></i>Recycle Electronics</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-2 mb-4 mb-md-0">
+            <h5>Company</h5>
+            <ul class="list-unstyled">
+              <li>
+                <a href="about-us.html" class="active"
+                  ><i class="fas fa-info-circle me-2"></i>About Us</a
+                >
+              </li>
+              <li>
+                <a href="contact-us.html"
+                  ><i class="fas fa-phone me-2"></i>Contact Us</a
+                >
+              </li>
+              <li>
+                <a href="faq.html"
+                  ><i class="fas fa-question-circle me-2"></i>FAQ</a
+                >
+              </li>
+              <li>
+                <a href="#"
+                  ><i class="fas fa-shield-alt me-2"></i>Privacy Policy</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-5">
+            <div class="footer-newsletter">
+              <h5>Stay Connected</h5>
+              <p>Subscribe to our newsletter for updates and eco-tips</p>
+              <div class="input-group">
+                <input
+                  type="email"
+                  class="form-control"
+                  placeholder="Your email address"
+                  aria-label="Email"
+                />
+                <button class="btn btn-success" type="button">Subscribe</button>
+              </div>
+              <small class="text-muted mt-2 d-block"
+                >We respect your privacy and will never share your
+                information.</small
+              >
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>
+            ©
+            <script>
+              document.write(new Date().getFullYear());
+            </script>
+            RETECH. All rights reserved. | <a href="#">Terms of Service</a> |
+            <a href="#">Privacy Policy</a>
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="../js/main.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/about-us.js"></script>
+  </body>
+</html>

@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Us - RETECH</title>
+    <link rel="icon" href="../images/recycle-symbol.png" type="image/x-icon" />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/contact.css" />
+  </head>
+  <body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+          <a class="navbar-brand" href="index.html">♻️ RETECH</a>
+
+          <div class="d-flex align-items-center">
+            <!-- Auth buttons - will be shown/hidden based on login state -->
+            <div id="authButtons">
+              <a class="btn btn-outline-success me-2" href="login.html"
+                ><i class="fas fa-sign-in-alt me-2"></i>Login</a
+              >
+              <a class="btn btn-success" href="signup.html"
+                ><i class="fas fa-user-plus me-2"></i>SignUp</a
+              >
+            </div>
+
+            <!-- User profile - will be shown when logged in -->
+            <div id="userProfile" class="d-none">
+              <div class="dropdown">
+                <button
+                  class="btn btn-outline-primary dropdown-toggle d-flex align-items-center"
+                  type="button"
+                  id="userDropdown"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <span class="user-avatar-small me-2">
+                    <!-- Will be filled with user image or initials -->
+                  </span>
+                  <span class="user-name" id="userName">Account</span>
+                </button>
+                <ul
+                  class="dropdown-menu dropdown-menu-end"
+                  aria-labelledby="userDropdown"
+                >
+                  <div class="user-dropdown-header">
+                    <div class="user-dropdown-avatar">
+                      <!-- Will be filled with user image or initials -->
+                    </div>
+                    <div class="user-dropdown-info">
+                      <div class="name" id="dropdownUserName">Account</div>
+                      <div class="email" id="dropdownUserEmail">
+                        user@example.com
+                      </div>
+                    </div>
+                  </div>
+                  <li>
+                    <a class="dropdown-item" href="profile.html"
+                      ><i class="fas fa-user me-2"></i>Profile</a
+                    >
+                  </li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li>
+                    <a class="dropdown-item" href="#" data-action="logout"
+                      ><i class="fas fa-sign-out-alt me-2"></i>Logout</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#mainNavigation"
+          aria-controls="mainNavigation"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNavigation">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">
+                <i class="fas fa-home me-1"></i>Home
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about-us.html">
+                <i class="fas fa-info-circle me-1"></i>About Us
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="servicesDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i class="fas fa-recycle me-1"></i>Services
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
+                <li>
+                  <a class="dropdown-item" href="recycle-phone.html">
+                    <i class="fas fa-mobile-alt me-2"></i>Recycle Phones
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="recycle-laptop.html">
+                    <i class="fas fa-laptop me-2"></i>Recycle Laptops
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="recycle-kitchen.html">
+                    <i class="fas fa-blender me-2"></i>Recycle Kitchen
+                    Appliances
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="recycle-electronics.html">
+                    <i class="fas fa-tv me-2"></i>Recycle Electronics
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="faq.html">
+                <i class="fas fa-question-circle me-1"></i>FAQ
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="contact-us.html">
+                <i class="fas fa-envelope me-1"></i>Contact Us
+              </a>
+            </li>
+          </ul>
+          <div class="d-flex align-items-center">
+            <div class="points-display-navbar auth-required d-none">
+              <div class="d-flex align-items-center">
+                <i class="fas fa-leaf text-success me-2"></i>
+                <div class="d-flex align-items-baseline">
+                  <span class="points-label">Points:</span>
+                  <span class="points-value" id="navbarPoints">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="contact-hero" data-aos="fade-up">
+      <div class="container">
+        <h1 class="display-4">
+          Get In Touch <i class="fas fa-envelope-open-text ms-2"></i>
+        </h1>
+        <p class="lead">
+          We'd love to hear from you. Contact us for any questions, feedback, or
+          support with your recycling needs.
+        </p>
+        <div class="hero-badges">
+          <span class="badge bg-success"
+            ><i class="fas fa-check-circle me-1"></i> Quick Responses</span
+          >
+          <span class="badge bg-success"
+            ><i class="fas fa-headset me-1"></i> 24/7 Support</span
+          >
+          <span class="badge bg-success"
+            ><i class="fas fa-star me-1"></i> Expert Team</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Info Section -->
+    <section class="contact-info-section py-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="contact-info-card">
+              <div class="icon-wrapper">
+                <i class="fas fa-map-marker-alt"></i>
+              </div>
+              <h3>Visit Us</h3>
+              <p>123 Green Street</p>
+              <p>Eco City, EC 12345</p>
+              <p>United States</p>
+              <a
+                href="https://maps.app.goo.gl/tVPt4d5yVryfyv9j9"
+                target="_blank"
+                rel="noopener"
+                class="btn btn-outline-success btn-sm mt-2"
+              >
+                <i class="fas fa-directions me-1"></i> Get Directions
+              </a>
+            </div>
+          </div>
+          <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="contact-info-card">
+              <div class="icon-wrapper">
+                <i class="fas fa-phone-alt"></i>
+              </div>
+              <h3>Call Us</h3>
+              <p>
+                <strong>Main:</strong>
+                <a href="tel:+11234567890">01101791968</a>
+              </p>
+              <p>
+                <strong>Support:</strong>
+                <a href="tel:+11234567891">(123) 456-7891</a>
+              </p>
+              <p>
+                <strong>Toll-free:</strong>
+                <a href="tel:+18003268324">1-800-ECO-TECH</a>
+              </p>
+              <p class="hours-note">
+                <small
+                  ><i class="far fa-clock me-1"></i> Available Mon-Fri, 9AM-6PM
+                  ET</small
+                >
+              </p>
+            </div>
+          </div>
+          <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="contact-info-card">
+              <div class="icon-wrapper">
+                <i class="fas fa-envelope"></i>
+              </div>
+              <h3>Email Us</h3>
+              <p>
+                <a href="mailto:info@retechrecycling.com"
+                  >elnaggara877@gmail.com</a
+                >
+              </p>
+              <p>
+                <a href="mailto:support@retechrecycling.com"
+                  >support@retechrecycling.com</a
+                >
+              </p>
+              <p>
+                <a href="mailto:careers@retechrecycling.com"
+                  >careers@retechrecycling.com</a
+                >
+              </p>
+              <p class="response-note">
+                <small
+                  ><i class="fas fa-reply me-1"></i> We respond within 24
+                  hours</small
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Social Media Section -->
+    <section class="social-section" data-aos="fade-up">
+      <div class="container text-center">
+        <h2>Connect With Us <i class="fas fa-globe ms-2"></i></h2>
+        <p class="mb-4">
+          Follow us on social media for eco-tips, recycling news, and updates
+        </p>
+        <div class="social-links">
+          <a href="#" class="social-link" aria-label="Facebook"
+            ><i class="fab fa-facebook-f"></i
+          ></a>
+          <a href="#" class="social-link" aria-label="Twitter"
+            ><i class="fab fa-twitter"></i
+          ></a>
+          <a href="#" class="social-link" aria-label="Instagram"
+            ><i class="fab fa-instagram"></i
+          ></a>
+          <a href="#" class="social-link" aria-label="LinkedIn"
+            ><i class="fab fa-linkedin-in"></i
+          ></a>
+          <a href="#" class="social-link" aria-label="YouTube"
+            ><i class="fab fa-youtube"></i
+          ></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Form Section -->
+    <section class="contact-form-section py-5" data-aos="fade-up">
+      <div class="container">
+        <div class="row g-4">
+          <div class="col-lg-6">
+            <div class="contact-form">
+              <h3><i class="fas fa-paper-plane me-2"></i>Send Us a Message</h3>
+              <p class="text-muted mb-4">
+                Fill out the form below and our team will get back to you as
+                soon as possible.
+              </p>
+              <form id="contactForm">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="name"
+                        placeholder="Your name"
+                        required
+                      />
+                      <label for="name"
+                        ><i class="fas fa-user me-2"></i>Your Name</label
+                      >
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="email"
+                        placeholder="Your email"
+                        required
+                      />
+                      <label for="email"
+                        ><i class="fas fa-envelope me-2"></i>Email
+                        Address</label
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="form-floating mb-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="subject"
+                    placeholder="What is this regarding?"
+                    required
+                  />
+                  <label for="subject"
+                    ><i class="fas fa-tag me-2"></i>Subject</label
+                  >
+                </div>
+                <div class="form-floating mb-3">
+                  <textarea
+                    class="form-control"
+                    id="message"
+                    rows="5"
+                    placeholder="Your message"
+                    required
+                  ></textarea>
+                  <label for="message"
+                    ><i class="fas fa-comment-alt me-2"></i>Message</label
+                  >
+                </div>
+                <div class="form-check mb-3">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="agreement"
+                    required
+                  />
+                  <label class="form-check-label" for="agreement">
+                    I agree to the <a href="#">Privacy Policy</a> and consent to
+                    being contacted regarding my inquiry.
+                  </label>
+                </div>
+                <button
+                  type="submit"
+                  class="btn btn-primary w-100"
+                  id="submitButton"
+                >
+                  <i class="fas fa-paper-plane me-2"></i>Send Message
+                </button>
+              </form>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="business-hours-map h-100 d-flex flex-column">
+              <div
+                class="business-hours mb-4"
+                data-aos="fade-up"
+                data-aos-delay="100"
+              >
+                <h3><i class="far fa-clock me-2"></i>Business Hours</h3>
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <tbody>
+                      <tr>
+                        <td><strong>Monday - Friday</strong></td>
+                        <td>9:00 AM - 6:00 PM</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Saturday</strong></td>
+                        <td>10:00 AM - 4:00 PM</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Sunday</strong></td>
+                        <td>Closed</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Holidays</strong></td>
+                        <td>
+                          Please check our <a href="#">holiday schedule</a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div
+                class="map-container flex-grow-1"
+                data-aos="fade-up"
+                data-aos-delay="200"
+              >
+                <h3><i class="fas fa-map-marked-alt me-2"></i>Our Location</h3>
+                <div class="map-responsive">
+                  <!-- Replace with actual map embed code -->
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13779.674300489694!2d30.969326767382416!3d30.296379573993207!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14586391cf9add4d%3A0xb44e4443485820a2!2sAshmun%2C%20Madinet%20Ashmoun%2C%20Ashmoun%2C%20Menofia%20Governorate!5e0!3m2!1sen!2seg!4v1744288001206!5m2!1sen!2seg"
+                    width="600"
+                    height="450"
+                    style="border: 0"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                  ></iframe>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Teaser -->
+    <section class="faq-teaser" data-aos="fade-up">
+      <div class="container text-center">
+        <div class="faq-teaser-content p-5">
+          <h2><i class="fas fa-question-circle me-2"></i>Have Questions?</h2>
+          <p class="lead">
+            Check out our frequently asked questions to find quick answers to
+            common inquiries about our recycling services.
+          </p>
+          <a href="faq.html" class="btn btn-lg btn-success mt-3">
+            <i class="fas fa-external-link-alt me-2"></i>Visit FAQ Page
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3 mb-4 mb-md-0">
+            <h3><b>RETECH</b></h3>
+            <p>
+              Making the world cleaner one device at a time through responsible
+              recycling and sustainability.
+            </p>
+            <div class="social-icons">
+              <a href="#" aria-label="Facebook"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" aria-label="Twitter"
+                ><i class="fab fa-twitter"></i
+              ></a>
+              <a href="#" aria-label="Instagram"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" aria-label="LinkedIn"
+                ><i class="fab fa-linkedin-in"></i
+              ></a>
+            </div>
+          </div>
+          <div class="col-md-2 mb-4 mb-md-0">
+            <h5>Services</h5>
+            <ul class="list-unstyled">
+              <li>
+                <a href="recycle-phone.html"
+                  ><i class="fas fa-mobile-alt me-2"></i>Recycle Phones</a
+                >
+              </li>
+              <li>
+                <a href="recycle-laptop.html"
+                  ><i class="fas fa-laptop me-2"></i>Recycle Laptops</a
+                >
+              </li>
+              <li>
+                <a href="recycle-kitchen.html"
+                  ><i class="fas fa-blender me-2"></i>Recycle Kitchen
+                  Appliances</a
+                >
+              </li>
+              <li>
+                <a href="recycle-electronics.html"
+                  ><i class="fas fa-tv me-2"></i>Recycle Electronics</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-2 mb-4 mb-md-0">
+            <h5>Company</h5>
+            <ul class="list-unstyled">
+              <li>
+                <a href="about-us.html"
+                  ><i class="fas fa-info-circle me-2"></i>About Us</a
+                >
+              </li>
+              <li>
+                <a href="contact-us.html"
+                  ><i class="fas fa-envelope me-2"></i>Contact Us</a
+                >
+              </li>
+              <li>
+                <a href="faq.html"
+                  ><i class="fas fa-question-circle me-2"></i>FAQ</a
+                >
+              </li>
+              <li>
+                <a href="#"
+                  ><i class="fas fa-shield-alt me-2"></i>Privacy Policy</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-5">
+            <div class="footer-newsletter">
+              <h5>Stay Connected</h5>
+              <p>Subscribe to our newsletter for updates and eco-tips</p>
+              <div class="input-group">
+                <input
+                  type="email"
+                  class="form-control"
+                  placeholder="Your email address"
+                  aria-label="Email"
+                />
+                <button class="btn btn-success" type="button">Subscribe</button>
+              </div>
+              <small class="text-muted mt-2 d-block"
+                >We respect your privacy and will never share your
+                information.</small
+              >
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>
+            ©
+            <script>
+              document.write(new Date().getFullYear());
+            </script>
+            RETECH. All rights reserved. | <a href="#">Terms of Service</a> |
+            <a href="#">Privacy Policy</a>
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="../js/main.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/contact.js"></script>
+    <script>
+      // Initialize AOS
+      AOS.init({
+        duration: 800,
+        once: true,
+        offset: 100,
+      });
+
+      // Make header sticky on scroll
+      window.addEventListener("scroll", function () {
+        const navbar = document.querySelector(".navbar");
+        if (window.scrollY > 100) {
+          navbar.classList.add("navbar-sticky");
+        } else {
+          navbar.classList.remove("navbar-sticky");
+        }
+      });
+    </script>
+  </body>
+</html>

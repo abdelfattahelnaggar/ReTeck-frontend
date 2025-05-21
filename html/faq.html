@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FAQ - RETECH</title>
+    <link rel="icon" href="../images/recycle-symbol.png" type="image/x-icon" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/faq.css" />
+  </head>
+  <body>
+    <div class="top-bar">
+      <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+          <a class="navbar-brand" href="index.html">♻️ RETECH</a>
+
+          <div class="d-flex align-items-center">
+            <!-- Auth buttons - will be shown/hidden based on login state -->
+            <div id="authButtons">
+              <a class="btn btn-outline-success me-2" href="login.html"
+                ><i class="fas fa-sign-in-alt me-2"></i>Login</a
+              >
+              <a class="btn btn-success" href="signup.html"
+                ><i class="fas fa-user-plus me-2"></i>SignUp</a
+              >
+            </div>
+
+            <!-- User profile - will be shown when logged in -->
+            <div id="userProfile" class="d-none">
+              <div class="dropdown">
+                <button
+                  class="btn btn-outline-primary dropdown-toggle d-flex align-items-center"
+                  type="button"
+                  id="userDropdown"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <span class="user-avatar-small me-2">
+                    <!-- Will be filled with user image or initials -->
+                  </span>
+                  <span class="user-name" id="userName">Account</span>
+                </button>
+                <ul
+                  class="dropdown-menu dropdown-menu-end"
+                  aria-labelledby="userDropdown"
+                >
+                  <div class="user-dropdown-header">
+                    <div class="user-dropdown-avatar">
+                      <!-- Will be filled with user image or initials -->
+                    </div>
+                    <div class="user-dropdown-info">
+                      <div class="name" id="dropdownUserName">Account</div>
+                      <div class="email" id="dropdownUserEmail">
+                        user@example.com
+                      </div>
+                    </div>
+                  </div>
+                  <li>
+                    <a class="dropdown-item" href="profile.html"
+                      ><i class="fas fa-user me-2"></i>Profile</a
+                    >
+                  </li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li>
+                    <a class="dropdown-item" href="#" data-action="logout"
+                      ><i class="fas fa-sign-out-alt me-2"></i>Logout</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#mainNavigation"
+          aria-controls="mainNavigation"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNavigation">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">
+                <i class="fas fa-home me-1"></i>Home
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about-us.html">
+                <i class="fas fa-info-circle me-1"></i>About Us
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="servicesDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i class="fas fa-recycle me-1"></i>Services
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
+                <li>
+                  <a class="dropdown-item" href="recycle-phone.html">
+                    <i class="fas fa-mobile-alt me-2"></i>Recycle Phones
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="recycle-laptop.html">
+                    <i class="fas fa-laptop me-2"></i>Recycle Laptops
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="recycle-kitchen.html">
+                    <i class="fas fa-blender me-2"></i>Recycle Kitchen
+                    Appliances
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="recycle-electronics.html">
+                    <i class="fas fa-tv me-2"></i>Recycle Electronics
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="faq.html">
+                <i class="fas fa-question-circle me-1"></i>FAQ
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="contact-us.html">
+                <i class="fas fa-envelope me-1"></i>Contact Us
+              </a>
+            </li>
+          </ul>
+          <div class="d-flex align-items-center">
+            <div class="points-display-navbar auth-required d-none">
+              <div class="d-flex align-items-center">
+                <i class="fas fa-leaf text-success me-2"></i>
+                <div class="d-flex align-items-baseline">
+                  <span class="points-label">Points:</span>
+                  <span class="points-value" id="navbarPoints">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="container mt-4">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">FAQ</li>
+        </ol>
+      </nav>
+    </div>
+
+    <!-- FAQ Section -->
+    <section class="faq-section py-5">
+      <div class="container">
+        <div class="row mb-5 text-center">
+          <div class="col-12">
+            <h1 class="faq-header">Frequently Asked Questions</h1>
+            <p class="faq-subheader">
+              Find answers to common questions about our recycling services,
+              payment options, and more.
+            </p>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="search-container">
+              <input
+                type="text"
+                id="searchInput"
+                class="form-control"
+                placeholder="Search for questions or keywords"
+                aria-label="Search"
+              />
+              <button
+                id="searchButton"
+                class="btn btn-primary"
+                title="Search"
+                aria-label="Search"
+              >
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-3 mb-4">
+            <div class="category-tabs list-group">
+              <a href="#" class="list-group-item active" data-target="general"
+                >General</a
+              >
+              <a href="#" class="list-group-item" data-target="recycling"
+                >Recycling Process</a
+              >
+              <a href="#" class="list-group-item" data-target="payment"
+                >Payment & Pricing</a
+              >
+              <a href="#" class="list-group-item" data-target="shipping"
+                >Shipping & Delivery</a
+              >
+              <a href="#" class="list-group-item" data-target="account"
+                >Account & Security</a
+              >
+            </div>
+          </div>
+
+          <div class="col-md-9">
+            <div class="accordion-container">
+              <!-- Tab content -->
+              <div class="tab-content">
+                <!-- General FAQs -->
+                <div class="tab-pane fade show active" id="general">
+                  <div class="accordion" id="accordionGeneral">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="general-heading-1">
+                        <button
+                          class="accordion-button"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#general-collapse-1"
+                          aria-expanded="true"
+                          aria-controls="general-collapse-1"
+                        >
+                          What is Retech?
+                        </button>
+                      </h2>
+                      <div
+                        id="general-collapse-1"
+                        class="accordion-collapse collapse show"
+                        aria-labelledby="general-heading-1"
+                        data-bs-parent="#accordionGeneral"
+                      >
+                        <div class="accordion-body">
+                          Retech is an eco-friendly recycling platform dedicated
+                          to responsible electronic waste management. We provide
+                          services to recycle phones, laptops, kitchen
+                          appliances, and other electronics. Our mission is to
+                          reduce e-waste and promote sustainable technology use.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="general-heading-2">
+                        <button
+                          class="accordion-button collapsed"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#general-collapse-2"
+                          aria-expanded="false"
+                          aria-controls="general-collapse-2"
+                        >
+                          How does Retech contribute to environmental
+                          sustainability?
+                        </button>
+                      </h2>
+                      <div
+                        id="general-collapse-2"
+                        class="accordion-collapse collapse"
+                        aria-labelledby="general-heading-2"
+                        data-bs-parent="#accordionGeneral"
+                      >
+                        <div class="accordion-body">
+                          Retech contributes to environmental sustainability by
+                          recycling electronic waste responsibly, refurbishing
+                          devices when possible, and ensuring proper disposal of
+                          hazardous materials. By extending the lifecycle of
+                          electronics and recovering valuable materials, we
+                          reduce the need for new resource extraction and
+                          minimize landfill waste.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="general-heading-3">
+                        <button
+                          class="accordion-button collapsed"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#general-collapse-3"
+                          aria-expanded="false"
+                          aria-controls="general-collapse-3"
+                        >
+                          What types of devices can I recycle with Retech?
+                        </button>
+                      </h2>
+                      <div
+                        id="general-collapse-3"
+                        class="accordion-collapse collapse"
+                        aria-labelledby="general-heading-3"
+                        data-bs-parent="#accordionGeneral"
+                      >
+                        <div class="accordion-body">
+                          We accept a wide range of electronic devices including
+                          smartphones, tablets, laptops, desktop computers,
+                          kitchen appliances, gaming consoles, televisions,
+                          audio equipment, and various small electronics. If
+                          you're unsure about a specific device, please contact
+                          our customer service for assistance.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Recycling Process FAQs -->
+                <div class="tab-pane fade" id="recycling">
+                  <div class="accordion" id="accordionRecycling">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="recycling-heading-1">
+                        <button
+                          class="accordion-button"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#recycling-collapse-1"
+                          aria-expanded="true"
+                          aria-controls="recycling-collapse-1"
+                        >
+                          How does the recycling process work?
+                        </button>
+                      </h2>
+                      <div
+                        id="recycling-collapse-1"
+                        class="accordion-collapse collapse show"
+                        aria-labelledby="recycling-heading-1"
+                        data-bs-parent="#accordionRecycling"
+                      >
+                        <div class="accordion-body">
+                          Our recycling process is simple: First, submit details
+                          about your device through our online form. We'll
+                          provide an estimated value based on the information
+                          provided. Then, ship your device to us using our
+                          prepaid shipping label. Once we receive and verify
+                          your device's condition, we'll process payment
+                          according to your preference. Devices are then
+                          refurbished or recycled responsibly.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="recycling-heading-2">
+                        <button
+                          class="accordion-button collapsed"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#recycling-collapse-2"
+                          aria-expanded="false"
+                          aria-controls="recycling-collapse-2"
+                        >
+                          How do I prepare my device for recycling?
+                        </button>
+                      </h2>
+                      <div
+                        id="recycling-collapse-2"
+                        class="accordion-collapse collapse"
+                        aria-labelledby="recycling-heading-2"
+                        data-bs-parent="#accordionRecycling"
+                      >
+                        <div class="accordion-body">
+                          Before sending your device, please follow these steps:
+                          1) Backup your data, 2) Perform a factory reset to
+                          remove personal information, 3) Remove any SIM cards
+                          or memory cards, 4) Disable any activation locks or
+                          Find My Device features, 5) Include the charger and
+                          accessories if possible. For detailed instructions
+                          specific to your device, please visit our device
+                          preparation guide.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="recycling-heading-3">
+                        <button
+                          class="accordion-button collapsed"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#recycling-collapse-3"
+                          aria-expanded="false"
+                          aria-controls="recycling-collapse-3"
+                        >
+                          Is my data secure when I recycle my device?
+                        </button>
+                      </h2>
+                      <div
+                        id="recycling-collapse-3"
+                        class="accordion-collapse collapse"
+                        aria-labelledby="recycling-heading-3"
+                        data-bs-parent="#accordionRecycling"
+                      >
+                        <div class="accordion-body">
+                          We take data security very seriously. While we
+                          recommend performing a factory reset before sending
+                          your device, we also have a certified data wiping
+                          process that meets Department of Defense standards for
+                          all devices we receive. This ensures that all personal
+                          information is completely removed before recycling or
+                          refurbishing.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Payment & Pricing FAQs -->
+                <div class="tab-pane fade" id="payment">
+                  <div class="accordion" id="accordionPayment">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="payment-heading-1">
+                        <button
+                          class="accordion-button"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#payment-collapse-1"
+                          aria-expanded="true"
+                          aria-controls="payment-collapse-1"
+                        >
+                          How is the value of my device determined?
+                        </button>
+                      </h2>
+                      <div
+                        id="payment-collapse-1"
+                        class="accordion-collapse collapse show"
+                        aria-labelledby="payment-heading-1"
+                        data-bs-parent="#accordionPayment"
+                      >
+                        <div class="accordion-body">
+                          The value of your device is determined based on
+                          several factors including the make, model, age,
+                          condition, functionality, and current market demand.
+                          We use a comprehensive pricing algorithm that takes
+                          into account these factors to offer you a fair and
+                          competitive price for your device.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="payment-heading-2">
+                        <button
+                          class="accordion-button collapsed"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#payment-collapse-2"
+                          aria-expanded="false"
+                          aria-controls="payment-collapse-2"
+                        >
+                          What payment methods do you offer?
+                        </button>
+                      </h2>
+                      <div
+                        id="payment-collapse-2"
+                        class="accordion-collapse collapse"
+                        aria-labelledby="payment-heading-2"
+                        data-bs-parent="#accordionPayment"
+                      >
+                        <div class="accordion-body">
+                          We offer several payment methods including direct bank
+                          transfer, PayPal, check by mail, or store credit (with
+                          a bonus value). You can select your preferred payment
+                          method during the quote acceptance process. Once your
+                          device is verified, payment is typically processed
+                          within 3-5 business days.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="payment-heading-3">
+                        <button
+                          class="accordion-button collapsed"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#payment-collapse-3"
+                          aria-expanded="false"
+                          aria-controls="payment-collapse-3"
+                        >
+                          What if my device is worth less than quoted?
+                        </button>
+                      </h2>
+                      <div
+                        id="payment-collapse-3"
+                        class="accordion-collapse collapse"
+                        aria-labelledby="payment-heading-3"
+                        data-bs-parent="#accordionPayment"
+                      >
+                        <div class="accordion-body">
+                          If our inspection determines that your device is in
+                          worse condition than described, we'll send you a
+                          revised offer based on its actual condition. You can
+                          choose to accept the new offer or have your device
+                          returned to you at no cost. We strive for transparency
+                          in our pricing process to ensure customer
+                          satisfaction.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Shipping & Delivery FAQs -->
+                <div class="tab-pane fade" id="shipping">
+                  <div class="accordion" id="accordionShipping">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="shipping-heading-1">
+                        <button
+                          class="accordion-button"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#shipping-collapse-1"
+                          aria-expanded="true"
+                          aria-controls="shipping-collapse-1"
+                        >
+                          How do I ship my device to Retech?
+                        </button>
+                      </h2>
+                      <div
+                        id="shipping-collapse-1"
+                        class="accordion-collapse collapse show"
+                        aria-labelledby="shipping-heading-1"
+                        data-bs-parent="#accordionShipping"
+                      >
+                        <div class="accordion-body">
+                          After accepting our quote, you'll receive a prepaid
+                          shipping label via email. Simply package your device
+                          securely in a box with proper cushioning, attach the
+                          prepaid label, and drop it off at the specified
+                          carrier location. For larger items, we can arrange a
+                          pickup service. All shipping costs are covered by us.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="shipping-heading-2">
+                        <button
+                          class="accordion-button collapsed"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#shipping-collapse-2"
+                          aria-expanded="false"
+                          aria-controls="shipping-collapse-2"
+                        >
+                          Is my shipment insured?
+                        </button>
+                      </h2>
+                      <div
+                        id="shipping-collapse-2"
+                        class="accordion-collapse collapse"
+                        aria-labelledby="shipping-heading-2"
+                        data-bs-parent="#accordionShipping"
+                      >
+                        <div class="accordion-body">
+                          Yes, all shipments are insured up to the quoted value
+                          of your device. In the rare event that a package is
+                          lost or damaged during transit, we'll work with the
+                          shipping carrier to file a claim and ensure you're
+                          compensated appropriately. We recommend taking photos
+                          of your device before shipping as additional
+                          documentation.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="shipping-heading-3">
+                        <button
+                          class="accordion-button collapsed"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#shipping-collapse-3"
+                          aria-expanded="false"
+                          aria-controls="shipping-collapse-3"
+                        >
+                          How long does the entire recycling process take?
+                        </button>
+                      </h2>
+                      <div
+                        id="shipping-collapse-3"
+                        class="accordion-collapse collapse"
+                        aria-labelledby="shipping-heading-3"
+                        data-bs-parent="#accordionShipping"
+                      >
+                        <div class="accordion-body">
+                          The entire process typically takes 7-14 days from the
+                          moment you ship your device to when you receive
+                          payment. This includes shipping time (2-5 days),
+                          processing and inspection (1-2 days), and payment
+                          processing (3-5 business days). You can track the
+                          status of your recycling request through your account
+                          dashboard at any time.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Account & Security FAQs -->
+                <div class="tab-pane fade" id="account">
+                  <div class="accordion" id="accordionAccount">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="account-heading-1">
+                        <button
+                          class="accordion-button"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#account-collapse-1"
+                          aria-expanded="true"
+                          aria-controls="account-collapse-1"
+                        >
+                          How do I create an account on Retech?
+                        </button>
+                      </h2>
+                      <div
+                        id="account-collapse-1"
+                        class="accordion-collapse collapse show"
+                        aria-labelledby="account-heading-1"
+                        data-bs-parent="#accordionAccount"
+                      >
+                        <div class="accordion-body">
+                          Creating an account is easy! Click on the "Sign Up"
+                          button in the top right corner of our website. Fill in
+                          your details including name, email, and password.
+                          Verify your email address through the link we send
+                          you, and your account will be ready to use. With an
+                          account, you can track multiple recycling requests and
+                          manage your payments more efficiently.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="account-heading-2">
+                        <button
+                          class="accordion-button collapsed"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#account-collapse-2"
+                          aria-expanded="false"
+                          aria-controls="account-collapse-2"
+                        >
+                          How is my personal information protected?
+                        </button>
+                      </h2>
+                      <div
+                        id="account-collapse-2"
+                        class="accordion-collapse collapse"
+                        aria-labelledby="account-heading-2"
+                        data-bs-parent="#accordionAccount"
+                      >
+                        <div class="accordion-body">
+                          We employ industry-standard encryption and security
+                          measures to protect your personal information. Our
+                          privacy policy outlines how your data is collected,
+                          used, and protected. We never sell your personal
+                          information to third parties. All payment processing
+                          is done through secure, PCI-compliant systems to
+                          ensure the safety of your financial information.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="account-heading-3">
+                        <button
+                          class="accordion-button collapsed"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#account-collapse-3"
+                          aria-expanded="false"
+                          aria-controls="account-collapse-3"
+                        >
+                          Can I track the status of my recycling request?
+                        </button>
+                      </h2>
+                      <div
+                        id="account-collapse-3"
+                        class="accordion-collapse collapse"
+                        aria-labelledby="account-heading-3"
+                        data-bs-parent="#accordionAccount"
+                      >
+                        <div class="accordion-body">
+                          Yes, you can track the status of your recycling
+                          request by logging into your account and visiting the
+                          "My Recycling Requests" section. There, you'll see
+                          real-time updates on the status of each request,
+                          including when we receive your device, inspection
+                          results, and payment processing. You'll also receive
+                          email notifications at key stages of the process.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3 mb-4 mb-md-0">
+            <h3><b>RETECH</b></h3>
+            <p>
+              Making the world cleaner one device at a time through responsible
+              recycling and sustainability.
+            </p>
+            <div class="social-icons">
+              <a href="#" aria-label="Facebook"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" aria-label="Twitter"
+                ><i class="fab fa-twitter"></i
+              ></a>
+              <a href="#" aria-label="Instagram"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" aria-label="LinkedIn"
+                ><i class="fab fa-linkedin-in"></i
+              ></a>
+            </div>
+          </div>
+          <div class="col-md-2 mb-4 mb-md-0">
+            <h5>Services</h5>
+            <ul class="list-unstyled">
+              <li>
+                <a href="recycle-phone.html"
+                  ><i class="fas fa-mobile-alt me-2"></i>Recycle Phones</a
+                >
+              </li>
+              <li>
+                <a href="recycle-laptop.html"
+                  ><i class="fas fa-laptop me-2"></i>Recycle Laptops</a
+                >
+              </li>
+              <li>
+                <a href="recycle-kitchen.html"
+                  ><i class="fas fa-blender me-2"></i>Recycle Kitchen
+                  Appliances</a
+                >
+              </li>
+              <li>
+                <a href="recycle-electronics.html"
+                  ><i class="fas fa-tv me-2"></i>Recycle Electronics</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-2 mb-4 mb-md-0">
+            <h5>Company</h5>
+            <ul class="list-unstyled">
+              <li>
+                <a href="about-us.html"
+                  ><i class="fas fa-info-circle me-2"></i>About Us</a
+                >
+              </li>
+              <li>
+                <a href="contact-us.html"
+                  ><i class="fas fa-phone me-2"></i>Contact Us</a
+                >
+              </li>
+              <li>
+                <a href="faq.html"
+                  ><i class="fas fa-question-circle me-2"></i>FAQ</a
+                >
+              </li>
+              <li>
+                <a href="#"
+                  ><i class="fas fa-shield-alt me-2"></i>Privacy Policy</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-5">
+            <div class="footer-newsletter">
+              <h5>Stay Connected</h5>
+              <p>Subscribe to our newsletter for updates and eco-tips</p>
+              <div class="input-group">
+                <input
+                  type="email"
+                  class="form-control"
+                  placeholder="Your email address"
+                  aria-label="Email"
+                />
+                <button class="btn btn-success" type="button">Subscribe</button>
+              </div>
+              <small class="text-muted mt-2 d-block"
+                >We respect your privacy and will never share your
+                information.</small
+              >
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>
+            ©
+            <script>
+              document.write(new Date().getFullYear());
+            </script>
+            RETECH. All rights reserved.
+            <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/faq.js"></script>
+  </body>
+</html>
