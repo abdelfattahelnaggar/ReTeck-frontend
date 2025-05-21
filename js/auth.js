@@ -34,6 +34,26 @@ document.addEventListener("DOMContentLoaded", function () {
   setupLogout();
 });
 
+// Function to toggle password visibility
+function togglePassword(inputId) {
+  const passwordInput = document.getElementById(inputId);
+  if (!passwordInput) return;
+
+  // Toggle the type attribute
+  const type =
+    passwordInput.getAttribute("type") === "password" ? "text" : "password";
+  passwordInput.setAttribute("type", type);
+
+  // Toggle the eye / eye slash icon
+  const eyeIcon = document.querySelector(
+    `[onclick="togglePassword('${inputId}')"] i`
+  );
+  if (eyeIcon) {
+    eyeIcon.classList.toggle("fa-eye");
+    eyeIcon.classList.toggle("fa-eye-slash");
+  }
+}
+
 // Check if user is already logged in and redirect if necessary
 function checkAuthRedirect() {
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
@@ -41,6 +61,7 @@ function checkAuthRedirect() {
   const currentPage = window.location.pathname.split("/").pop();
   const isAboutUsPage = currentPage === "about-us.html";
   const isAdminPage = currentPage === "admin-dashboard.html";
+  const isInventoryStorePage = currentPage === "inventory-store.html";
 
   // Don't redirect if on about-us page
   if (isAboutUsPage) {
@@ -52,6 +73,9 @@ function checkAuthRedirect() {
     if (currentPage === "login.html" || currentPage === "signup.html") {
       if (userRole === "admin") {
         window.location.href = "admin-dashboard.html";
+      } else if (userRole === "company") {
+        // Redirect company users to inventory store
+        window.location.href = "inventory-store.html";
       } else {
         window.location.href = "index.html";
       }
@@ -72,10 +96,22 @@ function checkAuthRedirect() {
     if (userRole !== "admin" && isAdminPage) {
       window.location.href = "index.html";
     }
+
+    // If non-company user tries to access inventory store, redirect to home
+    if (userRole !== "company" && isInventoryStorePage) {
+      window.location.href =
+        "index.html?access=denied&message=Only recycling companies can access the inventory store";
+    }
   } else {
     // If not logged in and trying to access admin page, redirect to login
     if (isAdminPage) {
       window.location.href = "login.html";
+    }
+
+    // If not logged in and trying to access inventory store, redirect to login
+    if (isInventoryStorePage) {
+      window.location.href =
+        "login.html?redirect=inventory-store.html&message=Please log in as a recycling company to access the inventory store";
     }
   }
 }
@@ -91,6 +127,10 @@ function setupLoginForm() {
       const email = document.getElementById("loginEmail").value.trim();
       const password = document.getElementById("loginPassword").value;
       const rememberMe = document.getElementById("rememberMe").checked;
+
+      // Get selected role if available
+      const selectedRole =
+        document.querySelector('input[name="userRole"]:checked')?.value || null;
 
       // Validate email format
       if (!isValidEmail(email)) {
@@ -112,9 +152,19 @@ function setupLoginForm() {
         return;
       }
 
+      // Validate selected role matches user role if role selection exists
+      if (selectedRole && userData.role !== selectedRole) {
+        showToast(
+          `This email is not registered as a ${selectedRole} account`,
+          "danger"
+        );
+        return;
+      }
+
       // Set login state
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("userEmail", email);
+      localStorage.setItem("userRole", userData.role);
 
       // If remember me is checked, set a longer expiration
       if (rememberMe) {
@@ -122,16 +172,14 @@ function setupLoginForm() {
         localStorage.setItem("rememberLogin", "true");
       }
 
-      // Check if admin user
+      // Redirect based on user role
       if (userData.role === "admin") {
-        localStorage.setItem("adminLoggedIn", "true");
-        localStorage.setItem("userRole", "admin");
-
         // Redirect to admin dashboard
-        window.location.href = "html/admin-dashboard.html";
+        window.location.href = "admin-dashboard.html";
+      } else if (userData.role === "company") {
+        // Redirect company users to inventory store
+        window.location.href = "inventory-store.html";
       } else {
-        localStorage.setItem("userRole", "customer");
-
         // Redirect to home page
         window.location.href = "index.html";
       }
@@ -157,10 +205,24 @@ function setupLoginForm() {
 // Setup signup form
 function setupSignupForm() {
   const signupForm = document.getElementById("signupForm");
+  console.log("Setting up signup form", signupForm);
 
   if (signupForm) {
     signupForm.addEventListener("submit", function (e) {
+      console.log("Signup form submitted!");
       e.preventDefault();
+
+      // Get button and spinner elements
+      const signupButton = document.getElementById("signupButton");
+      const signupSpinner = document.getElementById("signupSpinner");
+
+      console.log("Button elements:", signupButton, signupSpinner);
+
+      // Show spinner and disable button
+      if (signupButton && signupSpinner) {
+        signupButton.disabled = true;
+        signupSpinner.classList.remove("d-none");
+      }
 
       const email = document.getElementById("signupEmail").value.trim();
       const password = document.getElementById("signupPassword").value;
@@ -168,9 +230,26 @@ function setupSignupForm() {
       const firstName = document.getElementById("firstName")?.value.trim();
       const lastName = document.getElementById("lastName")?.value.trim();
 
+      console.log("Form values:", {
+        email,
+        password: "****",
+        confirmPassword: "****",
+        firstName,
+        lastName,
+      });
+
+      // Helper function to reset button state
+      const resetButtonState = () => {
+        if (signupButton && signupSpinner) {
+          signupButton.disabled = false;
+          signupSpinner.classList.add("d-none");
+        }
+      };
+
       // Validate email format
       if (!isValidEmail(email)) {
         showToast("Please enter a valid email address", "danger");
+        resetButtonState();
         return;
       }
 
@@ -178,12 +257,14 @@ function setupSignupForm() {
       const existingUser = getUserData(email);
       if (existingUser) {
         showToast("An account with this email already exists", "danger");
+        resetButtonState();
         return;
       }
 
       // Validate password
       if (password.length < 8) {
         showToast("Password must be at least 8 characters long", "danger");
+        resetButtonState();
         return;
       }
 
@@ -194,12 +275,14 @@ function setupSignupForm() {
           "Please use a stronger password: " + strengthResult.feedback,
           "danger"
         );
+        resetButtonState();
         return;
       }
 
       // Check if passwords match
       if (password !== confirmPassword) {
         showToast("Passwords do not match", "danger");
+        resetButtonState();
         return;
       }
 
@@ -214,6 +297,8 @@ function setupSignupForm() {
         window.location.href = "login.html";
       }, 2000);
     });
+  } else {
+    console.error("Signup form not found in DOM!");
   }
 }
 

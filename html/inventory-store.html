@@ -1,0 +1,1822 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Available inventory for recycling companies"
+    />
+    <title>RETECH - Recycling Inventory</title>
+    <link rel="icon" href="../images/recycle-symbol.png" type="image/x-icon" />
+
+    <!-- Resource hints for faster loading -->
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+
+    <!-- Preload critical resources -->
+    <link
+      rel="preload"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      as="style"
+    />
+    <link
+      rel="preload"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      as="style"
+    />
+    <link rel="preload" href="../css/main.css" as="style" />
+
+    <!--bootstrap-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!--fontawesome-->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../css/main.css" />
+
+    <style>
+      /* Inventory page specific styles */
+      :root {
+        --primary-color: #0d6efd;
+        --primary-dark: #0b5ed7;
+        --primary-light: #cfe2ff;
+        --success-color: #198754;
+        --warning-color: #ffc107;
+        --danger-color: #dc3545;
+        --light-bg: #f8f9fa;
+        --dark-bg: #212529;
+        --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        --hover-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        --border-radius: 0.5rem;
+        --eco-green: #2ecc71;
+        --eco-light: #e8f5e9;
+      }
+
+      /* Inventory header with animated gradient */
+      .inventory-header {
+        background: linear-gradient(
+          135deg,
+          var(--primary-dark),
+          #1a66ff,
+          var(--primary-color)
+        );
+        background-size: 200% 200%;
+        animation: gradientBG 15s ease infinite;
+        color: white;
+        padding: 2.5rem 0;
+        margin-bottom: 2.5rem;
+        border-radius: 0 0 var(--border-radius) var(--border-radius);
+        box-shadow: 0 4px 15px rgba(13, 110, 253, 0.2);
+      }
+
+      @keyframes gradientBG {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .inventory-header h1 {
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.5px;
+      }
+
+      .inventory-header .lead {
+        opacity: 0.9;
+        font-weight: 300;
+      }
+
+      .inventory-header .input-group {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: var(--border-radius);
+        overflow: hidden;
+      }
+
+      .inventory-header .input-group input {
+        border: none;
+        padding: 0.625rem 1rem;
+        font-size: 1rem;
+      }
+
+      .inventory-header .input-group .btn {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+        border: none;
+      }
+
+      /* Filter sidebar */
+      .filter-sidebar {
+        background-color: var(--light-bg);
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        box-shadow: var(--card-shadow);
+        position: sticky;
+        top: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .filter-sidebar:hover {
+        box-shadow: var(--hover-shadow);
+      }
+
+      .filter-heading {
+        font-weight: 700;
+        font-size: 1.2rem;
+        margin-bottom: 1.25rem;
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid var(--primary-light);
+      }
+
+      .filter-heading i {
+        margin-right: 0.625rem;
+      }
+
+      .filter-group {
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        padding-bottom: 1.25rem;
+      }
+
+      .filter-group:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-bottom: 0;
+      }
+
+      .filter-group-title {
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        color: #2c3e50;
+      }
+
+      .form-check-label {
+        cursor: pointer;
+        transition: color 0.2s ease;
+      }
+
+      .form-check-label:hover {
+        color: var(--primary-color);
+      }
+
+      .form-check-input:checked {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+      }
+
+      /* Inventory cards */
+      .inventory-card {
+        border: none;
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+        transition: all 0.3s ease;
+        height: 100%;
+        overflow: hidden;
+        background: white;
+        position: relative;
+        z-index: 1;
+      }
+
+      .inventory-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          135deg,
+          rgba(13, 110, 253, 0.05) 0%,
+          rgba(255, 255, 255, 0) 60%
+        );
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .inventory-card:hover::before {
+        opacity: 1;
+      }
+
+      .inventory-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+      }
+
+      .inventory-card .card-img-top {
+        height: 200px;
+        object-fit: contain;
+        background-color: #f8f9fa;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .inventory-card:hover .card-img-top {
+        transform: scale(1.05);
+        background-color: #f0f4f8;
+      }
+
+      .inventory-card .card-body {
+        padding: 1.5rem;
+        position: relative;
+      }
+
+      .inventory-card .card-title {
+        font-weight: 700;
+        font-size: 1.15rem;
+        margin-bottom: 0.25rem;
+        color: #2c3e50;
+        transition: color 0.2s ease;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .inventory-card:hover .card-title {
+        color: var(--primary-color);
+      }
+
+      .inventory-card .card-subtitle {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+      }
+
+      .inventory-card .card-subtitle::before {
+        content: "";
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--primary-light);
+        margin-right: 0.5rem;
+      }
+
+      .inventory-card .card-text {
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+        color: #495057;
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        height: 3em;
+      }
+
+      /* Inventory badge for device conditions and types */
+      .inventory-badge {
+        font-size: 0.7rem;
+        padding: 0.35rem 0.75rem;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+        display: inline-block;
+        border-radius: 50rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        text-transform: uppercase;
+        transition: all 0.2s ease;
+      }
+
+      .inventory-badge:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      /* Device type badge (secondary) enhancements */
+      .inventory-badge.bg-secondary {
+        background: linear-gradient(135deg, #6c757d, #495057);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .inventory-badge.bg-secondary::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.1) 0%,
+          rgba(255, 255, 255, 0) 50%
+        );
+      }
+
+      /* Quick view button */
+      .quick-view-btn {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background: rgba(255, 255, 255, 0.9);
+        color: var(--primary-color);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transform: translate(-10px, -10px);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: none;
+        z-index: 5;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .inventory-card:hover .quick-view-btn {
+        opacity: 1;
+        transform: translate(-15px, -15px);
+      }
+
+      .quick-view-btn:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translate(-15px, -15px) scale(1.05);
+      }
+
+      /* Status badges for inventory items */
+      .inventory-status {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        padding: 0.35rem 0.75rem;
+        border-radius: 50rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        z-index: 10;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        animation: fadeIn 0.5s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .inventory-status.available {
+        background-color: rgba(46, 204, 113, 0.15);
+        color: var(--eco-green);
+        border: 1px solid rgba(46, 204, 113, 0.3);
+      }
+
+      .inventory-status.pending {
+        background-color: rgba(255, 193, 7, 0.15);
+        color: #ffc107;
+        border: 1px solid rgba(255, 193, 7, 0.3);
+      }
+
+      /* Recycling source badge */
+      .recycling-source {
+        position: absolute;
+        top: 48px;
+        right: 12px;
+        padding: 0.35rem 0.75rem;
+        border-radius: 50rem;
+        font-size: 0.7rem;
+        font-weight: 600;
+        z-index: 10;
+        letter-spacing: 0.5px;
+        background-color: rgba(13, 110, 253, 0.1);
+        color: var(--primary-color);
+        border: 1px solid rgba(13, 110, 253, 0.2);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        animation: fadeIn 0.5s ease-out 0.2s;
+        animation-fill-mode: backwards;
+      }
+
+      /* Environmental impact indicator */
+      .eco-impact {
+        position: absolute;
+        bottom: 15px;
+        right: 15px;
+        z-index: 5;
+        color: var(--eco-green);
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        opacity: 0.9;
+      }
+
+      .eco-impact .icon {
+        background-color: var(--eco-light);
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Inventory price styling */
+      .inventory-price {
+        font-weight: 700;
+        font-size: 1.35rem;
+        color: var(--primary-color);
+        margin-bottom: 1.25rem;
+        position: relative;
+        display: inline-block;
+      }
+
+      .inventory-price::after {
+        content: "";
+        position: absolute;
+        bottom: -6px;
+        left: 0;
+        width: 40px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary-color), transparent);
+        border-radius: 3px;
+      }
+
+      /* Add to cart button */
+      .inventory-card .btn-primary {
+        border-radius: 50rem;
+        padding: 0.6rem 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        background: linear-gradient(
+          90deg,
+          var(--primary-color),
+          var(--primary-dark)
+        );
+        border: none;
+        box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+      }
+
+      .inventory-card .btn-primary::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.7s ease;
+        z-index: -1;
+      }
+
+      .inventory-card .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(13, 110, 253, 0.3);
+      }
+
+      .inventory-card .btn-primary:hover::before {
+        left: 100%;
+      }
+
+      .inventory-card .btn-secondary {
+        border-radius: 50rem;
+        padding: 0.6rem 1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+      }
+
+      /* Stock badge styles */
+      .stock-badge {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        background: linear-gradient(
+          135deg,
+          rgba(13, 110, 253, 0.9),
+          rgba(9, 84, 194, 0.9)
+        );
+        color: white;
+        padding: 0.4rem 0.85rem;
+        border-radius: 50rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        z-index: 10;
+        letter-spacing: 0.5px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+        animation: slideIn 0.5s ease-out;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .stock-badge::before {
+        content: "";
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background-color: white;
+        border-radius: 50%;
+        margin-right: 2px;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          opacity: 0.6;
+          transform: scale(0.9);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.2);
+        }
+        100% {
+          opacity: 0.6;
+          transform: scale(0.9);
+        }
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateX(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .stock-badge.low {
+        background: linear-gradient(
+          135deg,
+          rgba(220, 53, 69, 0.9),
+          rgba(178, 34, 48, 0.9)
+        );
+      }
+
+      .stock-badge.low::before {
+        animation: pulseFast 1s infinite;
+      }
+
+      @keyframes pulseFast {
+        0% {
+          opacity: 0.6;
+          transform: scale(0.9);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.2);
+        }
+        100% {
+          opacity: 0.6;
+          transform: scale(0.9);
+        }
+      }
+
+      /* Badge styles for device conditions */
+      .badge-new {
+        background: linear-gradient(135deg, var(--success-color), #20c997);
+        color: white;
+      }
+
+      .badge-like-new {
+        background: linear-gradient(135deg, #20c997, #0dcaf0);
+        color: white;
+      }
+
+      .badge-good {
+        background: linear-gradient(135deg, #0dcaf0, #0d6efd);
+        color: white;
+      }
+
+      .badge-fair {
+        background: linear-gradient(135deg, var(--warning-color), #fd7e14);
+        color: #212529;
+      }
+
+      .badge-poor {
+        background: linear-gradient(135deg, #fd7e14, #dc3545);
+        color: white;
+      }
+
+      /* Empty search result styling */
+      .empty-result {
+        text-align: center;
+        padding: 4rem 2rem;
+        background-color: var(--light-bg);
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+      }
+
+      .empty-result i {
+        font-size: 3.5rem;
+        color: #6c757d;
+        margin-bottom: 1.5rem;
+        opacity: 0.7;
+      }
+
+      .empty-result h3 {
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #2c3e50;
+      }
+
+      .empty-result p {
+        font-size: 1.1rem;
+        color: #6c757d;
+        max-width: 500px;
+        margin: 0 auto 1.5rem;
+      }
+
+      .empty-result .btn {
+        border-radius: 50rem;
+        padding: 0.5rem 1.5rem;
+        font-weight: 600;
+        box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
+      }
+
+      /* Filter buttons */
+      #applyFilters,
+      #resetFilters {
+        border-radius: 50rem;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+      }
+
+      #applyFilters {
+        background: linear-gradient(
+          90deg,
+          var(--primary-color),
+          var(--primary-dark)
+        );
+        border: none;
+        box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
+        transition: all 0.3s ease;
+      }
+
+      #applyFilters:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(13, 110, 253, 0.3);
+      }
+
+      /* Result count and sort section */
+      .inventory-controls {
+        background-color: white;
+        border-radius: var(--border-radius);
+        padding: 1rem 1.5rem;
+        box-shadow: var(--card-shadow);
+        margin-bottom: 2rem;
+      }
+
+      .inventory-controls h5 {
+        margin-bottom: 0;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+
+      #resultCount {
+        font-weight: 700;
+        color: var(--primary-color);
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 767.98px) {
+        .filter-sidebar {
+          position: static;
+          margin-bottom: 2rem;
+        }
+
+        .inventory-header {
+          padding: 2rem 0;
+        }
+
+        .inventory-header .input-group {
+          margin-top: 1rem;
+        }
+
+        .inventory-card .card-img-top {
+          height: 180px;
+        }
+
+        .inventory-controls {
+          flex-direction: column;
+          gap: 1rem;
+        }
+      }
+
+      /* Enhanced navbar styling */
+      .navbar {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+      }
+
+      .navbar .btn {
+        border-radius: 50rem;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .navbar .btn-primary {
+        background: linear-gradient(
+          90deg,
+          var(--primary-color),
+          var(--primary-dark)
+        );
+        border: none;
+        box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
+      }
+
+      .navbar .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(13, 110, 253, 0.3);
+      }
+
+      .navbar .btn-outline-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
+      }
+
+      .navbar-brand {
+        font-size: 1.5rem;
+        letter-spacing: -0.5px;
+      }
+
+      .user-dropdown-header {
+        padding: 1rem;
+        background: linear-gradient(135deg, var(--primary-light), #e6f0ff);
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+      }
+
+      .dropdown-menu {
+        border-radius: var(--border-radius);
+        overflow: hidden;
+      }
+
+      .dropdown-item {
+        padding: 0.75rem 1rem;
+        transition: all 0.2s ease;
+      }
+
+      .dropdown-item:hover {
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+      }
+
+      @media (max-width: 767.98px) {
+        .navbar .gap-3 {
+          gap: 0.5rem !important;
+        }
+
+        .navbar .btn {
+          padding: 0.4rem 0.75rem;
+          font-size: 0.9rem;
+        }
+
+        #userName {
+          display: none;
+        }
+      }
+
+      /* Sort dropdown styling */
+      .sort-dropdown .dropdown-toggle {
+        background-color: white;
+        border: 1px solid #e9ecef;
+        color: #495057;
+        border-radius: 50rem;
+        padding: 0.5rem 1rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      }
+
+      .sort-dropdown .dropdown-toggle:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+      }
+
+      .sort-dropdown .dropdown-menu {
+        border-radius: var(--border-radius);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        border: none;
+        padding: 0.5rem;
+      }
+
+      .sort-dropdown .dropdown-item {
+        border-radius: calc(var(--border-radius) - 0.25rem);
+        padding: 0.5rem 1rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .sort-dropdown .dropdown-item:hover {
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+      }
+
+      /* Pagination styling */
+      .pagination {
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        border-radius: 50rem;
+        overflow: hidden;
+      }
+
+      .pagination .page-item:first-child .page-link {
+        border-top-left-radius: 50rem;
+        border-bottom-left-radius: 50rem;
+      }
+
+      .pagination .page-item:last-child .page-link {
+        border-top-right-radius: 50rem;
+        border-bottom-right-radius: 50rem;
+      }
+
+      .pagination .page-item.active .page-link {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        font-weight: 600;
+        box-shadow: 0 2px 5px rgba(13, 110, 253, 0.2);
+      }
+
+      .pagination .page-link {
+        color: var(--primary-color);
+        border: none;
+        padding: 0.5rem 1rem;
+      }
+
+      .pagination .page-link:focus {
+        box-shadow: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Main Navigation -->
+    <nav class="navbar navbar-expand-lg bg-white py-3 shadow-sm sticky-top">
+      <div class="container">
+        <a
+          class="navbar-brand fw-bold fs-4"
+          href="http://127.0.0.1:5501/html/inventory-store.html"
+        >
+          <span class="text-primary">♻️ RETECH</span>
+        </a>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarContent"
+          aria-controls="navbarContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarContent">
+          <div class="ms-auto d-flex align-items-center gap-3">
+            <a
+              href="cart.html"
+              class="btn btn-outline-primary position-relative"
+            >
+              <i class="fas fa-shopping-cart"></i>
+              <span
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+              >
+                3
+                <span class="visually-hidden">items in cart</span>
+              </span>
+            </a>
+
+            <a href="orders.html" class="btn btn-outline-primary">
+              <i class="fas fa-clipboard-list me-1"></i>
+              <span>Orders</span>
+            </a>
+
+            <!-- User profile dropdown -->
+            <div id="userProfile">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  id="userDropdown"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <span class="user-avatar-small me-1">
+                    <i class="fas fa-building"></i>
+                  </span>
+                  <span id="userName">Company Name</span>
+                </button>
+                <ul
+                  class="dropdown-menu dropdown-menu-end shadow border-0"
+                  aria-labelledby="userDropdown"
+                >
+                  <div class="user-dropdown-header">
+                    <div class="user-dropdown-avatar">
+                      <i class="fas fa-building fa-2x"></i>
+                    </div>
+                    <div class="user-dropdown-info">
+                      <div class="name" id="dropdownUserName">Company Name</div>
+                      <div class="email" id="dropdownUserEmail">
+                        company@recycling.com
+                      </div>
+                    </div>
+                  </div>
+                  <li>
+                    <a class="dropdown-item" href="profile.html"
+                      ><i class="fas fa-user me-2"></i>Profile</a
+                    >
+                  </li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li>
+                    <a class="dropdown-item" href="#" onclick="logout()"
+                      ><i class="fas fa-sign-out-alt me-2"></i>Logout</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="inventory-header">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <h1>Recycling Inventory</h1>
+            <p class="lead mb-0">
+              Browse collected devices available for processing
+            </p>
+          </div>
+          <div class="col-md-6">
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Search recycled devices..."
+                id="inventorySearch"
+              />
+              <button
+                class="btn btn-light"
+                type="button"
+                id="searchButton"
+                title="Search inventory"
+              >
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mb-5">
+      <div class="row">
+        <!-- Filters Sidebar -->
+        <div class="col-md-3 mb-4 mb-md-0">
+          <div class="filter-sidebar">
+            <div class="filter-heading">
+              <i class="fas fa-filter"></i>
+              <span>Filters</span>
+            </div>
+
+            <div class="filter-group">
+              <div class="filter-group-title">Device Type</div>
+              <div class="form-check mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="smartphones"
+                  id="filterSmartphones"
+                  checked
+                />
+                <label class="form-check-label" for="filterSmartphones">
+                  Smartphones
+                </label>
+              </div>
+              <div class="form-check mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="laptops"
+                  id="filterLaptops"
+                  checked
+                />
+                <label class="form-check-label" for="filterLaptops">
+                  Laptops
+                </label>
+              </div>
+              <div class="form-check mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="tablets"
+                  id="filterTablets"
+                  checked
+                />
+                <label class="form-check-label" for="filterTablets">
+                  Tablets
+                </label>
+              </div>
+              <div class="form-check mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="desktops"
+                  id="filterDesktops"
+                />
+                <label class="form-check-label" for="filterDesktops">
+                  Desktops
+                </label>
+              </div>
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="accessories"
+                  id="filterAccessories"
+                />
+                <label class="form-check-label" for="filterAccessories">
+                  Accessories
+                </label>
+              </div>
+            </div>
+
+            <div class="filter-group">
+              <div class="filter-group-title">Condition</div>
+              <div class="form-check mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="new"
+                  id="filterNew"
+                  checked
+                />
+                <label class="form-check-label" for="filterNew"> New </label>
+              </div>
+              <div class="form-check mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="likeNew"
+                  id="filterLikeNew"
+                  checked
+                />
+                <label class="form-check-label" for="filterLikeNew">
+                  Like New
+                </label>
+              </div>
+              <div class="form-check mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="good"
+                  id="filterGood"
+                  checked
+                />
+                <label class="form-check-label" for="filterGood"> Good </label>
+              </div>
+              <div class="form-check mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="fair"
+                  id="filterFair"
+                />
+                <label class="form-check-label" for="filterFair"> Fair </label>
+              </div>
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="poor"
+                  id="filterPoor"
+                />
+                <label class="form-check-label" for="filterPoor"> Poor </label>
+              </div>
+            </div>
+
+            <div class="filter-group">
+              <div class="filter-group-title">Brand</div>
+              <div class="form-check mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="apple"
+                  id="filterApple"
+                  checked
+                />
+                <label class="form-check-label" for="filterApple">
+                  Apple
+                </label>
+              </div>
+              <div class="form-check mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="samsung"
+                  id="filterSamsung"
+                  checked
+                />
+                <label class="form-check-label" for="filterSamsung">
+                  Samsung
+                </label>
+              </div>
+              <div class="form-check mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="dell"
+                  id="filterDell"
+                />
+                <label class="form-check-label" for="filterDell"> Dell </label>
+              </div>
+              <div class="form-check mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="hp"
+                  id="filterHp"
+                />
+                <label class="form-check-label" for="filterHp"> HP </label>
+              </div>
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="other"
+                  id="filterOther"
+                />
+                <label class="form-check-label" for="filterOther">
+                  Other
+                </label>
+              </div>
+            </div>
+
+            <div class="filter-group">
+              <div class="filter-group-title">Recycling Source</div>
+              <div class="form-check mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="tradein"
+                  id="filterTradeIn"
+                  checked
+                />
+                <label class="form-check-label" for="filterTradeIn">
+                  <i class="fas fa-exchange-alt me-1 text-muted"></i> Customer
+                  Trade-in
+                </label>
+              </div>
+              <div class="form-check mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="ewaste"
+                  id="filterEwaste"
+                  checked
+                />
+                <label class="form-check-label" for="filterEwaste">
+                  <i class="fas fa-trash-alt me-1 text-muted"></i> E-waste
+                  Collection
+                </label>
+              </div>
+              <div class="form-check mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="corporate"
+                  id="filterCorporate"
+                  checked
+                />
+                <label class="form-check-label" for="filterCorporate">
+                  <i class="fas fa-building me-1 text-muted"></i> Corporate
+                  Recycling
+                </label>
+              </div>
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="dropoff"
+                  id="filterDropoff"
+                  checked
+                />
+                <label class="form-check-label" for="filterDropoff">
+                  <i class="fas fa-map-marker-alt me-1 text-muted"></i> Drop-off
+                  Location
+                </label>
+              </div>
+            </div>
+
+            <div class="filter-group">
+              <div class="filter-group-title">Price Range</div>
+              <div class="mb-3">
+                <label
+                  for="priceRange"
+                  class="form-label d-flex justify-content-between"
+                >
+                  <span>$0</span>
+                  <span id="priceRangeValue">$500</span>
+                </label>
+                <input
+                  type="range"
+                  class="form-range"
+                  min="0"
+                  max="1000"
+                  step="50"
+                  id="priceRange"
+                  value="500"
+                />
+              </div>
+            </div>
+
+            <div class="mt-3">
+              <button class="btn btn-primary w-100" id="applyFilters">
+                <i class="fas fa-filter me-2"></i>Apply Filters
+              </button>
+              <button
+                class="btn btn-outline-secondary w-100 mt-2"
+                id="resetFilters"
+              >
+                <i class="fas fa-undo me-2"></i>Reset Filters
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inventory Items -->
+        <div class="col-md-9">
+          <div
+            class="d-flex justify-content-between align-items-center mb-4 inventory-controls"
+          >
+            <div>
+              <h5 class="mb-0">
+                Showing <span id="resultCount">6</span> recycled devices
+              </h5>
+            </div>
+            <div class="dropdown sort-dropdown">
+              <button
+                class="btn dropdown-toggle"
+                type="button"
+                id="sortDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i class="fas fa-sort me-1"></i> Sort by:
+                <span id="currentSort">Newest</span>
+              </button>
+              <ul
+                class="dropdown-menu dropdown-menu-end"
+                aria-labelledby="sortDropdown"
+              >
+                <li>
+                  <a class="dropdown-item" href="#" data-sort="newest"
+                    >Recently Added</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#" data-sort="oldest"
+                    >Oldest First</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#" data-sort="price-asc"
+                    >Price: Low to High</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#" data-sort="price-desc"
+                    >Price: High to Low</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#" data-sort="condition"
+                    >Best Condition</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#" data-sort="value"
+                    >Recycling Value</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="row g-4 mb-4" id="inventoryItems">
+            <!-- Item 1 -->
+            <div class="col-md-6 col-lg-4">
+              <div class="card inventory-card position-relative">
+                <span class="inventory-status available"
+                  >Ready for Processing</span
+                >
+                <span class="recycling-source">Customer Trade-in</span>
+                <span class="stock-badge">In Stock: 5</span>
+                <img
+                  src="images/product-test.jpg"
+                  class="card-img-top"
+                  alt="iPhone 13"
+                />
+                <button class="quick-view-btn" title="View device details">
+                  <i class="fas fa-search"></i>
+                </button>
+                <div class="eco-impact">
+                  <span class="icon"><i class="fas fa-leaf fa-xs"></i></span>
+                  <span>High reuse value</span>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">iPhone 13</h5>
+                  <h6 class="card-subtitle">Apple</h6>
+                  <p class="card-text">128GB, Blue, Unlocked</p>
+                  <div class="mb-3">
+                    <span class="badge inventory-badge badge-like-new"
+                      >Like New</span
+                    >
+                    <span class="badge inventory-badge bg-secondary"
+                      >Smartphone</span
+                    >
+                  </div>
+                  <div class="inventory-price">$450.00</div>
+                  <a href="#" class="btn btn-primary w-100">
+                    <i class="fas fa-recycle me-2"></i>Add to Processing
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="col-md-6 col-lg-4">
+              <div class="card inventory-card position-relative">
+                <span class="inventory-status available"
+                  >Ready for Processing</span
+                >
+                <span class="recycling-source">E-waste Collection</span>
+                <span class="stock-badge">In Stock: 3</span>
+                <img
+                  src="/images/product-test.jpg"
+                  class="card-img-top"
+                  alt="Samsung Galaxy S21"
+                />
+                <button class="quick-view-btn" title="View device details">
+                  <i class="fas fa-search"></i>
+                </button>
+                <div class="eco-impact">
+                  <span class="icon"><i class="fas fa-leaf fa-xs"></i></span>
+                  <span>High reuse value</span>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">Samsung Galaxy S21</h5>
+                  <h6 class="card-subtitle">Samsung</h6>
+                  <p class="card-text">256GB, Phantom Black</p>
+                  <div class="mb-3">
+                    <span class="badge inventory-badge badge-good">Good</span>
+                    <span class="badge inventory-badge bg-secondary"
+                      >Smartphone</span
+                    >
+                  </div>
+                  <div class="inventory-price">$380.00</div>
+                  <a href="#" class="btn btn-primary w-100">
+                    <i class="fas fa-recycle me-2"></i>Add to Processing
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="col-md-6 col-lg-4">
+              <div class="card inventory-card position-relative">
+                <span class="inventory-status available"
+                  >Ready for Processing</span
+                >
+                <span class="recycling-source">Corporate Recycling</span>
+                <span class="stock-badge low">In Stock: 1</span>
+                <img
+                  src="../images/product-test.jpg"
+                  class="card-img-top"
+                  alt="MacBook Pro"
+                />
+                <button class="quick-view-btn" title="View device details">
+                  <i class="fas fa-search"></i>
+                </button>
+                <div class="eco-impact">
+                  <span class="icon"><i class="fas fa-leaf fa-xs"></i></span>
+                  <span>High reuse value</span>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">MacBook Pro 13"</h5>
+                  <h6 class="card-subtitle">Apple</h6>
+                  <p class="card-text">M1, 8GB RAM, 256GB SSD</p>
+                  <div class="mb-3">
+                    <span class="badge inventory-badge badge-good">Good</span>
+                    <span class="badge inventory-badge bg-secondary"
+                      >Laptop</span
+                    >
+                  </div>
+                  <div class="inventory-price">$750.00</div>
+                  <a href="#" class="btn btn-primary w-100">
+                    <i class="fas fa-recycle me-2"></i>Add to Processing
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Item 4 -->
+            <div class="col-md-6 col-lg-4">
+              <div class="card inventory-card position-relative">
+                <span class="inventory-status available"
+                  >Ready for Processing</span
+                >
+                <span class="recycling-source">Customer Trade-in</span>
+                <span class="stock-badge">In Stock: 8</span>
+                <img
+                  src="../images/product-test.jpg"
+                  class="card-img-top"
+                  alt="iPad Air"
+                />
+                <button class="quick-view-btn" title="View device details">
+                  <i class="fas fa-search"></i>
+                </button>
+                <div class="eco-impact">
+                  <span class="icon"><i class="fas fa-leaf fa-xs"></i></span>
+                  <span>High reuse value</span>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">iPad Air (4th Gen)</h5>
+                  <h6 class="card-subtitle">Apple</h6>
+                  <p class="card-text">64GB, Space Gray, Wi-Fi</p>
+                  <div class="mb-3">
+                    <span class="badge inventory-badge badge-new">New</span>
+                    <span class="badge inventory-badge bg-secondary"
+                      >Tablet</span
+                    >
+                  </div>
+                  <div class="inventory-price">$480.00</div>
+                  <a href="#" class="btn btn-primary w-100">
+                    <i class="fas fa-recycle me-2"></i>Add to Processing
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Item 5 -->
+            <div class="col-md-6 col-lg-4">
+              <div class="card inventory-card position-relative">
+                <span class="inventory-status available"
+                  >Ready for Processing</span
+                >
+                <span class="recycling-source">E-waste Collection</span>
+                <span class="stock-badge">In Stock: 4</span>
+                <img
+                  src="../images/product-test.jpg"
+                  class="card-img-top"
+                  alt="Samsung Galaxy Tab S7"
+                />
+                <button class="quick-view-btn" title="View device details">
+                  <i class="fas fa-search"></i>
+                </button>
+                <div class="eco-impact">
+                  <span class="icon"><i class="fas fa-leaf fa-xs"></i></span>
+                  <span>High reuse value</span>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">Galaxy Tab S7</h5>
+                  <h6 class="card-subtitle">Samsung</h6>
+                  <p class="card-text">128GB, Mystic Silver, Wi-Fi</p>
+                  <div class="mb-3">
+                    <span class="badge inventory-badge badge-like-new"
+                      >Like New</span
+                    >
+                    <span class="badge inventory-badge bg-secondary"
+                      >Tablet</span
+                    >
+                  </div>
+                  <div class="inventory-price">$420.00</div>
+                  <a href="#" class="btn btn-primary w-100">
+                    <i class="fas fa-recycle me-2"></i>Add to Processing
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Item 6 -->
+            <div class="col-md-6 col-lg-4">
+              <div class="card inventory-card position-relative">
+                <span class="inventory-status pending">Being Inspected</span>
+                <span class="recycling-source">Drop-off Location</span>
+                <span class="stock-badge">In Stock: 2</span>
+                <img
+                  src="../images/product-test.jpg"
+                  class="card-img-top"
+                  alt="iPhone 12 Mini"
+                />
+                <button class="quick-view-btn" title="View device details">
+                  <i class="fas fa-search"></i>
+                </button>
+                <div class="eco-impact">
+                  <span class="icon"><i class="fas fa-leaf fa-xs"></i></span>
+                  <span>High reuse value</span>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">iPhone 12 Mini</h5>
+                  <h6 class="card-subtitle">Apple</h6>
+                  <p class="card-text">64GB, Product RED, Unlocked</p>
+                  <div class="mb-3">
+                    <span class="badge inventory-badge badge-good">Good</span>
+                    <span class="badge inventory-badge bg-secondary"
+                      >Smartphone</span
+                    >
+                  </div>
+                  <div class="inventory-price">$350.00</div>
+                  <a href="#" class="btn btn-secondary w-100 disabled">
+                    <i class="fas fa-clock me-2"></i>Coming Soon
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <nav aria-label="Inventory pagination" class="mt-5">
+            <ul class="pagination justify-content-center">
+              <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
+                  >Previous</a
+                >
+              </li>
+              <li class="page-item active">
+                <a class="page-link" href="#">1</a>
+              </li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer mt-auto py-4 bg-dark text-white">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3 mb-4 mb-md-0">
+            <h3><b>RETECH</b></h3>
+            <p>
+              Making the world cleaner one device at a time through responsible
+              recycling and sustainability.
+            </p>
+            <div class="social-icons">
+              <a href="#" aria-label="Facebook"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" aria-label="Twitter"
+                ><i class="fab fa-twitter"></i
+              ></a>
+              <a href="#" aria-label="Instagram"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" aria-label="LinkedIn"
+                ><i class="fab fa-linkedin-in"></i
+              ></a>
+            </div>
+          </div>
+          <div class="col-md-2 mb-4 mb-md-0">
+            <h5>Services</h5>
+            <ul class="list-unstyled">
+              <li>
+                <a href="recycle-phone.html"
+                  ><i class="fas fa-mobile-alt me-2"></i>Recycle Phones</a
+                >
+              </li>
+              <li>
+                <a href="recycle-laptop.html"
+                  ><i class="fas fa-laptop me-2"></i>Recycle Laptops</a
+                >
+              </li>
+              <li>
+                <a href="recycle-kitchen.html"
+                  ><i class="fas fa-blender me-2"></i>Recycle Kitchen
+                  Appliances</a
+                >
+              </li>
+              <li>
+                <a href="recycle-electronics.html"
+                  ><i class="fas fa-tv me-2"></i>Recycle Electronics</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-2 mb-4 mb-md-0">
+            <h5>Company</h5>
+            <ul class="list-unstyled">
+              <li>
+                <a href="about-us.html"
+                  ><i class="fas fa-info-circle me-2"></i>About Us</a
+                >
+              </li>
+              <li>
+                <a href="contact-us.html"
+                  ><i class="fas fa-envelope me-2"></i>Contact Us</a
+                >
+              </li>
+              <li>
+                <a href="faq.html"
+                  ><i class="fas fa-question-circle me-2"></i>FAQ</a
+                >
+              </li>
+              <li>
+                <a href="#"
+                  ><i class="fas fa-shield-alt me-2"></i>Privacy Policy</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-5">
+            <div class="footer-newsletter">
+              <h5>Stay Connected</h5>
+              <p>Subscribe to our newsletter for updates and eco-tips</p>
+              <div class="input-group">
+                <input
+                  type="email"
+                  class="form-control"
+                  placeholder="Your email address"
+                  aria-label="Email"
+                />
+                <button class="btn btn-success" type="button">Subscribe</button>
+              </div>
+              <small class="text-muted mt-2 d-block"
+                >We respect your privacy and will never share your
+                information.</small
+              >
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>
+            ©
+            <script>
+              document.write(new Date().getFullYear());
+            </script>
+            RETECH. All rights reserved. | <a href="#">Terms of Service</a> |
+            <a href="#">Privacy Policy</a>
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="../js/main.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/inventory.js"></script>
+
+    <script>
+      // Initialize price range display
+      const priceRange = document.getElementById("priceRange");
+      const priceRangeValue = document.getElementById("priceRangeValue");
+
+      priceRange.addEventListener("input", function () {
+        priceRangeValue.textContent = "$" + this.value;
+      });
+
+      // Sort dropdown functionality
+      const sortLinks = document.querySelectorAll("[data-sort]");
+      const currentSort = document.getElementById("currentSort");
+
+      sortLinks.forEach((link) => {
+        link.addEventListener("click", function (e) {
+          e.preventDefault();
+          const sortValue = this.dataset.sort;
+          currentSort.textContent = this.textContent;
+
+          // Here you would implement the actual sorting logic
+          console.log("Sorting by:", sortValue);
+
+          // For demo purposes, we'll just log the action
+          // In a real implementation, you would re-order the items
+        });
+      });
+
+      // Filter functionality
+      document
+        .getElementById("applyFilters")
+        .addEventListener("click", function () {
+          // Here you would implement the actual filtering logic
+          console.log("Applying filters");
+
+          // For demo purposes, we'll just log the selected filters
+          const deviceTypes = Array.from(
+            document.querySelectorAll('[id^="filter"][id$="s"]:checked')
+          ).map((checkbox) => checkbox.value);
+
+          const conditions = Array.from(
+            document.querySelectorAll(
+              '[id^="filter"][id$="w"]:checked, [id^="filter"][id$="d"]:checked, [id^="filter"][id$="r"]:checked'
+            )
+          ).map((checkbox) => checkbox.value);
+
+          const brands = Array.from(
+            document.querySelectorAll(
+              '[id^="filter"][id$="e"]:checked, [id^="filter"][id$="g"]:checked, [id^="filter"][id$="l"]:checked, [id^="filter"][id$="p"]:checked, [id^="filter"][id$="r"]:checked'
+            )
+          ).map((checkbox) => checkbox.value);
+
+          const priceMax = priceRange.value;
+
+          console.log("Device Types:", deviceTypes);
+          console.log("Conditions:", conditions);
+          console.log("Brands:", brands);
+          console.log("Max Price:", priceMax);
+        });
+
+      // Reset filters
+      document
+        .getElementById("resetFilters")
+        .addEventListener("click", function () {
+          // Reset all checkboxes to their default values
+          document.querySelectorAll(".form-check-input").forEach((checkbox) => {
+            if (
+              checkbox.id === "filterSmartphones" ||
+              checkbox.id === "filterLaptops" ||
+              checkbox.id === "filterTablets" ||
+              checkbox.id === "filterNew" ||
+              checkbox.id === "filterLikeNew" ||
+              checkbox.id === "filterGood" ||
+              checkbox.id === "filterApple" ||
+              checkbox.id === "filterSamsung"
+            ) {
+              checkbox.checked = true;
+            } else {
+              checkbox.checked = false;
+            }
+          });
+
+          // Reset price range
+          priceRange.value = 500;
+          priceRangeValue.textContent = "$500";
+
+          console.log("Filters reset");
+        });
+
+      // Search functionality
+      document
+        .getElementById("searchButton")
+        .addEventListener("click", function () {
+          const searchQuery = document
+            .getElementById("inventorySearch")
+            .value.trim();
+          if (searchQuery) {
+            console.log("Searching for:", searchQuery);
+            // Implement actual search logic here
+          }
+        });
+
+      // Allow search on Enter key
+      document
+        .getElementById("inventorySearch")
+        .addEventListener("keyup", function (e) {
+          if (e.key === "Enter") {
+            document.getElementById("searchButton").click();
+          }
+        });
+    </script>
+  </body>
+</html>

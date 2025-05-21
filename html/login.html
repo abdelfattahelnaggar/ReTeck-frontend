@@ -44,6 +44,285 @@
 
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/login.css" />
+
+    <style>
+      /* Enhanced Role selection styles - Smaller size */
+      .role-selection-container {
+        margin-bottom: 1rem;
+        padding-top: 0;
+      }
+
+      .role-selection-header {
+        text-align: center;
+        margin-bottom: 0.75rem;
+      }
+
+      .role-selection-header h5 {
+        font-weight: 600;
+        color: #2e8b57;
+        margin-bottom: 0.25rem;
+        font-size: 1rem;
+      }
+
+      .role-selection-header p {
+        color: #6c757d;
+        font-size: 0.8rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .role-btn {
+        height: 100%;
+        border-radius: 12px;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        overflow: hidden;
+        background: linear-gradient(135deg, #f8f9fa, #ffffff);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        padding: 0.75rem 0.5rem;
+      }
+
+      /* Role button hover effects */
+      .role-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        border-color: #dee2e6;
+      }
+
+      .role-btn .icon-container {
+        width: 40px;
+        height: 40px;
+        margin: 0 auto 8px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+
+      .role-btn i {
+        transition: all 0.3s ease;
+        font-size: 1.2rem;
+      }
+
+      .role-btn:hover i {
+        transform: scale(1.1);
+      }
+
+      .role-btn .role-title {
+        font-weight: 600;
+        font-size: 0.85rem;
+        margin-bottom: 4px;
+      }
+
+      .role-btn .role-description {
+        font-size: 0.7rem;
+        line-height: 1.2;
+      }
+
+      .btn-check:checked + .role-btn {
+        color: white;
+        box-shadow: 0 4px 10px rgba(46, 139, 87, 0.3);
+        transform: translateY(-2px);
+      }
+
+      .btn-check:checked + .role-btn .icon-container {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .btn-check:checked + .role-btn i {
+        color: white;
+      }
+
+      .btn-check:checked + .role-btn .role-title {
+        color: white;
+      }
+
+      .btn-check:checked + .role-btn .role-description {
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      /* Role-specific styles - smaller size */
+      #roleCustomer + .role-btn .icon-container {
+        background-color: rgba(60, 179, 113, 0.1);
+      }
+
+      #roleCustomer + .role-btn i {
+        color: #3cb371;
+      }
+
+      #roleCustomer:checked + .role-btn {
+        background: linear-gradient(135deg, #2e8b57, #3cb371);
+        border-color: #2e8b57;
+        box-shadow: 0 4px 10px rgba(46, 139, 87, 0.25);
+        transform: translateY(-2px);
+      }
+
+      #roleCompany + .role-btn .icon-container {
+        background-color: rgba(13, 110, 253, 0.1);
+      }
+
+      #roleCompany + .role-btn i {
+        color: #0d6efd;
+      }
+
+      #roleCompany:checked + .role-btn {
+        background: linear-gradient(135deg, #0b5ed7, #0d6efd);
+        border-color: #0b5ed7;
+        box-shadow: 0 4px 10px rgba(13, 110, 253, 0.25);
+        transform: translateY(-2px);
+      }
+
+      #roleAdmin + .role-btn .icon-container {
+        background-color: rgba(220, 53, 69, 0.1);
+      }
+
+      #roleAdmin + .role-btn i {
+        color: #dc3545;
+      }
+
+      #roleAdmin:checked + .role-btn {
+        background: linear-gradient(135deg, #b02a37, #dc3545);
+        border-color: #b02a37;
+        box-shadow: 0 4px 10px rgba(220, 53, 69, 0.25);
+        transform: translateY(-2px);
+      }
+
+      /* Role-specific hover effects */
+      #roleCustomer + .role-btn:hover {
+        border-color: #3cb371;
+      }
+
+      #roleCustomer + .role-btn:hover .icon-container {
+        background-color: rgba(60, 179, 113, 0.2);
+        transform: scale(1.05);
+      }
+
+      #roleCustomer + .role-btn:hover i {
+        color: #2e8b57;
+        transform: scale(1.1);
+      }
+
+      #roleCustomer + .role-btn:hover .role-title {
+        color: #2e8b57;
+      }
+
+      #roleCompany + .role-btn:hover {
+        border-color: #0d6efd;
+      }
+
+      #roleCompany + .role-btn:hover .icon-container {
+        background-color: rgba(13, 110, 253, 0.2);
+        transform: scale(1.05);
+      }
+
+      #roleCompany + .role-btn:hover i {
+        color: #0b5ed7;
+        transform: scale(1.1);
+      }
+
+      #roleCompany + .role-btn:hover .role-title {
+        color: #0b5ed7;
+      }
+
+      #roleAdmin + .role-btn:hover {
+        border-color: #dc3545;
+      }
+
+      #roleAdmin + .role-btn:hover .icon-container {
+        background-color: rgba(220, 53, 69, 0.2);
+        transform: scale(1.05);
+      }
+
+      #roleAdmin + .role-btn:hover i {
+        color: #b02a37;
+        transform: scale(1.1);
+      }
+
+      #roleAdmin + .role-btn:hover .role-title {
+        color: #b02a37;
+      }
+
+      /* Simplified pulse animations */
+      @keyframes customerPulse {
+        0% {
+          box-shadow: 0 4px 10px rgba(46, 139, 87, 0.2);
+        }
+        50% {
+          box-shadow: 0 4px 15px rgba(46, 139, 87, 0.35);
+        }
+        100% {
+          box-shadow: 0 4px 10px rgba(46, 139, 87, 0.2);
+        }
+      }
+
+      @keyframes companyPulse {
+        0% {
+          box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
+        }
+        50% {
+          box-shadow: 0 4px 15px rgba(13, 110, 253, 0.35);
+        }
+        100% {
+          box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
+        }
+      }
+
+      @keyframes adminPulse {
+        0% {
+          box-shadow: 0 4px 10px rgba(220, 53, 69, 0.2);
+        }
+        50% {
+          box-shadow: 0 4px 15px rgba(220, 53, 69, 0.35);
+        }
+        100% {
+          box-shadow: 0 4px 10px rgba(220, 53, 69, 0.2);
+        }
+      }
+
+      #roleCustomer:checked + .role-btn {
+        animation: customerPulse 2s infinite;
+      }
+
+      #roleCompany:checked + .role-btn {
+        animation: companyPulse 2s infinite;
+      }
+
+      #roleAdmin:checked + .role-btn {
+        animation: adminPulse 2s infinite;
+      }
+
+      /* Role-email error styling */
+      #roleEmailError {
+        padding: 0.5rem 1rem;
+        border-left: 4px solid #dc3545;
+        font-size: 0.875rem;
+        animation: fadeInShake 0.5s;
+        margin-top: 0 !important;
+      }
+
+      @keyframes fadeInShake {
+        0% {
+          opacity: 0;
+          transform: translateX(-10px);
+        }
+        20% {
+          transform: translateX(8px);
+        }
+        40% {
+          transform: translateX(-6px);
+        }
+        60% {
+          transform: translateX(4px);
+        }
+        80% {
+          transform: translateX(-2px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+    </style>
   </head>
   <body>
     <div class="top-bar">
@@ -225,6 +504,7 @@
                       type="email"
                       class="form-control"
                       id="email"
+                      name="email"
                       placeholder="Enter your email"
                       required
                       value="user@example.com"
@@ -245,6 +525,7 @@
                         type="password"
                         class="form-control"
                         id="password"
+                        name="password"
                         placeholder="Enter your password"
                         required
                       />
@@ -262,6 +543,102 @@
                     </div>
                   </div>
                 </div>
+
+                <!-- User Role Selection -->
+                <div class="mb-3">
+                  <div class="role-selection-header">
+                    <h5>Login As</h5>
+                    <p>Select your account type</p>
+                  </div>
+                  <div class="role-selection-container">
+                    <div class="row g-2">
+                      <div class="col-md-4">
+                        <input
+                          type="radio"
+                          class="btn-check"
+                          name="userRole"
+                          id="roleCustomer"
+                          value="customer"
+                          checked
+                          autocomplete="off"
+                          onchange="handleRoleChange()"
+                        />
+                        <label
+                          class="btn btn-outline-primary w-100 role-btn"
+                          for="roleCustomer"
+                        >
+                          <div class="d-flex flex-column align-items-center">
+                            <div class="icon-container">
+                              <i class="fas fa-user"></i>
+                            </div>
+                            <span class="role-title">Customer</span>
+                            <span class="role-description"
+                              >Recycle devices</span
+                            >
+                          </div>
+                        </label>
+                      </div>
+                      <div class="col-md-4">
+                        <input
+                          type="radio"
+                          class="btn-check"
+                          name="userRole"
+                          id="roleCompany"
+                          value="company"
+                          autocomplete="off"
+                          onchange="handleRoleChange()"
+                        />
+                        <label
+                          class="btn btn-outline-primary w-100 role-btn"
+                          for="roleCompany"
+                        >
+                          <div class="d-flex flex-column align-items-center">
+                            <div class="icon-container">
+                              <i class="fas fa-building"></i>
+                            </div>
+                            <span class="role-title">Company</span>
+                            <span class="role-description"
+                              >Process devices</span
+                            >
+                          </div>
+                        </label>
+                      </div>
+                      <div class="col-md-4">
+                        <input
+                          type="radio"
+                          class="btn-check"
+                          name="userRole"
+                          id="roleAdmin"
+                          value="admin"
+                          autocomplete="off"
+                          onchange="handleRoleChange()"
+                        />
+                        <label
+                          class="btn btn-outline-primary w-100 role-btn"
+                          for="roleAdmin"
+                        >
+                          <div class="d-flex flex-column align-items-center">
+                            <div class="icon-container">
+                              <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <span class="role-title">Admin</span>
+                            <span class="role-description"
+                              >Manage platform</span
+                            >
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Hidden input to store the selected role -->
+                <input
+                  type="hidden"
+                  id="selectedRole"
+                  name="selectedRole"
+                  value="customer"
+                />
 
                 <div class="mb-4 form-check">
                   <input
@@ -308,14 +685,22 @@
                 </p>
                 <div class="mt-3 pt-3 border-top">
                   <p class="text-muted small mb-1">For demo purposes:</p>
-                  <div class="d-flex justify-content-center gap-3">
-                    <div>
+                  <div class="d-flex justify-content-center flex-wrap gap-2">
+                    <div class="badge bg-light text-dark p-2">
+                      <i class="fas fa-user text-success me-1"></i>
                       <strong>Customer:</strong> user@example.com / user123
-                      <span class="badge bg-light text-dark ms-1">Alt+F</span>
+                      <span class="badge bg-secondary ms-1">Alt+C</span>
                     </div>
-                    <div>
+                    <div class="badge bg-light text-dark p-2">
+                      <i class="fas fa-building text-primary me-1"></i>
+                      <strong>Company:</strong> company@recycling.com /
+                      company123
+                      <span class="badge bg-secondary ms-1">Alt+R</span>
+                    </div>
+                    <div class="badge bg-light text-dark p-2">
+                      <i class="fas fa-shield-alt text-danger me-1"></i>
                       <strong>Admin:</strong> admin@retech.com / admin123
-                      <span class="badge bg-light text-dark ms-1">Alt+A</span>
+                      <span class="badge bg-secondary ms-1">Alt+A</span>
                     </div>
                   </div>
                 </div>
@@ -445,5 +830,225 @@
     <script src="../js/utils.js" type="text/javascript" defer></script>
     <script src="../js/login.js" type="text/javascript" defer></script>
     <script src="../js/auth.js" type="text/javascript" defer></script>
+
+    <script>
+      // Define email addresses for each role
+      const EMAIL_MAPPING = {
+        customer: "user@example.com",
+        company: "company@recycling.com",
+        admin: "admin@retech.com",
+      };
+
+      // Function to show error message
+      function showRoleEmailError(show, message = "") {
+        const errorDiv = document.getElementById("roleEmailError");
+        if (!errorDiv) {
+          // Create error div if it doesn't exist
+          const loginAlert = document.getElementById("loginAlert");
+          const newErrorDiv = document.createElement("div");
+          newErrorDiv.id = "roleEmailError";
+          newErrorDiv.className =
+            "alert alert-danger mt-2 mb-3" + (show ? "" : " d-none");
+          newErrorDiv.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i>${message}`;
+
+          // Insert after the role selection section
+          const roleSelection = document.querySelector(
+            ".role-selection-container"
+          ).parentNode;
+          roleSelection.parentNode.insertBefore(
+            newErrorDiv,
+            roleSelection.nextSibling
+          );
+
+          return newErrorDiv;
+        }
+
+        if (show) {
+          errorDiv.textContent = "";
+          errorDiv.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i>${message}`;
+          errorDiv.classList.remove("d-none");
+        } else {
+          errorDiv.classList.add("d-none");
+        }
+
+        return errorDiv;
+      }
+
+      // Validate role and email match
+      function validateRoleEmailMatch() {
+        const selectedRole = document.querySelector(
+          'input[name="userRole"]:checked'
+        ).value;
+        const email = document
+          .getElementById("email")
+          .value.trim()
+          .toLowerCase();
+
+        // Check if email matches the selected role
+        if (EMAIL_MAPPING[selectedRole] !== email) {
+          const correctEmail = EMAIL_MAPPING[selectedRole];
+          let roleName = "Customer";
+          if (selectedRole === "company") roleName = "Recycling Company";
+          if (selectedRole === "admin") roleName = "Administrator";
+
+          showRoleEmailError(
+            true,
+            `Email address doesn't match the selected ${roleName} role. Please use <strong>${correctEmail}</strong> or select a different role.`
+          );
+          return false;
+        } else {
+          showRoleEmailError(false);
+          return true;
+        }
+      }
+
+      // Function to handle role selection changes
+      function handleRoleChange() {
+        const customerRole = document.getElementById("roleCustomer");
+        const companyRole = document.getElementById("roleCompany");
+        const adminRole = document.getElementById("roleAdmin");
+        const emailInput = document.getElementById("email");
+        const selectedRoleInput = document.getElementById("selectedRole");
+
+        if (customerRole.checked) {
+          emailInput.value = EMAIL_MAPPING.customer;
+          selectedRoleInput.value = "customer";
+          document.getElementById("password").value = ""; // Clear password for security
+        } else if (companyRole.checked) {
+          emailInput.value = EMAIL_MAPPING.company;
+          selectedRoleInput.value = "company";
+          document.getElementById("password").value = ""; // Clear password for security
+        } else if (adminRole.checked) {
+          emailInput.value = EMAIL_MAPPING.admin;
+          selectedRoleInput.value = "admin";
+          document.getElementById("password").value = ""; // Clear password for security
+        }
+
+        // Hide any existing error
+        showRoleEmailError(false);
+      }
+
+      // Function to update role based on email
+      function updateRoleFromEmail() {
+        const emailInput = document.getElementById("email");
+        const selectedRoleInput = document.getElementById("selectedRole");
+        const email = emailInput.value.trim().toLowerCase();
+
+        if (email === EMAIL_MAPPING.customer) {
+          document.getElementById("roleCustomer").checked = true;
+          selectedRoleInput.value = "customer";
+          showRoleEmailError(false);
+        } else if (email === EMAIL_MAPPING.company) {
+          document.getElementById("roleCompany").checked = true;
+          selectedRoleInput.value = "company";
+          showRoleEmailError(false);
+        } else if (email === EMAIL_MAPPING.admin) {
+          document.getElementById("roleAdmin").checked = true;
+          selectedRoleInput.value = "admin";
+          showRoleEmailError(false);
+        } else {
+          // If email doesn't match any predefined value, show error
+          const selectedRole = document.querySelector(
+            'input[name="userRole"]:checked'
+          ).value;
+          const correctEmail = EMAIL_MAPPING[selectedRole];
+          showRoleEmailError(
+            true,
+            `The email doesn't match the selected role. For ${selectedRole} role, use ${correctEmail}`
+          );
+        }
+      }
+
+      // Auto-fill credentials when clicking the role buttons
+      document.addEventListener("DOMContentLoaded", function () {
+        // Add validation HTML element
+        showRoleEmailError(false);
+
+        // Set up email change detection
+        const emailInput = document.getElementById("email");
+        emailInput.addEventListener("change", function () {
+          updateRoleFromEmail();
+          validateRoleEmailMatch();
+        });
+        emailInput.addEventListener("blur", function () {
+          updateRoleFromEmail();
+          validateRoleEmailMatch();
+        });
+
+        // Initial check to set the correct role based on default email
+        updateRoleFromEmail();
+
+        // Set up form submission handler
+        const loginForm = document.getElementById("loginForm");
+        if (loginForm) {
+          loginForm.addEventListener("submit", function (e) {
+            // Validate role-email match
+            if (!validateRoleEmailMatch()) {
+              e.preventDefault(); // Prevent form submission
+              return false;
+            }
+
+            // Ensure role and email are in sync before submission
+            updateRoleFromEmail();
+
+            // Log the selected role for debugging
+            const selectedRole = document.getElementById("selectedRole").value;
+            console.log("Submitting with role:", selectedRole);
+          });
+        }
+
+        // Set up event handlers for keyboard shortcuts
+        document.addEventListener("keydown", function (e) {
+          // Alt+C to select Customer role
+          if (e.altKey && e.key === "c") {
+            document.getElementById("roleCustomer").checked = true;
+            handleRoleChange();
+            fillCredentials("customer");
+          }
+
+          // Alt+R to select Recycling Company role
+          if (e.altKey && e.key === "r") {
+            document.getElementById("roleCompany").checked = true;
+            handleRoleChange();
+            fillCredentials("company");
+          }
+
+          // Alt+A to select Admin role
+          if (e.altKey && e.key === "a") {
+            document.getElementById("roleAdmin").checked = true;
+            handleRoleChange();
+            fillCredentials("admin");
+          }
+        });
+      });
+
+      // Fill credentials based on role
+      function fillCredentials(role) {
+        const passwordInput = document.getElementById("password");
+
+        switch (role) {
+          case "customer":
+            passwordInput.value = "user123";
+            break;
+          case "company":
+            passwordInput.value = "company123";
+            break;
+          case "admin":
+            passwordInput.value = "admin123";
+            break;
+        }
+
+        // Add animation to show fields were filled
+        const emailInput = document.getElementById("email");
+        emailInput.classList.add("filled-animation");
+        passwordInput.classList.add("filled-animation");
+
+        // Remove animation class after animation completes
+        setTimeout(() => {
+          emailInput.classList.remove("filled-animation");
+          passwordInput.classList.remove("filled-animation");
+        }, 1000);
+      }
+    </script>
   </body>
 </html>

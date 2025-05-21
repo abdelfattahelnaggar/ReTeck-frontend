@@ -41,9 +41,357 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
       rel="stylesheet"
     />
+    <!--animate.css-->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+      rel="stylesheet"
+    />
 
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/signup.css" />
+
+    <style>
+      /* Fix modal display issues */
+      .modal {
+        z-index: 1050 !important;
+      }
+
+      .modal-backdrop {
+        z-index: 1040 !important;
+        -webkit-backdrop-filter: blur(5px);
+        backdrop-filter: blur(5px);
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+
+      /* Blur the background when modal is open */
+      body.modal-open {
+        overflow: hidden;
+      }
+
+      body.modal-open .container:not(.modal),
+      body.modal-open .top-bar,
+      body.modal-open .navbar,
+      body.modal-open .footer {
+        filter: blur(5px);
+        transition: filter 0.3s ease;
+      }
+
+      /* Position modal at the top */
+      .modal-dialog-top {
+        margin-top: 10vh !important;
+        margin-bottom: 0;
+      }
+
+      .modal-open .modal {
+        display: block;
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+
+      /* Enhanced animation for the success icon */
+      @keyframes successPulse {
+        0% {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1.1);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .success-icon-animate {
+        animation: successPulse 0.6s ease-in-out;
+      }
+
+      /* Animation for modal entry */
+      @keyframes slideInFromTop {
+        0% {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+        100% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .modal.show .modal-content {
+        animation: slideInFromTop 0.4s ease forwards;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Enhanced Role selection styles - Smaller size */
+      .role-selection-container {
+        margin-bottom: 1rem;
+        padding-top: 0;
+      }
+
+      .role-selection-header {
+        text-align: center;
+        margin-bottom: 0.75rem;
+      }
+
+      .role-selection-header h5 {
+        font-weight: 600;
+        color: #2e8b57;
+        margin-bottom: 0.25rem;
+        font-size: 1rem;
+      }
+
+      .role-selection-header p {
+        color: #6c757d;
+        font-size: 0.8rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .role-btn {
+        height: 100%;
+        border-radius: 12px;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        overflow: hidden;
+        background: linear-gradient(135deg, #f8f9fa, #ffffff);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        padding: 0.75rem 0.5rem;
+      }
+
+      /* Role button hover effects */
+      .role-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        border-color: #dee2e6;
+      }
+
+      .role-btn .icon-container {
+        width: 50px;
+        height: 50px;
+        margin: 0 auto 8px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+
+      .role-btn i {
+        transition: all 0.3s ease;
+        font-size: 1.5rem;
+      }
+
+      .role-btn:hover i {
+        transform: scale(1.1);
+      }
+
+      .role-btn .role-title {
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-bottom: 4px;
+      }
+
+      .role-btn .role-description {
+        font-size: 0.75rem;
+        line-height: 1.2;
+      }
+
+      .btn-check:checked + .role-btn {
+        color: white;
+        box-shadow: 0 4px 10px rgba(46, 139, 87, 0.3);
+        transform: translateY(-2px);
+      }
+
+      .btn-check:checked + .role-btn .icon-container {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .btn-check:checked + .role-btn i {
+        color: white;
+      }
+
+      .btn-check:checked + .role-btn .role-title {
+        color: white;
+      }
+
+      .btn-check:checked + .role-btn .role-description {
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      /* Subtle pulse animation for selected role */
+      @keyframes selectedPulse {
+        0% {
+          box-shadow: 0 8px 20px rgba(46, 139, 87, 0.3);
+        }
+        50% {
+          box-shadow: 0 8px 25px rgba(46, 139, 87, 0.5);
+        }
+        100% {
+          box-shadow: 0 8px 20px rgba(46, 139, 87, 0.3);
+        }
+      }
+
+      .btn-check:checked + .role-btn {
+        animation: selectedPulse 2s infinite;
+      }
+
+      /* Success Modal Styling */
+      .modal-dialog-top {
+        margin-top: 10vh;
+      }
+
+      #successModal .modal-header {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+
+      #successModal .modal-title {
+        font-weight: 600;
+      }
+
+      #successModal .success-icon {
+        margin: 20px auto;
+        width: 100px;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background-color: rgba(40, 167, 69, 0.1);
+      }
+
+      #successModal.company-modal .success-icon {
+        background-color: rgba(0, 123, 255, 0.1);
+      }
+
+      #successModal .modal-footer {
+        border-top: none;
+        padding-top: 0;
+      }
+
+      /* Animation for success icon */
+      @keyframes successIconAnimate {
+        0% {
+          transform: scale(0.8);
+          opacity: 0.5;
+        }
+        50% {
+          transform: scale(1.2);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .success-icon-animate {
+        animation: successIconAnimate 0.6s ease-in-out;
+      }
+
+      /* Role-specific styles - smaller size */
+      #roleCustomer + .role-btn .icon-container {
+        background-color: rgba(60, 179, 113, 0.1);
+      }
+
+      #roleCustomer + .role-btn i {
+        color: #3cb371;
+      }
+
+      #roleCustomer:checked + .role-btn {
+        background: linear-gradient(135deg, #2e8b57, #3cb371);
+        border-color: #2e8b57;
+        box-shadow: 0 4px 10px rgba(46, 139, 87, 0.25);
+        transform: translateY(-2px);
+      }
+
+      #roleCompany + .role-btn .icon-container {
+        background-color: rgba(13, 110, 253, 0.1);
+      }
+
+      #roleCompany + .role-btn i {
+        color: #0d6efd;
+      }
+
+      #roleCompany:checked + .role-btn {
+        background: linear-gradient(135deg, #0b5ed7, #0d6efd);
+        border-color: #0b5ed7;
+        box-shadow: 0 4px 10px rgba(13, 110, 253, 0.25);
+        transform: translateY(-2px);
+      }
+
+      /* Simplified pulse animations */
+      @keyframes customerPulse {
+        0% {
+          box-shadow: 0 4px 10px rgba(46, 139, 87, 0.2);
+        }
+        50% {
+          box-shadow: 0 4px 15px rgba(46, 139, 87, 0.35);
+        }
+        100% {
+          box-shadow: 0 4px 10px rgba(46, 139, 87, 0.2);
+        }
+      }
+
+      @keyframes companyPulse {
+        0% {
+          box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
+        }
+        50% {
+          box-shadow: 0 4px 15px rgba(13, 110, 253, 0.35);
+        }
+        100% {
+          box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
+        }
+      }
+
+      #roleCustomer:checked + .role-btn {
+        animation: customerPulse 2s infinite;
+      }
+
+      #roleCompany:checked + .role-btn {
+        animation: companyPulse 2s infinite;
+      }
+
+      /* Role-specific hover effects */
+      #roleCustomer + .role-btn:hover {
+        border-color: #3cb371;
+      }
+
+      #roleCustomer + .role-btn:hover .icon-container {
+        background-color: rgba(60, 179, 113, 0.2);
+        transform: scale(1.05);
+      }
+
+      #roleCustomer + .role-btn:hover i {
+        color: #2e8b57;
+        transform: scale(1.1);
+      }
+
+      #roleCustomer + .role-btn:hover .role-title {
+        color: #2e8b57;
+      }
+
+      #roleCompany + .role-btn:hover {
+        border-color: #0d6efd;
+      }
+
+      #roleCompany + .role-btn:hover .icon-container {
+        background-color: rgba(13, 110, 253, 0.2);
+        transform: scale(1.05);
+      }
+
+      #roleCompany + .role-btn:hover i {
+        color: #0b5ed7;
+        transform: scale(1.1);
+      }
+
+      #roleCompany + .role-btn:hover .role-title {
+        color: #0b5ed7;
+      }
+    </style>
   </head>
   <body>
     <div class="top-bar">
@@ -231,7 +579,7 @@
 
               <form id="signupForm" class="needs-validation" novalidate>
                 <div class="mb-3">
-                  <label for="fullName" class="form-label">Full Name</label>
+                  <label for="firstName" class="form-label">First Name</label>
                   <div class="input-group">
                     <span class="input-group-text bg-light">
                       <i class="fas fa-user text-muted"></i>
@@ -239,17 +587,161 @@
                     <input
                       type="text"
                       class="form-control"
-                      id="fullName"
-                      placeholder="Enter your full name"
+                      id="firstName"
+                      placeholder="Enter your first name"
                       required
                       aria-required="true"
                     />
                   </div>
-                  <div class="invalid-feedback">Please enter your name</div>
+                  <div class="invalid-feedback">
+                    Please enter your first name
+                  </div>
                 </div>
 
                 <div class="mb-3">
-                  <label for="email" class="form-label">Email Address</label>
+                  <label for="lastName" class="form-label">Last Name</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light">
+                      <i class="fas fa-user text-muted"></i>
+                    </span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="lastName"
+                      placeholder="Enter your last name"
+                      required
+                      aria-required="true"
+                    />
+                  </div>
+                  <div class="invalid-feedback">
+                    Please enter your last name
+                  </div>
+                </div>
+
+                <!-- User Role Selection -->
+                <div class="mb-3">
+                  <div class="role-selection-header">
+                    <h5>Choose Your Role</h5>
+                    <p>Select the option that describes you best</p>
+                  </div>
+                  <div class="role-selection-container">
+                    <div class="row g-2">
+                      <div class="col-md-6">
+                        <input
+                          type="radio"
+                          class="btn-check"
+                          name="userRole"
+                          id="roleCustomer"
+                          value="customer"
+                          checked
+                          autocomplete="off"
+                          onchange="toggleCompanyFields()"
+                        />
+                        <label
+                          class="btn btn-outline-primary w-100 role-btn"
+                          for="roleCustomer"
+                        >
+                          <div class="d-flex flex-column align-items-center">
+                            <div class="icon-container">
+                              <i class="fas fa-user"></i>
+                            </div>
+                            <span class="role-title">Customer</span>
+                            <span class="role-description"
+                              >I want to recycle my devices</span
+                            >
+                          </div>
+                        </label>
+                      </div>
+                      <div class="col-md-6">
+                        <input
+                          type="radio"
+                          class="btn-check"
+                          name="userRole"
+                          id="roleCompany"
+                          value="company"
+                          autocomplete="off"
+                          onchange="toggleCompanyFields()"
+                        />
+                        <label
+                          class="btn btn-outline-primary w-100 role-btn"
+                          for="roleCompany"
+                        >
+                          <div class="d-flex flex-column align-items-center">
+                            <div class="icon-container">
+                              <i class="fas fa-building"></i>
+                            </div>
+                            <span class="role-title">Recycling Company</span>
+                            <span class="role-description"
+                              >I process recycled devices</span
+                            >
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Company-specific fields (hidden by default) -->
+                <div id="companyFields" class="d-none">
+                  <div class="mb-3">
+                    <label for="companyName" class="form-label"
+                      >Company Name</label
+                    >
+                    <div class="input-group">
+                      <span class="input-group-text bg-light">
+                        <i class="fas fa-building text-muted"></i>
+                      </span>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="companyName"
+                        placeholder="Enter your company name"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="businessID" class="form-label"
+                      >Business ID/Registration Number</label
+                    >
+                    <div class="input-group">
+                      <span class="input-group-text bg-light">
+                        <i class="fas fa-id-card text-muted"></i>
+                      </span>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="businessID"
+                        placeholder="Enter your business registration number"
+                      />
+                    </div>
+                    <small class="form-text text-muted"
+                      >Used for verification purposes only</small
+                    >
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="businessAddress" class="form-label"
+                      >Business Address</label
+                    >
+                    <div class="input-group">
+                      <span class="input-group-text bg-light">
+                        <i class="fas fa-map-marker-alt text-muted"></i>
+                      </span>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="businessAddress"
+                        placeholder="Enter your business address"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="signupEmail" class="form-label"
+                    >Email Address</label
+                  >
                   <div class="input-group">
                     <span class="input-group-text bg-light">
                       <i class="fas fa-envelope text-muted"></i>
@@ -257,7 +749,7 @@
                     <input
                       type="email"
                       class="form-control"
-                      id="email"
+                      id="signupEmail"
                       placeholder="Enter your email"
                       required
                       aria-required="true"
@@ -269,7 +761,9 @@
                 </div>
 
                 <div class="mb-3">
-                  <label for="password" class="form-label">Password</label>
+                  <label for="signupPassword" class="form-label"
+                    >Password</label
+                  >
                   <div class="input-group position-relative">
                     <span class="input-group-text bg-light">
                       <i class="fas fa-lock text-muted"></i>
@@ -277,7 +771,7 @@
                     <input
                       type="password"
                       class="form-control"
-                      id="password"
+                      id="signupPassword"
                       placeholder="Create a password"
                       required
                       minlength="6"
@@ -285,7 +779,7 @@
                     />
                     <i
                       class="fas fa-eye toggle-password"
-                      onclick="togglePassword('password')"
+                      onclick="togglePassword('signupPassword')"
                       tabindex="0"
                       role="button"
                       aria-label="Toggle password visibility"
@@ -293,6 +787,30 @@
                   </div>
                   <div class="invalid-feedback">
                     Password must be at least 6 characters
+                  </div>
+                  <div class="mt-2">
+                    <div class="d-flex align-items-center">
+                      <label
+                        for="passwordStrengthMeter"
+                        class="form-label mb-0 me-2 small"
+                        >Password Strength:</label
+                      >
+                      <meter
+                        id="passwordStrengthMeter"
+                        class="flex-grow-1"
+                        value="0"
+                        min="0"
+                        max="6"
+                        low="2"
+                        high="4"
+                        optimum="6"
+                      ></meter>
+                    </div>
+                    <small
+                      id="passwordStrengthText"
+                      class="form-text text-muted"
+                      >Enter a strong password</small
+                    >
                   </div>
                 </div>
 
@@ -329,16 +847,20 @@
                     class="btn btn-success signup-btn py-3 shadow-sm"
                     type="submit"
                     id="signupButton"
+                    onclick="console.log('Button clicked directly');"
                   >
                     <span
-                      ><i class="fas fa-recycle me-2"></i>Create Account</span
+                      class="d-flex align-items-center justify-content-center"
                     >
-                    <span
-                      class="spinner-border spinner-border-sm ms-2 d-none"
-                      role="status"
-                      aria-hidden="true"
-                      id="signupSpinner"
-                    ></span>
+                      <i class="fas fa-recycle me-2"></i>
+                      <span>Create Account</span>
+                      <span
+                        class="spinner-border spinner-border-sm ms-2 d-none"
+                        role="status"
+                        aria-hidden="true"
+                        id="signupSpinner"
+                      ></span>
+                    </span>
                   </button>
                 </div>
               </form>
@@ -355,6 +877,51 @@
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div
+      class="modal fade"
+      id="successModal"
+      tabindex="-1"
+      aria-labelledby="successModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-top">
+        <div class="modal-content">
+          <div class="modal-header text-center">
+            <h5 class="modal-title w-100" id="successModalLabel">
+              <i class="fas fa-check-circle me-2"></i>Account Created
+              Successfully!
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body text-center">
+            <div class="success-icon mb-4">
+              <i
+                class="fas fa-user-check text-success"
+                style="font-size: 60px"
+              ></i>
+            </div>
+            <h4 class="mb-3">Welcome to RETECH!</h4>
+            <p class="success-message mb-4">
+              Your account has been created successfully.
+            </p>
+            <div class="alert alert-info">
+              <i class="fas fa-info-circle me-2"></i>You will be redirected to
+              the login page in a few seconds.
+            </div>
+          </div>
+          <div class="modal-footer">
+            <a href="login.html" class="btn btn-primary w-100">Go to Login</a>
           </div>
         </div>
       </div>
@@ -420,7 +987,7 @@
               </li>
               <li>
                 <a href="contact-us.html"
-                  ><i class="fas fa-phone me-2"></i>Contact Us</a
+                  ><i class="fas fa-envelope me-2"></i>Contact Us</a
                 >
               </li>
               <li>
@@ -469,14 +1036,316 @@
     </footer>
 
     <!-- Bootstrap JS Bundle (includes Popper) -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-      defer
-    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Custom JavaScript -->
-    <script src="../js/main.js" defer></script>
-    <script src="../js/utils.js" defer></script>
-    <script src="../js/auth.js" defer></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/auth.js"></script>
+
+    <script>
+      // Function to toggle company-specific fields
+      function toggleCompanyFields() {
+        const companyFields = document.getElementById("companyFields");
+        const isCompanyRole = document.getElementById("roleCompany").checked;
+
+        if (isCompanyRole) {
+          companyFields.classList.remove("d-none");
+          // Make company fields required
+          document.getElementById("companyName").required = true;
+          document.getElementById("businessID").required = true;
+          document.getElementById("businessAddress").required = true;
+        } else {
+          companyFields.classList.add("d-none");
+          // Make company fields not required
+          document.getElementById("companyName").required = false;
+          document.getElementById("businessID").required = false;
+          document.getElementById("businessAddress").required = false;
+        }
+      }
+
+      // Debug script to check form submission
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("DOM loaded, checking signup form");
+        const form = document.getElementById("signupForm");
+        if (form) {
+          console.log("Signup form found, adding test listener");
+          form.addEventListener("submit", function (e) {
+            console.log("Form submit event fired directly from inline script");
+            e.preventDefault();
+
+            // Direct form handling
+            const email = document.getElementById("signupEmail").value.trim();
+            const password = document.getElementById("signupPassword").value;
+            const confirmPassword =
+              document.getElementById("confirmPassword").value;
+            const firstName = document
+              .getElementById("firstName")
+              ?.value.trim();
+            const lastName = document.getElementById("lastName")?.value.trim();
+            const userRole = document.querySelector(
+              'input[name="userRole"]:checked'
+            ).value;
+
+            // Get company information if role is company
+            let companyInfo = null;
+            if (userRole === "company") {
+              companyInfo = {
+                companyName: document
+                  .getElementById("companyName")
+                  .value.trim(),
+                businessID: document.getElementById("businessID").value.trim(),
+                businessAddress: document
+                  .getElementById("businessAddress")
+                  .value.trim(),
+              };
+            }
+
+            console.log("Collected form data:", {
+              email,
+              passwordLength: password.length,
+              confirmPasswordMatch: password === confirmPassword,
+              firstName,
+              lastName,
+              userRole,
+              companyInfo,
+            });
+
+            // Get button and spinner elements
+            const signupButton = document.getElementById("signupButton");
+            const signupSpinner = document.getElementById("signupSpinner");
+
+            if (signupButton && signupSpinner) {
+              signupButton.disabled = true;
+              signupSpinner.classList.remove("d-none");
+            }
+
+            // Simple validation
+            if (!email || !password || !confirmPassword) {
+              alert("Please fill in all required fields");
+              if (signupButton && signupSpinner) {
+                signupButton.disabled = false;
+                signupSpinner.classList.add("d-none");
+              }
+              return;
+            }
+
+            if (password !== confirmPassword) {
+              alert("Passwords do not match");
+              if (signupButton && signupSpinner) {
+                signupButton.disabled = false;
+                signupSpinner.classList.add("d-none");
+              }
+              return;
+            }
+
+            // Company-specific validation
+            if (userRole === "company") {
+              if (
+                !companyInfo.companyName ||
+                !companyInfo.businessID ||
+                !companyInfo.businessAddress
+              ) {
+                alert("Please fill in all company information");
+                if (signupButton && signupSpinner) {
+                  signupButton.disabled = false;
+                  signupSpinner.classList.add("d-none");
+                }
+                return;
+              }
+            }
+
+            // Create a user account
+            try {
+              // Store user info in localStorage
+              const users = JSON.parse(localStorage.getItem("users") || "{}");
+
+              // Create user object
+              users[email] = {
+                email: email,
+                passwordHash: password, // In a real app, this would be securely hashed
+                role: userRole,
+                createdAt: new Date().toISOString(),
+                profile: {
+                  firstName: firstName || "",
+                  lastName: lastName || "",
+                  phoneNumber: "",
+                  address: "",
+                  profileImage: "",
+                },
+                // Add company info if applicable
+                companyInfo: companyInfo,
+                verificationStatus:
+                  userRole === "company" ? "pending" : "verified",
+              };
+
+              // Save to localStorage
+              localStorage.setItem("users", JSON.stringify(users));
+
+              // Create empty userData object for this user
+              const userData = {
+                email: email,
+                role: userRole,
+                profile: {
+                  firstName: firstName || "",
+                  lastName: lastName || "",
+                  phoneNumber: "",
+                  address: "",
+                  profileImage: "",
+                },
+                companyInfo: companyInfo,
+                verificationStatus:
+                  userRole === "company" ? "pending" : "verified",
+                quotes: [],
+                recycleRequests: [],
+                notifications: [],
+              };
+
+              // Store the user's data
+              localStorage.setItem(
+                `userData_${email}`,
+                JSON.stringify(userData)
+              );
+
+              // Scroll to the top of the page
+              window.scrollTo({ top: 0, behavior: "smooth" });
+
+              // Show success modal using a more direct approach
+              try {
+                // First create a backdrop if it doesn't exist
+                let backdrop = document.querySelector(".modal-backdrop");
+                if (!backdrop) {
+                  backdrop = document.createElement("div");
+                  backdrop.className = "modal-backdrop fade show";
+                  document.body.appendChild(backdrop);
+                }
+
+                // Get the modal and show it directly
+                const modalElement = document.getElementById("successModal");
+                if (modalElement) {
+                  modalElement.style.display = "block";
+                  modalElement.classList.add("show");
+                  document.body.classList.add("modal-open");
+
+                  // Apply blur effect to main content
+                  document
+                    .querySelectorAll(
+                      ".container:not(.modal), .top-bar, .navbar, .footer"
+                    )
+                    .forEach((el) => {
+                      el.style.filter = "blur(5px)";
+                    });
+                }
+
+                // As backup, also try the Bootstrap way
+                try {
+                  const successModal = new bootstrap.Modal(
+                    document.getElementById("successModal")
+                  );
+                  successModal.show();
+                } catch (modalError) {
+                  console.log(
+                    "Using direct modal display instead of Bootstrap modal",
+                    modalError
+                  );
+                }
+              } catch (e) {
+                console.error("Error displaying modal:", e);
+              }
+
+              // Animate the icon in the modal
+              const iconElement = document.querySelector(
+                "#successModal .fa-user-check"
+              );
+              if (iconElement) {
+                iconElement.classList.add("success-icon-animate");
+              }
+
+              // Update modal content based on role
+              const modalTitle = document.querySelector(
+                "#successModal .modal-title"
+              );
+              const welcomeMessage = document.querySelector("#successModal h4");
+              const successMessage = document.querySelector(
+                "#successModal .success-message"
+              );
+              const infoMessage = document.querySelector(
+                "#successModal .alert-info"
+              );
+
+              if (userRole === "company") {
+                // Update for company role
+                if (modalTitle)
+                  modalTitle.innerHTML =
+                    '<i class="fas fa-building me-2"></i>Company Account Created!';
+                if (welcomeMessage)
+                  welcomeMessage.textContent =
+                    "Welcome to RETECH Partner Network!";
+                if (successMessage)
+                  successMessage.textContent =
+                    "Your company account has been created and is pending verification.";
+                if (infoMessage)
+                  infoMessage.innerHTML =
+                    '<i class="fas fa-info-circle me-2"></i>Our team will review your application within 1-2 business days.';
+
+                // Add company-modal class to change styling
+                const modalElement = document.getElementById("successModal");
+                if (modalElement) {
+                  modalElement.classList.add("company-modal");
+                }
+              } else {
+                // Customer role (default)
+                if (modalTitle)
+                  modalTitle.innerHTML =
+                    '<i class="fas fa-check-circle me-2"></i>Account Created Successfully!';
+                if (welcomeMessage)
+                  welcomeMessage.textContent = "Welcome to RETECH!";
+                if (successMessage)
+                  successMessage.textContent =
+                    "Your account has been created successfully.";
+                if (infoMessage)
+                  infoMessage.innerHTML =
+                    '<i class="fas fa-info-circle me-2"></i>You will be redirected to the login page in a few seconds.';
+
+                // Remove company-modal class if it exists
+                const modalElement = document.getElementById("successModal");
+                if (modalElement) {
+                  modalElement.classList.remove("company-modal");
+                }
+              }
+
+              // Redirect to login page after 3 seconds
+              setTimeout(() => {
+                window.location.href = "login.html";
+              }, 3000);
+            } catch (error) {
+              console.error("Error creating account:", error);
+              alert("Error creating account. Please try again.");
+              if (signupButton && signupSpinner) {
+                signupButton.disabled = false;
+                signupSpinner.classList.add("d-none");
+              }
+            }
+          });
+
+          // Also attach a direct click handler to the button as a fallback
+          const signupButton = document.getElementById("signupButton");
+          if (signupButton) {
+            signupButton.addEventListener("click", function (e) {
+              console.log("Button clicked via event listener");
+              // The form submit should handle this, but just in case
+              if (form) {
+                form.dispatchEvent(new Event("submit"));
+              }
+            });
+          }
+        } else {
+          console.error("Could not find signup form in inline script");
+        }
+
+        // Initialize company fields toggle
+        toggleCompanyFields();
+      });
+    </script>
   </body>
 </html>

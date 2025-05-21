@@ -164,6 +164,29 @@ function initLoginForm() {
         return;
       }
 
+      // Handle company credentials directly
+      if (email === "company@recycling.com" && password === "company123") {
+        console.log("Company login successful");
+
+        // Store user data in localStorage
+        localStorage.setItem("userEmail", email);
+        localStorage.setItem("userRole", "company");
+        localStorage.setItem("isLoggedIn", "true");
+
+        if (rememberMe) {
+          localStorage.setItem("rememberMe", "true");
+        } else {
+          localStorage.removeItem("rememberMe");
+        }
+
+        // Ensure company user exists in localStorage
+        createCompanyUserIfNeeded(email);
+
+        // Redirect to inventory store
+        window.location.href = "inventory-store.html";
+        return;
+      }
+
       // Handle admin credentials directly
       if (email === "admin@retech.com" && password === "admin123") {
         console.log("Admin login successful");
@@ -262,6 +285,11 @@ function setupKeyboardShortcuts() {
     if (e.altKey && e.key === "a") {
       fillAdminCredentials();
     }
+
+    // Alt+R to fill company credentials
+    if (e.altKey && e.key === "r") {
+      fillCompanyCredentials();
+    }
   });
 }
 
@@ -293,6 +321,26 @@ function fillAdminCredentials() {
 
   emailInput.value = "admin@retech.com";
   passwordInput.value = "admin123";
+
+  // Add animation to show fields were filled
+  emailInput.classList.add("filled-animation");
+  passwordInput.classList.add("filled-animation");
+
+  // Remove animation class after animation completes
+  setTimeout(() => {
+    emailInput.classList.remove("filled-animation");
+    passwordInput.classList.remove("filled-animation");
+  }, 1000);
+}
+
+/**
+ * Fill company credentials for demo
+ */
+function fillCompanyCredentials() {
+  if (!emailInput || !passwordInput) return;
+
+  emailInput.value = "company@recycling.com";
+  passwordInput.value = "company123";
 
   // Add animation to show fields were filled
   emailInput.classList.add("filled-animation");
@@ -411,6 +459,48 @@ function createDemoUserIfNeeded(email) {
           points: 100,
         },
       ],
+    };
+
+    localStorage.setItem(`userData_${email}`, JSON.stringify(userData));
+  }
+}
+
+/**
+ * Create company user if it doesn't exist
+ */
+function createCompanyUserIfNeeded(email) {
+  const users = JSON.parse(localStorage.getItem("users") || "{}");
+
+  // Check if company user already exists
+  if (!users[email]) {
+    // Create company user
+    users[email] = {
+      email: email,
+      passwordHash: "company123", // In a real app, this would be securely hashed
+      role: "company",
+      createdAt: new Date().toISOString(),
+      profile: {
+        firstName: "Company",
+        lastName: "Admin",
+        phoneNumber: "555-4321",
+      },
+      companyInfo: {
+        companyName: "Green Recycling Co.",
+        businessID: "RC12345678",
+        businessAddress: "456 Eco Street, Green City, GS 67890",
+      },
+    };
+
+    // Save to localStorage
+    localStorage.setItem("users", JSON.stringify(users));
+
+    // Create userData object for this user
+    const userData = {
+      email: email,
+      role: "company",
+      profile: users[email].profile,
+      companyInfo: users[email].companyInfo,
+      verificationStatus: "verified",
     };
 
     localStorage.setItem(`userData_${email}`, JSON.stringify(userData));
