@@ -186,6 +186,8 @@
         height: 100%;
         overflow: hidden;
         background: white;
+        display: flex;
+        flex-direction: column;
       }
 
       .inventory-card:hover {
@@ -208,6 +210,9 @@
 
       .inventory-card .card-body {
         padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
       }
 
       .inventory-card .card-title {
@@ -215,6 +220,11 @@
         font-size: 1.15rem;
         margin-bottom: 0.5rem;
         color: #2c3e50;
+        height: 2.5rem;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
       }
 
       .inventory-card .card-subtitle {
@@ -228,6 +238,20 @@
         font-size: 0.95rem;
         margin-bottom: 1rem;
         color: #495057;
+        height: 3rem;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+
+      /* Badge container to ensure consistent height */
+      .inventory-card .badge-container {
+        height: 2rem;
+        margin-bottom: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
       }
 
       /* Inventory badge for device conditions and types */
@@ -493,6 +517,36 @@
       #resultCount {
         font-weight: 700;
         color: var(--primary-color);
+      }
+
+      /* Grid system for inventory cards */
+      .inventory-grid {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+      }
+
+      @media (min-width: 768px) {
+        .inventory-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (min-width: 992px) {
+        .inventory-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      /* Inventory card for grid system */
+      .inventory-grid-item {
+        height: 100%;
+        display: flex;
+      }
+
+      .inventory-grid-item .inventory-card {
+        width: 100%;
       }
 
       /* Responsive adjustments */
@@ -940,9 +994,9 @@
             </div>
           </div>
 
-          <div class="row g-4 mb-4" id="inventoryItems">
+          <div class="inventory-grid" id="inventoryItems">
             <!-- Item 1 -->
-            <div class="col-md-6 col-lg-4">
+            <div class="inventory-grid-item">
               <div class="card inventory-card position-relative">
                 <span class="inventory-status available">Available</span>
                 <span class="stock-badge">In Stock: 5</span>
@@ -955,7 +1009,7 @@
                   <h5 class="card-title">iPhone 13</h5>
                   <h6 class="card-subtitle">Apple</h6>
                   <p class="card-text">128GB, Blue, Unlocked</p>
-                  <div class="mb-3">
+                  <div class="badge-container">
                     <span class="badge inventory-badge badge-like-new"
                       >Like New</span
                     >
@@ -963,14 +1017,16 @@
                       >Smartphone</span
                     >
                   </div>
-                  <div class="inventory-price">$450.00</div>
-                  <a href="#" class="btn btn-primary w-100">Add to Cart</a>
+                  <div class="card-actions">
+                    <div class="inventory-price">$450.00</div>
+                    <a href="#" class="btn btn-primary w-100">Add to Cart</a>
+                  </div>
                 </div>
               </div>
             </div>
 
             <!-- Item 2 -->
-            <div class="col-md-6 col-lg-4">
+            <div class="inventory-grid-item">
               <div class="card inventory-card position-relative">
                 <span class="inventory-status available">Available</span>
                 <span class="stock-badge">In Stock: 3</span>
@@ -983,20 +1039,22 @@
                   <h5 class="card-title">Samsung Galaxy S21</h5>
                   <h6 class="card-subtitle">Samsung</h6>
                   <p class="card-text">256GB, Phantom Black</p>
-                  <div class="mb-3">
+                  <div class="badge-container">
                     <span class="badge inventory-badge badge-good">Good</span>
                     <span class="badge inventory-badge bg-secondary"
                       >Smartphone</span
                     >
                   </div>
-                  <div class="inventory-price">$380.00</div>
-                  <a href="#" class="btn btn-primary w-100">Add to Cart</a>
+                  <div class="card-actions">
+                    <div class="inventory-price">$380.00</div>
+                    <a href="#" class="btn btn-primary w-100">Add to Cart</a>
+                  </div>
                 </div>
               </div>
             </div>
 
             <!-- Item 3 -->
-            <div class="col-md-6 col-lg-4">
+            <div class="inventory-grid-item">
               <div class="card inventory-card position-relative">
                 <span class="inventory-status available">Available</span>
                 <span class="stock-badge low">In Stock: 1</span>
@@ -1009,20 +1067,22 @@
                   <h5 class="card-title">MacBook Pro 13"</h5>
                   <h6 class="card-subtitle">Apple</h6>
                   <p class="card-text">M1, 8GB RAM, 256GB SSD</p>
-                  <div class="mb-3">
+                  <div class="badge-container">
                     <span class="badge inventory-badge badge-good">Good</span>
                     <span class="badge inventory-badge bg-secondary"
                       >Laptop</span
                     >
                   </div>
-                  <div class="inventory-price">$750.00</div>
-                  <a href="#" class="btn btn-primary w-100">Add to Cart</a>
+                  <div class="card-actions">
+                    <div class="inventory-price">$750.00</div>
+                    <a href="#" class="btn btn-primary w-100">Add to Cart</a>
+                  </div>
                 </div>
               </div>
             </div>
 
             <!-- Item 4 -->
-            <div class="col-md-6 col-lg-4">
+            <div class="inventory-grid-item">
               <div class="card inventory-card position-relative">
                 <span class="inventory-status available">Available</span>
                 <span class="stock-badge">In Stock: 8</span>
@@ -1035,20 +1095,22 @@
                   <h5 class="card-title">iPad Air (4th Gen)</h5>
                   <h6 class="card-subtitle">Apple</h6>
                   <p class="card-text">64GB, Space Gray, Wi-Fi</p>
-                  <div class="mb-3">
+                  <div class="badge-container">
                     <span class="badge inventory-badge badge-new">New</span>
                     <span class="badge inventory-badge bg-secondary"
                       >Tablet</span
                     >
                   </div>
-                  <div class="inventory-price">$480.00</div>
-                  <a href="#" class="btn btn-primary w-100">Add to Cart</a>
+                  <div class="card-actions">
+                    <div class="inventory-price">$480.00</div>
+                    <a href="#" class="btn btn-primary w-100">Add to Cart</a>
+                  </div>
                 </div>
               </div>
             </div>
 
             <!-- Item 5 -->
-            <div class="col-md-6 col-lg-4">
+            <div class="inventory-grid-item">
               <div class="card inventory-card position-relative">
                 <span class="inventory-status available">Available</span>
                 <span class="stock-badge">In Stock: 4</span>
@@ -1061,7 +1123,7 @@
                   <h5 class="card-title">Galaxy Tab S7</h5>
                   <h6 class="card-subtitle">Samsung</h6>
                   <p class="card-text">128GB, Mystic Silver, Wi-Fi</p>
-                  <div class="mb-3">
+                  <div class="badge-container">
                     <span class="badge inventory-badge badge-like-new"
                       >Like New</span
                     >
@@ -1069,14 +1131,16 @@
                       >Tablet</span
                     >
                   </div>
-                  <div class="inventory-price">$420.00</div>
-                  <a href="#" class="btn btn-primary w-100">Add to Cart</a>
+                  <div class="card-actions">
+                    <div class="inventory-price">$420.00</div>
+                    <a href="#" class="btn btn-primary w-100">Add to Cart</a>
+                  </div>
                 </div>
               </div>
             </div>
 
             <!-- Item 6 -->
-            <div class="col-md-6 col-lg-4">
+            <div class="inventory-grid-item">
               <div class="card inventory-card position-relative">
                 <span class="inventory-status pending">Processing</span>
                 <span class="stock-badge">In Stock: 2</span>
@@ -1089,16 +1153,18 @@
                   <h5 class="card-title">iPhone 12 Mini</h5>
                   <h6 class="card-subtitle">Apple</h6>
                   <p class="card-text">64GB, Product RED, Unlocked</p>
-                  <div class="mb-3">
+                  <div class="badge-container">
                     <span class="badge inventory-badge badge-good">Good</span>
                     <span class="badge inventory-badge bg-secondary"
                       >Smartphone</span
                     >
                   </div>
-                  <div class="inventory-price">$350.00</div>
-                  <a href="#" class="btn btn-secondary w-100 disabled"
-                    >Coming Soon</a
-                  >
+                  <div class="card-actions">
+                    <div class="inventory-price">$350.00</div>
+                    <a href="#" class="btn btn-secondary w-100 disabled"
+                      >Coming Soon</a
+                    >
+                  </div>
                 </div>
               </div>
             </div>

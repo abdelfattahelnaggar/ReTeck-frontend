@@ -142,37 +142,118 @@ function setupSearch() {
   searchInput.addEventListener("input", function () {
     const searchTerm = this.value.toLowerCase().trim();
     const allQuestions = document.querySelectorAll(".accordion-item");
+    const tabPanes = document.querySelectorAll(".tab-pane");
 
-    // If search term is empty, show all questions in the active category
+    // If search term is empty, restore original content and show active category
     if (searchTerm === "") {
+      // Restore any original content that was replaced with "no results" message
+      restoreOriginalContent();
+      // Remove search-match class from all tabs
+      document
+        .querySelectorAll(".category-tabs .list-group-item")
+        .forEach((tab) => {
+          tab.classList.remove("search-match");
+        });
+      // Show the active category
       showQuestionsInActiveCategory();
       return;
     }
 
-    // Hide all questions first
-    allQuestions.forEach((item) => {
-      item.style.display = "none";
+    // Reset all tab panes to be hidden
+    tabPanes.forEach((pane) => {
+      pane.classList.remove("show", "active");
     });
 
-    // Show questions that match the search term
-    allQuestions.forEach((item) => {
-      const questionText = item
-        .querySelector(".accordion-button")
-        .textContent.toLowerCase();
-      const answerText = item
-        .querySelector(".accordion-body")
-        .textContent.toLowerCase();
+    // Track if we have found any matches
+    let hasMatches = false;
+    // Track which tabs have matching content
+    const tabsWithMatches = new Set();
 
-      if (
-        questionText.includes(searchTerm) ||
-        answerText.includes(searchTerm)
-      ) {
-        item.style.display = "block";
+    // Check each question for matches
+    allQuestions.forEach((item) => {
+      const questionButton = item.querySelector(".accordion-button");
+      const answerBody = item.querySelector(".accordion-body");
+
+      const questionText = questionButton.textContent.toLowerCase();
+      const answerText = answerBody.textContent.toLowerCase();
+
+      // Check if this question matches the search
+      const isMatch =
+        questionText.includes(searchTerm) || answerText.includes(searchTerm);
+
+      // Set display based on match
+      item.style.display = isMatch ? "block" : "none";
+
+      if (isMatch) {
+        hasMatches = true;
+
+        // Find the tab pane that contains this question
+        const parentTabPane = item.closest(".tab-pane");
+        if (parentTabPane) {
+          // Add this tab to our set of tabs with matches
+          tabsWithMatches.add(parentTabPane.id);
+
+          // Make the tab pane visible
+          parentTabPane.classList.add("show", "active");
+        }
+
+        // Highlight the matched text
+        highlightMatches(questionButton, searchTerm);
+        highlightMatches(answerBody, searchTerm);
+
+        // Expand the accordion item
+        const collapseElement = item.querySelector(".accordion-collapse");
+        if (
+          collapseElement &&
+          collapseElement.classList.contains("collapse") &&
+          !collapseElement.classList.contains("show")
+        ) {
+          new bootstrap.Collapse(collapseElement, { toggle: true });
+        }
+      } else {
+        // Remove any existing highlights
+        removeHighlights(questionButton);
+        removeHighlights(answerBody);
       }
     });
+
+    // If we have matches, update the category tabs to show which tab is active
+    if (hasMatches) {
+      // Update category tabs to highlight tabs with matches
+      const categoryTabs = document.querySelectorAll(
+        ".category-tabs .list-group-item"
+      );
+      categoryTabs.forEach((tab) => {
+        const tabTarget = tab.getAttribute("data-target");
+
+        // If this tab has matches, highlight it
+        if (tabsWithMatches.has(tabTarget)) {
+          tab.classList.add("search-match");
+        } else {
+          tab.classList.remove("search-match");
+        }
+
+        // Remove active class from all tabs during search
+        tab.classList.remove("active");
+      });
+
+      // If we only have matches in one tab, mark that tab as active
+      if (tabsWithMatches.size === 1) {
+        const activeTabId = Array.from(tabsWithMatches)[0];
+        const activeTab = document.querySelector(
+          `.category-tabs .list-group-item[data-target="${activeTabId}"]`
+        );
+        if (activeTab) {
+          activeTab.classList.add("active");
+        }
+      }
+    } else {
+      // If no matches, show a "no results" message
+      showNoResultsMessage();
+    }
   });
 
-  // Also handle the search button click
+  // Handle the search button click
   const searchButton = document.getElementById("searchButton");
   if (searchButton) {
     searchButton.addEventListener("click", function () {
@@ -303,17 +384,23 @@ function showQuestionsInActiveCategory() {
 
   const categoryId = activeTab.getAttribute("data-target");
 
-  // Hide all questions first
-  const allQuestions = document.querySelectorAll(".accordion-item");
-  allQuestions.forEach((item) => {
-    item.style.display = "none";
+  // Hide all tab panes first
+  const tabPanes = document.querySelectorAll(".tab-pane");
+  tabPanes.forEach((pane) => {
+    pane.classList.remove("show", "active");
   });
 
-  // Show questions for the active category
-  const categoryQuestions = document.querySelectorAll(
+  // Show the selected tab pane
+  const activePane = document.getElementById(categoryId);
+  if (activePane) {
+    activePane.classList.add("show", "active");
+  }
+
+  // Ensure all questions in the active tab are visible
+  const activeQuestions = document.querySelectorAll(
     `#${categoryId} .accordion-item`
   );
-  categoryQuestions.forEach((item) => {
+  activeQuestions.forEach((item) => {
     item.style.display = "block";
   });
 }
@@ -345,4 +432,87 @@ function setupLogout() {
       }, 1000);
     });
   });
+}
+
+// Helper function to show a "no results" message
+function showNoResultsMessage() {
+  // Find the first tab pane and make it active
+  const firstTabPane = document.querySelector(".tab-pane");
+  if (firstTabPane) {
+    firstTabPane.classList.add("show", "active");
+
+    // Clear its contents and add a no results message
+    const accordionContainer = firstTabPane.querySelector(".accordion");
+    if (accordionContainer) {
+      // Store original content to restore later
+      if (!accordionContainer.hasAttribute("data-original-content")) {
+        accordionContainer.setAttribute(
+          "data-original-content",
+          accordionContainer.innerHTML
+        );
+      }
+
+      // Show no results message
+      accordionContainer.innerHTML = `
+        <div class="no-results-message">
+          <i class="fas fa-search"></i>
+          <h4>No results found</h4>
+          <p>We couldn't find any matches for your search. Please try different keywords or check the spelling.</p>
+        </div>
+      `;
+    }
+  }
+}
+
+// Helper function to restore original content after searching
+function restoreOriginalContent() {
+  // Find all accordions that might have been modified
+  document.querySelectorAll(".accordion").forEach((accordion) => {
+    if (accordion.hasAttribute("data-original-content")) {
+      // Restore the original content
+      accordion.innerHTML = accordion.getAttribute("data-original-content");
+      // Remove the stored content attribute
+      accordion.removeAttribute("data-original-content");
+    }
+  });
+}
+
+// Helper function to highlight matched text
+function highlightMatches(element, searchTerm) {
+  if (!element) return;
+
+  // Store original text if we haven't already
+  if (!element.hasAttribute("data-original-text")) {
+    element.setAttribute("data-original-text", element.innerHTML);
+  }
+
+  const originalText = element.getAttribute("data-original-text");
+  const textContent = originalText;
+
+  // Create a case-insensitive regex for the search term
+  const regex = new RegExp(`(${escapeRegExp(searchTerm)})`, "gi");
+
+  // Replace with highlighted version
+  const highlightedText = textContent.replace(
+    regex,
+    '<span class="highlight">$1</span>'
+  );
+
+  // Set the highlighted HTML
+  element.innerHTML = highlightedText;
+}
+
+// Helper function to remove highlights
+function removeHighlights(element) {
+  if (!element) return;
+
+  // Restore original text if we have it stored
+  if (element.hasAttribute("data-original-text")) {
+    element.innerHTML = element.getAttribute("data-original-text");
+  }
+}
+
+// Helper function to escape special characters in regex
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }

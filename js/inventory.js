@@ -470,13 +470,11 @@ function renderInventoryItems(items) {
   // Handle empty results
   if (items.length === 0) {
     inventoryItemsContainer.innerHTML = `
-      <div class="col-12">
-        <div class="empty-result">
-          <i class="fas fa-search"></i>
-          <h3>No items found</h3>
-          <p>We couldn't find any items matching your criteria. Try adjusting your filters or search query.</p>
-          <button class="btn btn-primary mt-3" id="clearSearchButton">Clear Search & Filters</button>
-        </div>
+      <div class="empty-result" style="grid-column: 1 / -1;">
+        <i class="fas fa-search"></i>
+        <h3>No items found</h3>
+        <p>We couldn't find any items matching your criteria. Try adjusting your filters or search query.</p>
+        <button class="btn btn-primary mt-3" id="clearSearchButton">Clear Search & Filters</button>
       </div>
     `;
 
@@ -498,7 +496,7 @@ function renderInventoryItems(items) {
   // Render each item
   paginatedItems.forEach((item) => {
     const itemElement = document.createElement("div");
-    itemElement.className = "col-md-6 col-lg-4";
+    itemElement.className = "inventory-grid-item";
 
     // Create condition badge class
     const conditionClass = `badge-${item.condition.replace("-", "-")}`;
@@ -517,7 +515,7 @@ function renderInventoryItems(items) {
           <h5 class="card-title">${item.name}</h5>
           <h6 class="card-subtitle">${item.brand}</h6>
           <p class="card-text">${item.description}</p>
-          <div class="mb-3">
+          <div class="badge-container">
             <span class="badge inventory-badge ${conditionClass}">${formatCondition(
       item.condition
     )}</span>
@@ -525,12 +523,14 @@ function renderInventoryItems(items) {
               item.type
             )}</span>
           </div>
-          <div class="inventory-price">$${item.price.toFixed(2)}</div>
-          ${
-            item.status === "available"
-              ? `<button class="btn btn-primary w-100 add-to-cart-btn" data-id="${item.id}">Add to Cart</button>`
-              : `<button class="btn btn-secondary w-100 disabled">Coming Soon</button>`
-          }
+          <div class="card-actions">
+            <div class="inventory-price">$${item.price.toFixed(2)}</div>
+            ${
+              item.status === "available"
+                ? `<button class="btn btn-primary w-100 add-to-cart-btn" data-id="${item.id}">Add to Cart</button>`
+                : `<button class="btn btn-secondary w-100 disabled">Coming Soon</button>`
+            }
+          </div>
         </div>
       </div>
     `;
