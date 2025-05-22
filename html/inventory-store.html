@@ -54,8 +54,6 @@
         --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         --hover-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         --border-radius: 0.5rem;
-        --eco-green: #2ecc71;
-        --eco-light: #e8f5e9;
       }
 
       /* Inventory header with animated gradient */
@@ -188,29 +186,6 @@
         height: 100%;
         overflow: hidden;
         background: white;
-        position: relative;
-        z-index: 1;
-      }
-
-      .inventory-card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-          135deg,
-          rgba(13, 110, 253, 0.05) 0%,
-          rgba(255, 255, 255, 0) 60%
-        );
-        z-index: -1;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-      }
-
-      .inventory-card:hover::before {
-        opacity: 1;
       }
 
       .inventory-card:hover {
@@ -224,7 +199,6 @@
         background-color: #f8f9fa;
         padding: 1.5rem;
         transition: all 0.3s ease;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
       }
 
       .inventory-card:hover .card-img-top {
@@ -234,127 +208,39 @@
 
       .inventory-card .card-body {
         padding: 1.5rem;
-        position: relative;
       }
 
       .inventory-card .card-title {
         font-weight: 700;
         font-size: 1.15rem;
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.5rem;
         color: #2c3e50;
-        transition: color 0.2s ease;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .inventory-card:hover .card-title {
-        color: var(--primary-color);
       }
 
       .inventory-card .card-subtitle {
         font-size: 0.9rem;
         color: #6c757d;
         margin-bottom: 0.75rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-      }
-
-      .inventory-card .card-subtitle::before {
-        content: "";
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background-color: var(--primary-light);
-        margin-right: 0.5rem;
+        font-weight: 500;
       }
 
       .inventory-card .card-text {
         font-size: 0.95rem;
         margin-bottom: 1rem;
         color: #495057;
-        line-height: 1.5;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        height: 3em;
       }
 
       /* Inventory badge for device conditions and types */
       .inventory-badge {
-        font-size: 0.7rem;
+        font-size: 0.75rem;
         padding: 0.35rem 0.75rem;
         margin-right: 0.5rem;
         margin-bottom: 0.5rem;
         display: inline-block;
         border-radius: 50rem;
         font-weight: 600;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.3px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        text-transform: uppercase;
-        transition: all 0.2s ease;
-      }
-
-      .inventory-badge:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-      }
-
-      /* Device type badge (secondary) enhancements */
-      .inventory-badge.bg-secondary {
-        background: linear-gradient(135deg, #6c757d, #495057);
-        position: relative;
-        overflow: hidden;
-      }
-
-      .inventory-badge.bg-secondary::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-          135deg,
-          rgba(255, 255, 255, 0.1) 0%,
-          rgba(255, 255, 255, 0) 50%
-        );
-      }
-
-      /* Quick view button */
-      .quick-view-btn {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        background: rgba(255, 255, 255, 0.9);
-        color: var(--primary-color);
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transform: translate(-10px, -10px);
-        transition: all 0.3s ease;
-        cursor: pointer;
-        border: none;
-        z-index: 5;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      }
-
-      .inventory-card:hover .quick-view-btn {
-        opacity: 1;
-        transform: translate(-15px, -15px);
-      }
-
-      .quick-view-btn:hover {
-        background: var(--primary-color);
-        color: white;
-        transform: translate(-15px, -15px) scale(1.05);
       }
 
       /* Status badges for inventory items */
@@ -367,28 +253,14 @@
         font-size: 0.75rem;
         font-weight: 600;
         z-index: 10;
-        letter-spacing: 0.5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
-        animation: fadeIn 0.5s ease-out;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(-10px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
+        letter-spacing: 0.3px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       }
 
       .inventory-status.available {
-        background-color: rgba(46, 204, 113, 0.15);
-        color: var(--eco-green);
-        border: 1px solid rgba(46, 204, 113, 0.3);
+        background-color: rgba(25, 135, 84, 0.15);
+        color: #198754;
+        border: 1px solid rgba(25, 135, 84, 0.3);
       }
 
       .inventory-status.pending {
@@ -397,77 +269,18 @@
         border: 1px solid rgba(255, 193, 7, 0.3);
       }
 
-      /* Recycling source badge */
-      .recycling-source {
-        position: absolute;
-        top: 48px;
-        right: 12px;
-        padding: 0.35rem 0.75rem;
-        border-radius: 50rem;
-        font-size: 0.7rem;
-        font-weight: 600;
-        z-index: 10;
-        letter-spacing: 0.5px;
-        background-color: rgba(13, 110, 253, 0.1);
-        color: var(--primary-color);
-        border: 1px solid rgba(13, 110, 253, 0.2);
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
-        animation: fadeIn 0.5s ease-out 0.2s;
-        animation-fill-mode: backwards;
-      }
-
-      /* Environmental impact indicator */
-      .eco-impact {
-        position: absolute;
-        bottom: 15px;
-        right: 15px;
-        z-index: 5;
-        color: var(--eco-green);
-        font-size: 0.8rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 0.3rem;
-        opacity: 0.9;
-      }
-
-      .eco-impact .icon {
-        background-color: var(--eco-light);
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
       /* Inventory price styling */
       .inventory-price {
         font-weight: 700;
-        font-size: 1.35rem;
+        font-size: 1.25rem;
         color: var(--primary-color);
         margin-bottom: 1.25rem;
-        position: relative;
-        display: inline-block;
-      }
-
-      .inventory-price::after {
-        content: "";
-        position: absolute;
-        bottom: -6px;
-        left: 0;
-        width: 40px;
-        height: 3px;
-        background: linear-gradient(90deg, var(--primary-color), transparent);
-        border-radius: 3px;
       }
 
       /* Add to cart button */
       .inventory-card .btn-primary {
         border-radius: 50rem;
-        padding: 0.6rem 1rem;
+        padding: 0.5rem 1rem;
         font-weight: 600;
         transition: all 0.3s ease;
         background: linear-gradient(
@@ -477,29 +290,6 @@
         );
         border: none;
         box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
-        position: relative;
-        overflow: hidden;
-        z-index: 1;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        letter-spacing: 0.5px;
-      }
-
-      .inventory-card .btn-primary::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          rgba(255, 255, 255, 0.2),
-          transparent
-        );
-        transition: left 0.7s ease;
-        z-index: -1;
       }
 
       .inventory-card .btn-primary:hover {
@@ -507,17 +297,102 @@
         box-shadow: 0 6px 15px rgba(13, 110, 253, 0.3);
       }
 
-      .inventory-card .btn-primary:hover::before {
-        left: 100%;
-      }
-
       .inventory-card .btn-secondary {
         border-radius: 50rem;
-        padding: 0.6rem 1rem;
+        padding: 0.5rem 1rem;
         font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        letter-spacing: 0.5px;
+      }
+
+      /* Sort dropdown styling */
+      .sort-dropdown .dropdown-toggle {
+        background-color: white;
+        border: 1px solid #e9ecef;
+        color: #495057;
+        border-radius: 50rem;
+        padding: 0.5rem 1rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      }
+
+      .sort-dropdown .dropdown-toggle:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+      }
+
+      .sort-dropdown .dropdown-menu {
+        border-radius: var(--border-radius);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        border: none;
+        padding: 0.5rem;
+      }
+
+      .sort-dropdown .dropdown-item {
+        border-radius: calc(var(--border-radius) - 0.25rem);
+        padding: 0.5rem 1rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .sort-dropdown .dropdown-item:hover {
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+      }
+
+      /* Pagination styling */
+      .pagination {
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        border-radius: 50rem;
+        overflow: hidden;
+      }
+
+      .pagination .page-item:first-child .page-link {
+        border-top-left-radius: 50rem;
+        border-bottom-left-radius: 50rem;
+      }
+
+      .pagination .page-item:last-child .page-link {
+        border-top-right-radius: 50rem;
+        border-bottom-right-radius: 50rem;
+      }
+
+      .pagination .page-item.active .page-link {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        font-weight: 600;
+        box-shadow: 0 2px 5px rgba(13, 110, 253, 0.2);
+      }
+
+      .pagination .page-link {
+        color: var(--primary-color);
+        border: none;
+        padding: 0.5rem 1rem;
+      }
+
+      .pagination .page-link:focus {
+        box-shadow: none;
+      }
+
+      /* Badge styles for device conditions */
+      .badge-new {
+        background-color: var(--success-color);
+        color: white;
+      }
+
+      .badge-like-new {
+        background-color: #20c997;
+        color: white;
+      }
+
+      .badge-good {
+        background-color: #0dcaf0;
+        color: white;
+      }
+
+      .badge-fair {
+        background-color: var(--warning-color);
+        color: #212529;
+      }
+
+      .badge-poor {
+        background-color: #fd7e14;
+        color: white;
       }
 
       /* Stock badge styles */
@@ -525,113 +400,19 @@
         position: absolute;
         top: 12px;
         left: 12px;
-        background: linear-gradient(
-          135deg,
-          rgba(13, 110, 253, 0.9),
-          rgba(9, 84, 194, 0.9)
-        );
+        background-color: rgba(13, 110, 253, 0.9);
         color: white;
-        padding: 0.4rem 0.85rem;
+        padding: 0.35rem 0.75rem;
         border-radius: 50rem;
         font-size: 0.75rem;
         font-weight: 600;
         z-index: 10;
-        letter-spacing: 0.5px;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
-        animation: slideIn 0.5s ease-out;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-      }
-
-      .stock-badge::before {
-        content: "";
-        display: inline-block;
-        width: 6px;
-        height: 6px;
-        background-color: white;
-        border-radius: 50%;
-        margin-right: 2px;
-        animation: pulse 2s infinite;
-      }
-
-      @keyframes pulse {
-        0% {
-          opacity: 0.6;
-          transform: scale(0.9);
-        }
-        50% {
-          opacity: 1;
-          transform: scale(1.2);
-        }
-        100% {
-          opacity: 0.6;
-          transform: scale(0.9);
-        }
-      }
-
-      @keyframes slideIn {
-        from {
-          opacity: 0;
-          transform: translateX(-10px);
-        }
-        to {
-          opacity: 1;
-          transform: translateX(0);
-        }
+        letter-spacing: 0.3px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       }
 
       .stock-badge.low {
-        background: linear-gradient(
-          135deg,
-          rgba(220, 53, 69, 0.9),
-          rgba(178, 34, 48, 0.9)
-        );
-      }
-
-      .stock-badge.low::before {
-        animation: pulseFast 1s infinite;
-      }
-
-      @keyframes pulseFast {
-        0% {
-          opacity: 0.6;
-          transform: scale(0.9);
-        }
-        50% {
-          opacity: 1;
-          transform: scale(1.2);
-        }
-        100% {
-          opacity: 0.6;
-          transform: scale(0.9);
-        }
-      }
-
-      /* Badge styles for device conditions */
-      .badge-new {
-        background: linear-gradient(135deg, var(--success-color), #20c997);
-        color: white;
-      }
-
-      .badge-like-new {
-        background: linear-gradient(135deg, #20c997, #0dcaf0);
-        color: white;
-      }
-
-      .badge-good {
-        background: linear-gradient(135deg, #0dcaf0, #0d6efd);
-        color: white;
-      }
-
-      .badge-fair {
-        background: linear-gradient(135deg, var(--warning-color), #fd7e14);
-        color: #212529;
-      }
-
-      .badge-poor {
-        background: linear-gradient(135deg, #fd7e14, #dc3545);
-        color: white;
+        background-color: rgba(220, 53, 69, 0.9);
       }
 
       /* Empty search result styling */
@@ -738,208 +519,32 @@
           gap: 1rem;
         }
       }
-
-      /* Enhanced navbar styling */
-      .navbar {
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        transition: all 0.3s ease;
-      }
-
-      .navbar .btn {
-        border-radius: 50rem;
-        padding: 0.5rem 1rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-      }
-
-      .navbar .btn-primary {
-        background: linear-gradient(
-          90deg,
-          var(--primary-color),
-          var(--primary-dark)
-        );
-        border: none;
-        box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
-      }
-
-      .navbar .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(13, 110, 253, 0.3);
-      }
-
-      .navbar .btn-outline-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
-      }
-
-      .navbar-brand {
-        font-size: 1.5rem;
-        letter-spacing: -0.5px;
-      }
-
-      .user-dropdown-header {
-        padding: 1rem;
-        background: linear-gradient(135deg, var(--primary-light), #e6f0ff);
-        border-radius: var(--border-radius) var(--border-radius) 0 0;
-      }
-
-      .dropdown-menu {
-        border-radius: var(--border-radius);
-        overflow: hidden;
-      }
-
-      .dropdown-item {
-        padding: 0.75rem 1rem;
-        transition: all 0.2s ease;
-      }
-
-      .dropdown-item:hover {
-        background-color: var(--primary-light);
-        color: var(--primary-dark);
-      }
-
-      @media (max-width: 767.98px) {
-        .navbar .gap-3 {
-          gap: 0.5rem !important;
-        }
-
-        .navbar .btn {
-          padding: 0.4rem 0.75rem;
-          font-size: 0.9rem;
-        }
-
-        #userName {
-          display: none;
-        }
-      }
-
-      /* Sort dropdown styling */
-      .sort-dropdown .dropdown-toggle {
-        background-color: white;
-        border: 1px solid #e9ecef;
-        color: #495057;
-        border-radius: 50rem;
-        padding: 0.5rem 1rem;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-      }
-
-      .sort-dropdown .dropdown-toggle:focus {
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-      }
-
-      .sort-dropdown .dropdown-menu {
-        border-radius: var(--border-radius);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        border: none;
-        padding: 0.5rem;
-      }
-
-      .sort-dropdown .dropdown-item {
-        border-radius: calc(var(--border-radius) - 0.25rem);
-        padding: 0.5rem 1rem;
-        margin-bottom: 0.25rem;
-      }
-
-      .sort-dropdown .dropdown-item:hover {
-        background-color: var(--primary-light);
-        color: var(--primary-dark);
-      }
-
-      /* Pagination styling */
-      .pagination {
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        border-radius: 50rem;
-        overflow: hidden;
-      }
-
-      .pagination .page-item:first-child .page-link {
-        border-top-left-radius: 50rem;
-        border-bottom-left-radius: 50rem;
-      }
-
-      .pagination .page-item:last-child .page-link {
-        border-top-right-radius: 50rem;
-        border-bottom-right-radius: 50rem;
-      }
-
-      .pagination .page-item.active .page-link {
-        background-color: var(--primary-color);
-        border-color: var(--primary-color);
-        font-weight: 600;
-        box-shadow: 0 2px 5px rgba(13, 110, 253, 0.2);
-      }
-
-      .pagination .page-link {
-        color: var(--primary-color);
-        border: none;
-        padding: 0.5rem 1rem;
-      }
-
-      .pagination .page-link:focus {
-        box-shadow: none;
-      }
     </style>
   </head>
   <body>
-    <!-- Main Navigation -->
-    <nav class="navbar navbar-expand-lg bg-white py-3 shadow-sm sticky-top">
+    <div class="top-bar">
       <div class="container">
-        <a
-          class="navbar-brand fw-bold fs-4"
-          href="http://127.0.0.1:5501/html/inventory-store.html"
-        >
-          <span class="text-primary">♻️ RETECH</span>
-        </a>
+        <div class="d-flex justify-content-between align-items-center">
+          <a class="navbar-brand" href="index.html">♻️ RETECH</a>
 
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarContent"
-          aria-controls="navbarContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarContent">
-          <div class="ms-auto d-flex align-items-center gap-3">
-            <a
-              href="cart.html"
-              class="btn btn-outline-primary position-relative"
-            >
-              <i class="fas fa-shopping-cart"></i>
-              <span
-                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-              >
-                3
-                <span class="visually-hidden">items in cart</span>
-              </span>
-            </a>
-
-            <a href="orders.html" class="btn btn-outline-primary">
-              <i class="fas fa-clipboard-list me-1"></i>
-              <span>Orders</span>
-            </a>
-
-            <!-- User profile dropdown -->
+          <div class="d-flex align-items-center">
+            <!-- User profile dropdown (will be shown when logged in) -->
             <div id="userProfile">
               <div class="dropdown">
                 <button
-                  class="btn btn-primary dropdown-toggle"
+                  class="btn btn-outline-primary dropdown-toggle"
                   type="button"
                   id="userDropdown"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  <span class="user-avatar-small me-1">
+                  <span class="user-avatar-small me-2">
                     <i class="fas fa-building"></i>
                   </span>
                   <span id="userName">Company Name</span>
                 </button>
                 <ul
-                  class="dropdown-menu dropdown-menu-end shadow border-0"
+                  class="dropdown-menu dropdown-menu-end"
                   aria-labelledby="userDropdown"
                 >
                   <div class="user-dropdown-header">
@@ -960,13 +565,72 @@
                   </li>
                   <li><hr class="dropdown-divider" /></li>
                   <li>
-                    <a class="dropdown-item" href="#" onclick="logoutUser()"
+                    <a class="dropdown-item" href="#" onclick="logout()"
                       ><i class="fas fa-sign-out-alt me-2"></i>Logout</a
                     >
                   </li>
                 </ul>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#mainNavigation"
+          aria-controls="mainNavigation"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNavigation">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about-us.html">About Us</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="inventory-store.html"
+                >Inventory</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="processing.html">Processing</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="reports.html">Reports</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="contact-us.html">Contact Us</a>
+            </li>
+          </ul>
+          <div class="d-flex align-items-center">
+            <a
+              href="cart.html"
+              class="btn btn-outline-primary position-relative me-3"
+            >
+              <i class="fas fa-shopping-cart"></i>
+              <span
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+              >
+                3
+                <span class="visually-hidden">items in cart</span>
+              </span>
+            </a>
+            <a href="orders.html" class="btn btn-outline-primary me-3">
+              <i class="fas fa-clipboard-list me-1"></i>
+              <span>My Orders</span>
+            </a>
           </div>
         </div>
       </div>
@@ -978,16 +642,14 @@
         <div class="row align-items-center">
           <div class="col-md-6">
             <h1>Recycling Inventory</h1>
-            <p class="lead mb-0">
-              Browse collected devices available for processing
-            </p>
+            <p class="lead mb-0">Browse available devices for processing</p>
           </div>
           <div class="col-md-6">
             <div class="input-group">
               <input
                 type="text"
                 class="form-control"
-                placeholder="Search recycled devices..."
+                placeholder="Search devices..."
                 id="inventorySearch"
               />
               <button
@@ -1189,62 +851,6 @@
             </div>
 
             <div class="filter-group">
-              <div class="filter-group-title">Recycling Source</div>
-              <div class="form-check mb-2">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  value="tradein"
-                  id="filterTradeIn"
-                  checked
-                />
-                <label class="form-check-label" for="filterTradeIn">
-                  <i class="fas fa-exchange-alt me-1 text-muted"></i> Customer
-                  Trade-in
-                </label>
-              </div>
-              <div class="form-check mb-2">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  value="ewaste"
-                  id="filterEwaste"
-                  checked
-                />
-                <label class="form-check-label" for="filterEwaste">
-                  <i class="fas fa-trash-alt me-1 text-muted"></i> E-waste
-                  Collection
-                </label>
-              </div>
-              <div class="form-check mb-2">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  value="corporate"
-                  id="filterCorporate"
-                  checked
-                />
-                <label class="form-check-label" for="filterCorporate">
-                  <i class="fas fa-building me-1 text-muted"></i> Corporate
-                  Recycling
-                </label>
-              </div>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  value="dropoff"
-                  id="filterDropoff"
-                  checked
-                />
-                <label class="form-check-label" for="filterDropoff">
-                  <i class="fas fa-map-marker-alt me-1 text-muted"></i> Drop-off
-                  Location
-                </label>
-              </div>
-            </div>
-
-            <div class="filter-group">
               <div class="filter-group-title">Price Range</div>
               <div class="mb-3">
                 <label
@@ -1268,13 +874,13 @@
 
             <div class="mt-3">
               <button class="btn btn-primary w-100" id="applyFilters">
-                <i class="fas fa-filter me-2"></i>Apply Filters
+                Apply Filters
               </button>
               <button
                 class="btn btn-outline-secondary w-100 mt-2"
                 id="resetFilters"
               >
-                <i class="fas fa-undo me-2"></i>Reset Filters
+                Reset Filters
               </button>
             </div>
           </div>
@@ -1287,7 +893,7 @@
           >
             <div>
               <h5 class="mb-0">
-                Showing <span id="resultCount">6</span> recycled devices
+                Showing <span id="resultCount">6</span> results
               </h5>
             </div>
             <div class="dropdown sort-dropdown">
@@ -1307,12 +913,12 @@
               >
                 <li>
                   <a class="dropdown-item" href="#" data-sort="newest"
-                    >Recently Added</a
+                    >Newest</a
                   >
                 </li>
                 <li>
                   <a class="dropdown-item" href="#" data-sort="oldest"
-                    >Oldest First</a
+                    >Oldest</a
                   >
                 </li>
                 <li>
@@ -1327,38 +933,24 @@
                 </li>
                 <li>
                   <a class="dropdown-item" href="#" data-sort="condition"
-                    >Best Condition</a
-                  >
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#" data-sort="value"
-                    >Recycling Value</a
+                    >Condition</a
                   >
                 </li>
               </ul>
             </div>
           </div>
+
           <div class="row g-4 mb-4" id="inventoryItems">
             <!-- Item 1 -->
             <div class="col-md-6 col-lg-4">
               <div class="card inventory-card position-relative">
-                <span class="inventory-status available"
-                  >Ready for Processing</span
-                >
-                <span class="recycling-source">Customer Trade-in</span>
+                <span class="inventory-status available">Available</span>
                 <span class="stock-badge">In Stock: 5</span>
                 <img
-                  src="images/product-test.jpg"
+                  src="https://via.placeholder.com/300x300?text=iPhone+13"
                   class="card-img-top"
                   alt="iPhone 13"
                 />
-                <button class="quick-view-btn" title="View device details">
-                  <i class="fas fa-search"></i>
-                </button>
-                <div class="eco-impact">
-                  <span class="icon"><i class="fas fa-leaf fa-xs"></i></span>
-                  <span>High reuse value</span>
-                </div>
                 <div class="card-body">
                   <h5 class="card-title">iPhone 13</h5>
                   <h6 class="card-subtitle">Apple</h6>
@@ -1372,9 +964,7 @@
                     >
                   </div>
                   <div class="inventory-price">$450.00</div>
-                  <a href="#" class="btn btn-primary w-100">
-                    <i class="fas fa-recycle me-2"></i>Add to Processing
-                  </a>
+                  <a href="#" class="btn btn-primary w-100">Add to Cart</a>
                 </div>
               </div>
             </div>
@@ -1382,23 +972,13 @@
             <!-- Item 2 -->
             <div class="col-md-6 col-lg-4">
               <div class="card inventory-card position-relative">
-                <span class="inventory-status available"
-                  >Ready for Processing</span
-                >
-                <span class="recycling-source">E-waste Collection</span>
+                <span class="inventory-status available">Available</span>
                 <span class="stock-badge">In Stock: 3</span>
                 <img
-                  src="/images/product-test.jpg"
+                  src="https://via.placeholder.com/300x300?text=Samsung+Galaxy+S21"
                   class="card-img-top"
                   alt="Samsung Galaxy S21"
                 />
-                <button class="quick-view-btn" title="View device details">
-                  <i class="fas fa-search"></i>
-                </button>
-                <div class="eco-impact">
-                  <span class="icon"><i class="fas fa-leaf fa-xs"></i></span>
-                  <span>High reuse value</span>
-                </div>
                 <div class="card-body">
                   <h5 class="card-title">Samsung Galaxy S21</h5>
                   <h6 class="card-subtitle">Samsung</h6>
@@ -1410,9 +990,7 @@
                     >
                   </div>
                   <div class="inventory-price">$380.00</div>
-                  <a href="#" class="btn btn-primary w-100">
-                    <i class="fas fa-recycle me-2"></i>Add to Processing
-                  </a>
+                  <a href="#" class="btn btn-primary w-100">Add to Cart</a>
                 </div>
               </div>
             </div>
@@ -1420,23 +998,13 @@
             <!-- Item 3 -->
             <div class="col-md-6 col-lg-4">
               <div class="card inventory-card position-relative">
-                <span class="inventory-status available"
-                  >Ready for Processing</span
-                >
-                <span class="recycling-source">Corporate Recycling</span>
+                <span class="inventory-status available">Available</span>
                 <span class="stock-badge low">In Stock: 1</span>
                 <img
-                  src="../images/product-test.jpg"
+                  src="https://via.placeholder.com/300x300?text=MacBook+Pro"
                   class="card-img-top"
                   alt="MacBook Pro"
                 />
-                <button class="quick-view-btn" title="View device details">
-                  <i class="fas fa-search"></i>
-                </button>
-                <div class="eco-impact">
-                  <span class="icon"><i class="fas fa-leaf fa-xs"></i></span>
-                  <span>High reuse value</span>
-                </div>
                 <div class="card-body">
                   <h5 class="card-title">MacBook Pro 13"</h5>
                   <h6 class="card-subtitle">Apple</h6>
@@ -1448,9 +1016,7 @@
                     >
                   </div>
                   <div class="inventory-price">$750.00</div>
-                  <a href="#" class="btn btn-primary w-100">
-                    <i class="fas fa-recycle me-2"></i>Add to Processing
-                  </a>
+                  <a href="#" class="btn btn-primary w-100">Add to Cart</a>
                 </div>
               </div>
             </div>
@@ -1458,23 +1024,13 @@
             <!-- Item 4 -->
             <div class="col-md-6 col-lg-4">
               <div class="card inventory-card position-relative">
-                <span class="inventory-status available"
-                  >Ready for Processing</span
-                >
-                <span class="recycling-source">Customer Trade-in</span>
+                <span class="inventory-status available">Available</span>
                 <span class="stock-badge">In Stock: 8</span>
                 <img
-                  src="../images/product-test.jpg"
+                  src="https://via.placeholder.com/300x300?text=iPad+Air"
                   class="card-img-top"
                   alt="iPad Air"
                 />
-                <button class="quick-view-btn" title="View device details">
-                  <i class="fas fa-search"></i>
-                </button>
-                <div class="eco-impact">
-                  <span class="icon"><i class="fas fa-leaf fa-xs"></i></span>
-                  <span>High reuse value</span>
-                </div>
                 <div class="card-body">
                   <h5 class="card-title">iPad Air (4th Gen)</h5>
                   <h6 class="card-subtitle">Apple</h6>
@@ -1486,9 +1042,7 @@
                     >
                   </div>
                   <div class="inventory-price">$480.00</div>
-                  <a href="#" class="btn btn-primary w-100">
-                    <i class="fas fa-recycle me-2"></i>Add to Processing
-                  </a>
+                  <a href="#" class="btn btn-primary w-100">Add to Cart</a>
                 </div>
               </div>
             </div>
@@ -1496,23 +1050,13 @@
             <!-- Item 5 -->
             <div class="col-md-6 col-lg-4">
               <div class="card inventory-card position-relative">
-                <span class="inventory-status available"
-                  >Ready for Processing</span
-                >
-                <span class="recycling-source">E-waste Collection</span>
+                <span class="inventory-status available">Available</span>
                 <span class="stock-badge">In Stock: 4</span>
                 <img
-                  src="../images/product-test.jpg"
+                  src="https://via.placeholder.com/300x300?text=Samsung+Galaxy+Tab+S7"
                   class="card-img-top"
                   alt="Samsung Galaxy Tab S7"
                 />
-                <button class="quick-view-btn" title="View device details">
-                  <i class="fas fa-search"></i>
-                </button>
-                <div class="eco-impact">
-                  <span class="icon"><i class="fas fa-leaf fa-xs"></i></span>
-                  <span>High reuse value</span>
-                </div>
                 <div class="card-body">
                   <h5 class="card-title">Galaxy Tab S7</h5>
                   <h6 class="card-subtitle">Samsung</h6>
@@ -1526,9 +1070,7 @@
                     >
                   </div>
                   <div class="inventory-price">$420.00</div>
-                  <a href="#" class="btn btn-primary w-100">
-                    <i class="fas fa-recycle me-2"></i>Add to Processing
-                  </a>
+                  <a href="#" class="btn btn-primary w-100">Add to Cart</a>
                 </div>
               </div>
             </div>
@@ -1536,21 +1078,13 @@
             <!-- Item 6 -->
             <div class="col-md-6 col-lg-4">
               <div class="card inventory-card position-relative">
-                <span class="inventory-status pending">Being Inspected</span>
-                <span class="recycling-source">Drop-off Location</span>
+                <span class="inventory-status pending">Processing</span>
                 <span class="stock-badge">In Stock: 2</span>
                 <img
-                  src="../images/product-test.jpg"
+                  src="https://via.placeholder.com/300x300?text=iPhone+12+Mini"
                   class="card-img-top"
                   alt="iPhone 12 Mini"
                 />
-                <button class="quick-view-btn" title="View device details">
-                  <i class="fas fa-search"></i>
-                </button>
-                <div class="eco-impact">
-                  <span class="icon"><i class="fas fa-leaf fa-xs"></i></span>
-                  <span>High reuse value</span>
-                </div>
                 <div class="card-body">
                   <h5 class="card-title">iPhone 12 Mini</h5>
                   <h6 class="card-subtitle">Apple</h6>
@@ -1562,9 +1096,9 @@
                     >
                   </div>
                   <div class="inventory-price">$350.00</div>
-                  <a href="#" class="btn btn-secondary w-100 disabled">
-                    <i class="fas fa-clock me-2"></i>Coming Soon
-                  </a>
+                  <a href="#" class="btn btn-secondary w-100 disabled"
+                    >Coming Soon</a
+                  >
                 </div>
               </div>
             </div>
@@ -1706,8 +1240,6 @@
     <!-- Custom JavaScript -->
     <script src="../js/main.js"></script>
     <script src="../js/auth.js"></script>
-    <script src="../js/utils.js"></script>
-    <script src="../js/inventory.js"></script>
 
     <script>
       // Initialize price range display

@@ -15,7 +15,7 @@ const inventoryData = [
     price: 450.0,
     stock: 5,
     status: "available",
-    image: "../images/product-test.jpg",
+    image: "https://via.placeholder.com/300x300?text=iPhone+13",
     dateAdded: new Date(2023, 10, 15),
   },
   {
@@ -28,7 +28,7 @@ const inventoryData = [
     price: 380.0,
     stock: 3,
     status: "available",
-    image: "../images/product-test.jpg",
+    image: "https://via.placeholder.com/300x300?text=Samsung+Galaxy+S21",
     dateAdded: new Date(2023, 9, 25),
   },
   {
@@ -41,7 +41,7 @@ const inventoryData = [
     price: 750.0,
     stock: 1,
     status: "available",
-    image: "../images/product-test.jpg",
+    image: "https://via.placeholder.com/300x300?text=MacBook+Pro",
     dateAdded: new Date(2023, 11, 5),
   },
   {
@@ -54,7 +54,7 @@ const inventoryData = [
     price: 480.0,
     stock: 8,
     status: "available",
-    image: "../images/product-test.jpg",
+    image: "https://via.placeholder.com/300x300?text=iPad+Air",
     dateAdded: new Date(2023, 11, 20),
   },
   {
@@ -67,7 +67,7 @@ const inventoryData = [
     price: 420.0,
     stock: 4,
     status: "available",
-    image: "../images/product-test.jpg",
+    image: "https://via.placeholder.com/300x300?text=Samsung+Galaxy+Tab+S7",
     dateAdded: new Date(2023, 10, 30),
   },
   {
@@ -80,7 +80,7 @@ const inventoryData = [
     price: 350.0,
     stock: 2,
     status: "pending",
-    image: "../images/product-test.jpg",
+    image: "https://via.placeholder.com/300x300?text=iPhone+12+Mini",
     dateAdded: new Date(2023, 8, 10),
   },
   {
@@ -93,7 +93,7 @@ const inventoryData = [
     price: 820.0,
     stock: 2,
     status: "available",
-    image: "../images/product-test.jpg",
+    image: "https://via.placeholder.com/300x300?text=Dell+XPS+13",
     dateAdded: new Date(2023, 11, 12),
   },
   {
@@ -106,7 +106,7 @@ const inventoryData = [
     price: 450.0,
     stock: 3,
     status: "available",
-    image: "../images/product-test.jpg",
+    image: "https://via.placeholder.com/300x300?text=HP+Pavilion",
     dateAdded: new Date(2023, 10, 20),
   },
   {
@@ -119,7 +119,7 @@ const inventoryData = [
     price: 380.0,
     stock: 6,
     status: "available",
-    image: "../images/product-test.jpg",
+    image: "https://via.placeholder.com/300x300?text=Apple+Watch+Series+7",
     dateAdded: new Date(2023, 11, 18),
   },
   {
@@ -132,7 +132,7 @@ const inventoryData = [
     price: 450.0,
     stock: 1,
     status: "available",
-    image: "../images/product-test.jpg",
+    image: "https://via.placeholder.com/300x300?text=PlayStation+5",
     dateAdded: new Date(2023, 7, 30),
   },
   {
@@ -145,7 +145,7 @@ const inventoryData = [
     price: 580.0,
     stock: 2,
     status: "pending",
-    image: "../images/product-test.jpg",
+    image: "https://via.placeholder.com/300x300?text=LG+Gram+17",
     dateAdded: new Date(2023, 9, 15),
   },
   {
@@ -158,7 +158,7 @@ const inventoryData = [
     price: 120.0,
     stock: 12,
     status: "available",
-    image: "../images/product-test.jpg",
+    image: "https://via.placeholder.com/300x300?text=Galaxy+Buds+Pro",
     dateAdded: new Date(2023, 10, 25),
   },
 ];
@@ -690,8 +690,6 @@ function showToast(message, type = "success") {
     toastContainer = document.createElement("div");
     toastContainer.className =
       "toast-container position-fixed bottom-0 end-0 p-3";
-    toastContainer.style.zIndex = "9999"; // Add high z-index
-    toastContainer.style.pointerEvents = "none"; // Let clicks pass through container
     document.body.appendChild(toastContainer);
   }
 
@@ -703,9 +701,6 @@ function showToast(message, type = "success") {
   toast.setAttribute("aria-live", "assertive");
   toast.setAttribute("aria-atomic", "true");
   toast.setAttribute("id", toastId);
-  toast.style.pointerEvents = "auto"; // Allow interaction with toast itself
-  toast.style.minWidth = "250px"; // Minimum width
-  toast.style.boxShadow = "0 0.5rem 1rem rgba(0, 0, 0, 0.15)"; // Add shadow for better visibility
 
   // Create toast content
   const icon =
