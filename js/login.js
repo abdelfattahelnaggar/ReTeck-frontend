@@ -128,11 +128,38 @@ function initLoginForm() {
     const password = passwordEl.value;
     const rememberMe = rememberMeCheckbox ? rememberMeCheckbox.checked : false;
 
-    console.log("Login attempt:", email, "Password length:", password.length);
+    // Get selected role
+    const selectedRole = document.querySelector(
+      'input[name="userRole"]:checked'
+    ).value;
+
+    console.log(
+      "Login attempt:",
+      email,
+      "Password length:",
+      password.length,
+      "Selected role:",
+      selectedRole
+    );
 
     // Validate email format
     if (!validateEmail(email)) {
       showLoginMessage("Please enter a valid email address", "danger");
+      return;
+    }
+
+    // Validate that email matches the selected role
+    const roleEmailMappings = {
+      customer: "user@example.com",
+      company: "company@recycling.com",
+      admin: "admin@retech.com",
+    };
+
+    if (roleEmailMappings[selectedRole] !== email) {
+      showLoginMessage(
+        `This email is not registered as a ${selectedRole}. Please select the correct role or use the appropriate email.`,
+        "danger"
+      );
       return;
     }
 
@@ -141,9 +168,13 @@ function initLoginForm() {
 
     // Simulate network delay (remove in production)
     setTimeout(function () {
-      // Handle demo user credentials directly
-      if (email === "user@example.com" && password === "user123") {
-        console.log("Demo user login successful");
+      // Handle user credentials based on selected role
+      if (
+        selectedRole === "customer" &&
+        email === "user@example.com" &&
+        password === "user123"
+      ) {
+        console.log("Customer login successful");
 
         // Store user data in localStorage
         localStorage.setItem("userEmail", email);
@@ -164,9 +195,13 @@ function initLoginForm() {
         return;
       }
 
-      // Handle company credentials directly
+      // Check if there's a company login attempt
       if (email === "company@recycling.com" && password === "company123") {
-        console.log("Company login successful");
+        console.log("Company login attempt detected - Debug check");
+        console.log(
+          "Role selection:",
+          selectedRole === "company" ? "correct" : "incorrect"
+        );
 
         // Store user data in localStorage
         localStorage.setItem("userEmail", email);
@@ -187,31 +222,12 @@ function initLoginForm() {
         return;
       }
 
-      // Handle recycling company credentials directly
-      if (email === "recycling@retech.com" && password === "recycling123") {
-        console.log("Recycling company login successful");
-
-        // Store user data in localStorage
-        localStorage.setItem("userEmail", email);
-        localStorage.setItem("userRole", "recycling");
-        localStorage.setItem("isLoggedIn", "true");
-
-        if (rememberMe) {
-          localStorage.setItem("rememberMe", "true");
-        } else {
-          localStorage.removeItem("rememberMe");
-        }
-
-        // Ensure recycling company user exists in localStorage
-        createRecyclingUserIfNeeded(email);
-
-        // Redirect to recycling dashboard
-        window.location.href = "recycling-dashboard.html";
-        return;
-      }
-
-      // Handle admin credentials directly
-      if (email === "admin@retech.com" && password === "admin123") {
+      // Handle admin credentials
+      if (
+        selectedRole === "admin" &&
+        email === "admin@retech.com" &&
+        password === "admin123"
+      ) {
         console.log("Admin login successful");
 
         // Store user data in localStorage
@@ -238,12 +254,22 @@ function initLoginForm() {
       const userData = users[email];
 
       if (userData && validatePassword(password, userData.passwordHash)) {
+        // Verify role matches
+        if (userData.role !== selectedRole) {
+          showLoginMessage(
+            `This email is registered as a ${userData.role}, not a ${selectedRole}. Please select the correct role.`,
+            "danger"
+          );
+          setLoginButtonLoading(false);
+          return;
+        }
+
         // Login successful
         console.log("Login successful");
 
         // Store user data in localStorage
         localStorage.setItem("userEmail", email);
-        localStorage.setItem("userRole", "customer");
+        localStorage.setItem("userRole", selectedRole);
         localStorage.setItem("isLoggedIn", "true");
 
         if (rememberMe) {
@@ -257,11 +283,31 @@ function initLoginForm() {
           window.performanceMonitor.endTiming("loginProcess");
         }
 
-        // Redirect to home page
-        window.location.href = "index.html";
+        // Redirect based on role
+        switch (selectedRole) {
+          case "customer":
+            window.location.href = "index.html";
+            break;
+          case "company":
+            window.location.href = "recycling-dashboard.html";
+            break;
+          case "admin":
+            window.location.href = "admin-dashboard.html";
+            break;
+          default:
+            window.location.href = "index.html";
+        }
       } else {
         // Login failed
         console.log("Login failed");
+        console.log(
+          "Debug - Company login attempt:",
+          email === "company@recycling.com",
+          "Password match:",
+          password === "company123",
+          "Selected role:",
+          selectedRole
+        );
         showLoginMessage("Invalid email or password", "danger");
         setLoginButtonLoading(false);
 
@@ -311,11 +357,6 @@ function setupKeyboardShortcuts() {
     // Alt+C to fill company credentials
     if (e.altKey && e.key === "c") {
       fillCompanyCredentials();
-    }
-
-    // Alt+R to fill recycling company credentials
-    if (e.altKey && e.key === "r") {
-      fillRecyclingCredentials();
     }
   });
 }
@@ -378,21 +419,6 @@ function fillCompanyCredentials() {
     emailInput.classList.remove("filled-animation");
     passwordInput.classList.remove("filled-animation");
   }, 1000);
-}
-
-/**
- * Fill recycling company credentials for testing
- */
-function fillRecyclingCredentials() {
-  if (emailInput && passwordInput) {
-    emailInput.value = "recycling@retech.com";
-    passwordInput.value = "recycling123";
-
-    // Focus on the login button
-    if (loginButton) {
-      loginButton.focus();
-    }
-  }
 }
 
 /**
@@ -582,41 +608,4 @@ function createAdminUserIfNeeded(email) {
 
     localStorage.setItem(`userData_${email}`, JSON.stringify(userData));
   }
-}
-
-/**
- * Create a recycling company user if needed
- * @param {string} email - The user's email
- */
-function createRecyclingUserIfNeeded(email) {
-  const users = JSON.parse(localStorage.getItem("users") || "{}");
-
-  // Check if user already exists
-  if (users[email]) {
-    return;
-  }
-
-  // Create a recycling company user
-  users[email] = {
-    email: email,
-    firstName: "Recycling",
-    lastName: "Manager",
-    passwordHash: "recycling123", // In a real app, this would be a proper hash
-    role: "recycling",
-    createDate: new Date().toISOString(),
-    points: 0,
-    preferences: {
-      notifications: true,
-      theme: "light",
-    },
-    profile: {
-      company: "RETECH Recycling",
-      position: "Recycling Manager",
-      phone: "555-123-4567",
-      address: "123 Eco Street, Green City",
-    },
-  };
-
-  // Save to localStorage
-  localStorage.setItem("users", JSON.stringify(users));
 }
