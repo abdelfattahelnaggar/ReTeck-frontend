@@ -182,8 +182,31 @@ function initLoginForm() {
         // Ensure company user exists in localStorage
         createCompanyUserIfNeeded(email);
 
-        // Redirect to inventory store
-        window.location.href = "inventory-store.html";
+        // Redirect to recycling dashboard
+        window.location.href = "recycling-dashboard.html";
+        return;
+      }
+
+      // Handle recycling company credentials directly
+      if (email === "recycling@retech.com" && password === "recycling123") {
+        console.log("Recycling company login successful");
+
+        // Store user data in localStorage
+        localStorage.setItem("userEmail", email);
+        localStorage.setItem("userRole", "recycling");
+        localStorage.setItem("isLoggedIn", "true");
+
+        if (rememberMe) {
+          localStorage.setItem("rememberMe", "true");
+        } else {
+          localStorage.removeItem("rememberMe");
+        }
+
+        // Ensure recycling company user exists in localStorage
+        createRecyclingUserIfNeeded(email);
+
+        // Redirect to recycling dashboard
+        window.location.href = "recycling-dashboard.html";
         return;
       }
 
@@ -271,13 +294,12 @@ function setupPasswordToggle() {
 }
 
 /**
- * Set up keyboard shortcuts for demo credentials
+ * Set up keyboard shortcuts
  */
 function setupKeyboardShortcuts() {
-  // Use event delegation for better performance
   document.addEventListener("keydown", function (e) {
-    // Alt+F to fill test credentials
-    if (e.altKey && e.key === "f") {
+    // Alt+T to fill test credentials (customer)
+    if (e.altKey && e.key === "t") {
       fillTestCredentials();
     }
 
@@ -286,9 +308,14 @@ function setupKeyboardShortcuts() {
       fillAdminCredentials();
     }
 
-    // Alt+R to fill company credentials
-    if (e.altKey && e.key === "r") {
+    // Alt+C to fill company credentials
+    if (e.altKey && e.key === "c") {
       fillCompanyCredentials();
+    }
+
+    // Alt+R to fill recycling company credentials
+    if (e.altKey && e.key === "r") {
+      fillRecyclingCredentials();
     }
   });
 }
@@ -351,6 +378,21 @@ function fillCompanyCredentials() {
     emailInput.classList.remove("filled-animation");
     passwordInput.classList.remove("filled-animation");
   }, 1000);
+}
+
+/**
+ * Fill recycling company credentials for testing
+ */
+function fillRecyclingCredentials() {
+  if (emailInput && passwordInput) {
+    emailInput.value = "recycling@retech.com";
+    passwordInput.value = "recycling123";
+
+    // Focus on the login button
+    if (loginButton) {
+      loginButton.focus();
+    }
+  }
 }
 
 /**
@@ -540,4 +582,41 @@ function createAdminUserIfNeeded(email) {
 
     localStorage.setItem(`userData_${email}`, JSON.stringify(userData));
   }
+}
+
+/**
+ * Create a recycling company user if needed
+ * @param {string} email - The user's email
+ */
+function createRecyclingUserIfNeeded(email) {
+  const users = JSON.parse(localStorage.getItem("users") || "{}");
+
+  // Check if user already exists
+  if (users[email]) {
+    return;
+  }
+
+  // Create a recycling company user
+  users[email] = {
+    email: email,
+    firstName: "Recycling",
+    lastName: "Manager",
+    passwordHash: "recycling123", // In a real app, this would be a proper hash
+    role: "recycling",
+    createDate: new Date().toISOString(),
+    points: 0,
+    preferences: {
+      notifications: true,
+      theme: "light",
+    },
+    profile: {
+      company: "RETECH Recycling",
+      position: "Recycling Manager",
+      phone: "555-123-4567",
+      address: "123 Eco Street, Green City",
+    },
+  };
+
+  // Save to localStorage
+  localStorage.setItem("users", JSON.stringify(users));
 }

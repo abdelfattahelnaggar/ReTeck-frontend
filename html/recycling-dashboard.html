@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Recycling Company Dashboard" />
+    <title>Recycling Company Dashboard - RETECH</title>
+    <link rel="icon" href="../images/recycle-symbol.png" type="image/x-icon" />
+
+    <!-- Resource hints for faster loading -->
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+
+    <!-- Preload critical resources -->
+    <link
+      rel="preload"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      as="style"
+    />
+    <link
+      rel="preload"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      as="style"
+    />
+    <link rel="preload" href="../css/main.css" as="style" />
+
+    <!--bootstrap-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!--fontawesome-->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../css/main.css" />
+
+    <style>
+      /* Recycling company specific styles */
+      :root {
+        --primary-color: #0d6efd;
+        --primary-dark: #0b5ed7;
+        --primary-light: #cfe2ff;
+        --success-color: #198754;
+        --warning-color: #ffc107;
+        --danger-color: #dc3545;
+        --light-bg: #f8f9fa;
+        --dark-bg: #212529;
+        --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        --hover-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        --border-radius: 0.5rem;
+      }
+
+      /* Company dashboard styles */
+      .company-navbar {
+        background-color: #2e7d32;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+      }
+
+      .company-navbar .navbar-brand {
+        font-weight: 700;
+        color: white;
+      }
+
+      .company-navbar .nav-link {
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 500;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .company-navbar .nav-link:hover,
+      .company-navbar .nav-link.active {
+        color: #aed581;
+        background-color: rgba(66, 66, 66, 0.2);
+        border-radius: 0.35rem;
+      }
+
+      .company-navbar .nav-link i {
+        margin-right: 0.5rem;
+      }
+
+      .dashboard-header {
+        background: linear-gradient(
+          135deg,
+          var(--primary-dark),
+          var(--primary-color)
+        );
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+      }
+
+      .dashboard-header h1 {
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+
+      .dashboard-header .lead {
+        opacity: 0.9;
+      }
+
+      .stats-card {
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: var(--card-shadow);
+        transition: all 0.3s ease;
+      }
+
+      .stats-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+      }
+
+      .stats-card .icon {
+        width: 4rem;
+        height: 4rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        margin-bottom: 1rem;
+      }
+
+      .stats-card .title {
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+
+      .stats-card .value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+
+      .stats-card .subtitle {
+        color: #6c757d;
+        font-size: 0.875rem;
+      }
+
+      .device-card {
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+      }
+
+      .device-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+      }
+
+      .device-card .card-header {
+        background-color: #f8f9fa;
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      .device-card .card-title {
+        margin-bottom: 0;
+        font-weight: 600;
+      }
+
+      .device-card .device-badge {
+        border-radius: 30px;
+        font-size: 0.75rem;
+        padding: 0.35em 0.65em;
+        font-weight: 500;
+      }
+
+      .device-info {
+        display: flex;
+        margin-bottom: 0.5rem;
+      }
+
+      .device-info-label {
+        width: 120px;
+        font-weight: 500;
+        color: #6c757d;
+      }
+
+      .device-info-value {
+        flex: 1;
+      }
+
+      .add-to-cart-btn {
+        transition: all 0.3s ease;
+      }
+
+      .add-to-cart-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .badge-pickup {
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+      }
+
+      .badge-dropoff {
+        background-color: #d1e7dd;
+        color: var(--success-color);
+      }
+
+      .badge-pending {
+        background-color: #fff3cd;
+        color: #664d03;
+      }
+
+      .badge-processed {
+        background-color: #d1e7dd;
+        color: var(--success-color);
+      }
+
+      .badge-ordered {
+        background-color: #cff4fc;
+        color: #055160;
+      }
+
+      /* Filter section */
+      .filter-card {
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+        margin-bottom: 1.5rem;
+      }
+
+      .filter-card .card-header {
+        background-color: var(--light-bg);
+        padding: 1rem 1.25rem;
+        font-weight: 600;
+      }
+
+      .filter-group {
+        margin-bottom: 1.25rem;
+      }
+
+      .filter-group:last-child {
+        margin-bottom: 0;
+      }
+
+      .filter-group-title {
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: #495057;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Recycling Company Navigation -->
+    <nav class="navbar navbar-expand-lg company-navbar bg-black">
+      <div class="container bg-dark">
+        <a class="navbar-brand" href="recycling-dashboard.html">
+          <i class="fas fa-recycle me-2"></i>Recycling Dashboard
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#companyNavigation"
+          aria-controls="companyNavigation"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="companyNavigation">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" href="recycling-dashboard.html">
+                <i class="fas fa-home"></i>Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="recycling-cart.html">
+                <i class="fas fa-shopping-cart"></i>Cart
+                <span class="badge bg-light text-dark cart-count">0</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="recycling-orders.html">
+                <i class="fas fa-box"></i>My Orders
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="company-profile.html">
+                <i class="fas fa-id-card"></i>Profile
+              </a>
+            </li>
+          </ul>
+          <div class="d-flex align-items-center">
+            <div class="dropdown">
+              <button
+                class="btn btn-outline-light dropdown-toggle d-flex align-items-center"
+                type="button"
+                id="userDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <span class="user-avatar-small me-2 bg-white text-primary">
+                  <i class="fas fa-building"></i>
+                </span>
+                <span class="user-name" id="companyName">Company</span>
+              </button>
+              <ul
+                class="dropdown-menu dropdown-menu-end"
+                aria-labelledby="userDropdown"
+              >
+                <div class="user-dropdown-header">
+                  <div class="user-dropdown-avatar bg-primary">
+                    <i class="fas fa-building text-white"></i>
+                  </div>
+                  <div class="user-dropdown-info">
+                    <div class="name" id="dropdownCompanyName">
+                      Green Recycling Co.
+                    </div>
+                    <div class="email" id="dropdownCompanyEmail">
+                      company@recycling.com
+                    </div>
+                  </div>
+                </div>
+                <li>
+                  <a class="dropdown-item" href="company-profile.html">
+                    <i class="fas fa-id-card me-2"></i>Company Profile
+                  </a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item" href="#" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+      <div class="container">
+        <h1>Recycling Dashboard</h1>
+        <p class="lead">
+          Manage collected devices and process recycling orders
+        </p>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+      <!-- Stats Section -->
+      <div class="row mb-4">
+        <div class="col-md-3">
+          <div class="stats-card bg-white">
+            <div class="icon bg-primary-light text-primary">
+              <i class="fas fa-mobile-alt"></i>
+            </div>
+            <h5 class="title">Available Devices</h5>
+            <div class="value" id="availableDevicesCount">24</div>
+            <div class="subtitle">Ready for processing</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stats-card bg-white">
+            <div class="icon bg-success-light text-success">
+              <i class="fas fa-shopping-cart"></i>
+            </div>
+            <h5 class="title">In Cart</h5>
+            <div class="value" id="cartItemsCount">0</div>
+            <div class="subtitle">Pending selection</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stats-card bg-white">
+            <div class="icon bg-info-light text-info">
+              <i class="fas fa-box"></i>
+            </div>
+            <h5 class="title">Orders</h5>
+            <div class="value" id="ordersCount">12</div>
+            <div class="subtitle">Processed items</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stats-card bg-white">
+            <div class="icon bg-warning-light text-warning">
+              <i class="fas fa-truck"></i>
+            </div>
+            <h5 class="title">Pickups</h5>
+            <div class="value" id="pickupsCount">18</div>
+            <div class="subtitle">Scheduled collections</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Filters Column -->
+        <div class="col-lg-3 mb-4">
+          <div class="card filter-card">
+            <div class="card-header">
+              <i class="fas fa-filter me-2"></i>Filters
+            </div>
+            <div class="card-body">
+              <div class="filter-group">
+                <h6 class="filter-group-title">Device Type</h6>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value="phone"
+                    id="phoneFilter"
+                    checked
+                  />
+                  <label class="form-check-label" for="phoneFilter">
+                    Phones
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value="laptop"
+                    id="laptopFilter"
+                    checked
+                  />
+                  <label class="form-check-label" for="laptopFilter">
+                    Laptops
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value="kitchen"
+                    id="kitchenFilter"
+                    checked
+                  />
+                  <label class="form-check-label" for="kitchenFilter">
+                    Kitchen Appliances
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value="electronics"
+                    id="electronicsFilter"
+                    checked
+                  />
+                  <label class="form-check-label" for="electronicsFilter">
+                    Electronics
+                  </label>
+                </div>
+              </div>
+
+              <div class="filter-group">
+                <h6 class="filter-group-title">Collection Method</h6>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value="pickup"
+                    id="pickupFilter"
+                    checked
+                  />
+                  <label class="form-check-label" for="pickupFilter">
+                    Pickup
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value="visit"
+                    id="visitFilter"
+                    checked
+                  />
+                  <label class="form-check-label" for="visitFilter">
+                    Drop-off
+                  </label>
+                </div>
+              </div>
+
+              <div class="filter-group">
+                <h6 class="filter-group-title">Status</h6>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value="received"
+                    id="receivedFilter"
+                    checked
+                  />
+                  <label class="form-check-label" for="receivedFilter">
+                    Received
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value="pending"
+                    id="pendingFilter"
+                    checked
+                  />
+                  <label class="form-check-label" for="pendingFilter">
+                    Pending
+                  </label>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                class="btn btn-outline-primary w-100"
+                id="resetFiltersBtn"
+              >
+                <i class="fas fa-undo me-2"></i>Reset Filters
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Devices Column -->
+        <div class="col-lg-9">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="m-0">Available Devices</h3>
+            <div class="input-group" style="max-width: 300px">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Search devices..."
+                id="searchInput"
+              />
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                title="Search"
+                id="searchBtn"
+              >
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Devices List -->
+          <div id="devicesList">
+            <!-- Device items will be populated here -->
+            <!-- Sample Device Card -->
+            <div class="device-card">
+              <div
+                class="card-header d-flex justify-content-between align-items-center"
+              >
+                <h5 class="card-title">Apple iPhone 12 Pro</h5>
+                <span class="device-badge badge-pickup">Pickup</span>
+              </div>
+              <div class="card-body">
+                <div class="device-info">
+                  <div class="device-info-label">Type:</div>
+                  <div class="device-info-value">Phone</div>
+                </div>
+                <div class="device-info">
+                  <div class="device-info-label">Condition:</div>
+                  <div class="device-info-value">Good - Minor wear</div>
+                </div>
+                <div class="device-info">
+                  <div class="device-info-label">Customer:</div>
+                  <div class="device-info-value">John Doe</div>
+                </div>
+                <div class="device-info">
+                  <div class="device-info-label">Location:</div>
+                  <div class="device-info-value">
+                    123 Main St, Eco City, EC 12345
+                  </div>
+                </div>
+                <div class="device-info">
+                  <div class="device-info-label">Date Received:</div>
+                  <div class="device-info-value">June 15, 2023 - 10:30 AM</div>
+                </div>
+                <div class="device-info">
+                  <div class="device-info-label">Status:</div>
+                  <div class="device-info-value">
+                    <span class="badge bg-success">Received</span>
+                  </div>
+                </div>
+                <div
+                  class="d-flex justify-content-between align-items-center mt-3"
+                >
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary btn-sm"
+                    data-bs-toggle="modal"
+                    data-bs-target="#deviceDetailsModal"
+                    data-device-id="1"
+                  >
+                    <i class="fas fa-info-circle me-1"></i>View Details
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-sm add-to-cart-btn"
+                    data-device-id="1"
+                  >
+                    <i class="fas fa-cart-plus me-1"></i>Add to Cart
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sample Device Card 2 -->
+            <div class="device-card">
+              <div
+                class="card-header d-flex justify-content-between align-items-center"
+              >
+                <h5 class="card-title">Dell XPS 15</h5>
+                <span class="device-badge badge-dropoff">Drop-off</span>
+              </div>
+              <div class="card-body">
+                <div class="device-info">
+                  <div class="device-info-label">Type:</div>
+                  <div class="device-info-value">Laptop</div>
+                </div>
+                <div class="device-info">
+                  <div class="device-info-label">Condition:</div>
+                  <div class="device-info-value">Excellent - Like new</div>
+                </div>
+                <div class="device-info">
+                  <div class="device-info-label">Customer:</div>
+                  <div class="device-info-value">Jane Smith</div>
+                </div>
+                <div class="device-info">
+                  <div class="device-info-label">Location:</div>
+                  <div class="device-info-value">RETECH Service Center</div>
+                </div>
+                <div class="device-info">
+                  <div class="device-info-label">Date Received:</div>
+                  <div class="device-info-value">June 12, 2023 - 2:15 PM</div>
+                </div>
+                <div class="device-info">
+                  <div class="device-info-label">Status:</div>
+                  <div class="device-info-value">
+                    <span class="badge bg-success">Received</span>
+                  </div>
+                </div>
+                <div
+                  class="d-flex justify-content-between align-items-center mt-3"
+                >
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary btn-sm"
+                    data-bs-toggle="modal"
+                    data-bs-target="#deviceDetailsModal"
+                    data-device-id="2"
+                  >
+                    <i class="fas fa-info-circle me-1"></i>View Details
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-sm add-to-cart-btn"
+                    data-device-id="2"
+                  >
+                    <i class="fas fa-cart-plus me-1"></i>Add to Cart
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sample Device Card 3 -->
+            <div class="device-card">
+              <div
+                class="card-header d-flex justify-content-between align-items-center"
+              >
+                <h5 class="card-title">Samsung Refrigerator</h5>
+                <span class="device-badge badge-pickup">Pickup</span>
+              </div>
+              <div class="card-body">
+                <div class="device-info">
+                  <div class="device-info-label">Type:</div>
+                  <div class="device-info-value">Kitchen Appliance</div>
+                </div>
+                <div class="device-info">
+                  <div class="device-info-label">Condition:</div>
+                  <div class="device-info-value">
+                    Fair - Works but has issues
+                  </div>
+                </div>
+                <div class="device-info">
+                  <div class="device-info-label">Customer:</div>
+                  <div class="device-info-value">Robert Johnson</div>
+                </div>
+                <div class="device-info">
+                  <div class="device-info-label">Location:</div>
+                  <div class="device-info-value">
+                    456 Green Ave, Eco City, EC 12345
+                  </div>
+                </div>
+                <div class="device-info">
+                  <div class="device-info-label">Date Received:</div>
+                  <div class="device-info-value">June 10, 2023 - 9:00 AM</div>
+                </div>
+                <div class="device-info">
+                  <div class="device-info-label">Status:</div>
+                  <div class="device-info-value">
+                    <span class="badge bg-warning text-dark">Pending</span>
+                  </div>
+                </div>
+                <div
+                  class="d-flex justify-content-between align-items-center mt-3"
+                >
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary btn-sm"
+                    data-bs-toggle="modal"
+                    data-bs-target="#deviceDetailsModal"
+                    data-device-id="3"
+                  >
+                    <i class="fas fa-info-circle me-1"></i>View Details
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-sm add-to-cart-btn"
+                    data-device-id="3"
+                  >
+                    <i class="fas fa-cart-plus me-1"></i>Add to Cart
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <nav aria-label="Devices pagination" class="mt-4">
+            <ul class="pagination justify-content-center">
+              <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
+                  >Previous</a
+                >
+              </li>
+              <li class="page-item active">
+                <a class="page-link" href="#">1</a>
+              </li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <!-- Device Details Modal -->
+    <div
+      class="modal fade"
+      id="deviceDetailsModal"
+      tabindex="-1"
+      aria-labelledby="deviceDetailsModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deviceDetailsModalLabel">
+              Device Details
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+                <h6 class="fw-bold mb-3">Device Information</h6>
+                <dl class="row">
+                  <dt class="col-sm-4">Brand:</dt>
+                  <dd class="col-sm-8" id="deviceBrand">Apple</dd>
+
+                  <dt class="col-sm-4">Model:</dt>
+                  <dd class="col-sm-8" id="deviceModel">iPhone 12 Pro</dd>
+
+                  <dt class="col-sm-4">Type:</dt>
+                  <dd class="col-sm-8" id="deviceType">Phone</dd>
+
+                  <dt class="col-sm-4">Condition:</dt>
+                  <dd class="col-sm-8" id="deviceCondition">
+                    Good - Minor wear
+                  </dd>
+
+                  <dt class="col-sm-4">Storage:</dt>
+                  <dd class="col-sm-8" id="deviceStorage">128GB</dd>
+
+                  <dt class="col-sm-4">Accessories:</dt>
+                  <dd class="col-sm-8" id="deviceAccessories">
+                    Charger, Original Box
+                  </dd>
+                </dl>
+              </div>
+              <div class="col-md-6">
+                <h6 class="fw-bold mb-3">Collection Information</h6>
+                <dl class="row">
+                  <dt class="col-sm-4">Method:</dt>
+                  <dd class="col-sm-8" id="collectionMethod">Pickup</dd>
+
+                  <dt class="col-sm-4">Customer:</dt>
+                  <dd class="col-sm-8" id="customerName">John Doe</dd>
+
+                  <dt class="col-sm-4">Contact:</dt>
+                  <dd class="col-sm-8" id="customerContact">
+                    john.doe@example.com
+                  </dd>
+
+                  <dt class="col-sm-4">Location:</dt>
+                  <dd class="col-sm-8" id="deviceLocation">
+                    123 Main St, Eco City, EC 12345
+                  </dd>
+
+                  <dt class="col-sm-4">Date Received:</dt>
+                  <dd class="col-sm-8" id="dateReceived">
+                    June 15, 2023 - 10:30 AM
+                  </dd>
+
+                  <dt class="col-sm-4">Status:</dt>
+                  <dd class="col-sm-8" id="deviceStatus">
+                    <span class="badge bg-success">Received</span>
+                  </dd>
+                </dl>
+              </div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col-12">
+                <h6 class="fw-bold mb-3">Additional Details</h6>
+                <p id="deviceDescription">
+                  This iPhone 12 Pro is in good condition with minor scratches
+                  on the back glass. The device has been factory reset and is
+                  ready for recycling. All features are working properly.
+                </p>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-12">
+                <h6 class="fw-bold mb-3">Device Images</h6>
+                <div class="row" id="deviceImages">
+                  <div class="col-md-3 mb-3">
+                    <img
+                      src="../images/placeholder-image.jpg"
+                      class="img-fluid rounded"
+                      alt="Device front"
+                    />
+                  </div>
+                  <div class="col-md-3 mb-3">
+                    <img
+                      src="../images/placeholder-image.jpg"
+                      class="img-fluid rounded"
+                      alt="Device back"
+                    />
+                  </div>
+                  <div class="col-md-3 mb-3">
+                    <img
+                      src="../images/placeholder-image.jpg"
+                      class="img-fluid rounded"
+                      alt="Device side"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="modalAddToCartBtn"
+              data-device-id=""
+            >
+              <i class="fas fa-cart-plus me-1"></i>Add to Cart
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
+      <div
+        id="notificationToast"
+        class="toast"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="toast-header">
+          <strong class="me-auto" id="toastTitle">Notification</strong>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="toast-body" id="toastMessage">
+          Item added to cart successfully!
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="../js/main.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/recycling-dashboard.js"></script>
+  </body>
+</html>
