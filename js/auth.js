@@ -32,6 +32,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Setup logout functionality
   setupLogout();
+
+  // Check if page has a market link
+  const marketLink = document.querySelector('a[href="market.html"]');
+  if (marketLink) {
+    // Add rewards after a short delay to ensure user data is loaded
+    setTimeout(addDemoRewards, 1000);
+  }
 });
 
 // Function to toggle password visibility
@@ -778,4 +785,68 @@ function getInitials(userData) {
   // Fallback to email first letter
   const userEmail = localStorage.getItem("userEmail");
   return userEmail ? userEmail[0].toUpperCase() : "U";
+}
+
+/**
+ * Add demo rewards for testing the market functionality
+ */
+function addDemoRewards() {
+  try {
+    const currentUser = getCurrentUser();
+    if (!currentUser) return;
+
+    // Get current user data
+    const userData = JSON.parse(
+      localStorage.getItem(`userData_${currentUser}`) || "{}"
+    );
+
+    // Initialize rewards array if needed
+    if (!userData.rewards) {
+      userData.rewards = [];
+    }
+
+    // Only add demo rewards if user doesn't have any
+    if (userData.rewards.length === 0) {
+      // If available, use createDemoRewards from data.js
+      if (typeof createDemoRewards === "function") {
+        userData.rewards = createDemoRewards();
+      } else {
+        // Default rewards if function not available
+        userData.rewards = [
+          {
+            id: "reward_1",
+            type: "voucher",
+            value: "100",
+            description: "E£100 HyperOne Voucher",
+            issueDate: new Date(
+              Date.now() - 7 * 24 * 60 * 60 * 1000
+            ).toISOString(),
+            expiryDate: new Date(
+              Date.now() + 90 * 24 * 60 * 60 * 1000
+            ).toISOString(),
+            used: false,
+          },
+          {
+            id: "reward_2",
+            type: "voucher",
+            value: "150",
+            description: "E£150 HyperOne Voucher",
+            issueDate: new Date(
+              Date.now() - 14 * 24 * 60 * 60 * 1000
+            ).toISOString(),
+            expiryDate: new Date(
+              Date.now() + 60 * 24 * 60 * 60 * 1000
+            ).toISOString(),
+            used: false,
+          },
+        ];
+      }
+
+      // Save updated user data
+      localStorage.setItem(`userData_${currentUser}`, JSON.stringify(userData));
+      console.log("Demo rewards added for", currentUser);
+    }
+  } catch (error) {
+    console.error("Error adding demo rewards:", error);
+  }
 }

@@ -123,6 +123,12 @@
             </li>
 
             <li class="nav-item">
+              <a class="nav-link" href="market.html">
+                <i class="fas fa-shopping-basket me-1"></i>Market
+              </a>
+            </li>
+
+            <li class="nav-item">
               <a class="nav-link" href="faq.html">
                 <i class="fas fa-question-circle me-1"></i>FAQ
               </a>
@@ -169,7 +175,7 @@
           Turning today's technology into tomorrow's resources, one device at a
           time.
         </p>
-        <div class="d-flex gap-3">
+        <div class="d-flex gap-3 flex-wrap mb-3">
           <a
             href="#rewards"
             class="btn btn-lg px-5 py-3 rounded-pill btn-earn-rewards animate-pulse"
@@ -181,6 +187,19 @@
             class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill"
           >
             Recycle Now <i class="fas fa-recycle ms-2"></i>
+          </a>
+        </div>
+        <div class="d-flex justify-content-center">
+          <a
+            href="market.html"
+            class="btn btn-lg px-5 py-3 rounded-pill btn-shop-now animate-shop-now"
+          >
+            <img
+              src="../images/HyperOneLogo.png"
+              alt="HyperOne"
+              class="hyperone-logo-btn me-2"
+            />
+            Shop Now
           </a>
         </div>
       </div>
@@ -255,32 +274,6 @@
                     <div class="coupon-points">150 points</div>
                   </div>
                 </a>
-              </div>
-              <div class="points-section">
-                <h4 class="points-heading">Points Earned Per Device</h4>
-                <div class="points-info">
-                  <div class="points-card">
-                    <div class="points-icon">
-                      <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <div class="points-value">+150</div>
-                    <div class="points-label">Phone</div>
-                  </div>
-                  <div class="points-card">
-                    <div class="points-icon">
-                      <i class="fas fa-laptop"></i>
-                    </div>
-                    <div class="points-value">+175</div>
-                    <div class="points-label">Laptop</div>
-                  </div>
-                  <div class="points-card">
-                    <div class="points-icon">
-                      <i class="fas fa-tv"></i>
-                    </div>
-                    <div class="points-value">+140</div>
-                    <div class="points-label">Electronics</div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -442,5 +435,97 @@
     <!-- Custom JavaScript -->
     <script src="../js/main.js"></script>
     <script src="../js/auth.js"></script>
+
+    <style>
+      /* Shop Now Button Styles */
+      .btn-shop-now {
+        background: linear-gradient(135deg, #0d6efd, #0dcaf0);
+        color: white;
+        border: none;
+        font-weight: 600;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
+        z-index: 1;
+      }
+
+      .btn-shop-now:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0),
+          rgba(255, 255, 255, 0.2),
+          rgba(255, 255, 255, 0)
+        );
+        transition: all 0.6s ease;
+        z-index: -1;
+      }
+
+      .btn-shop-now:hover {
+        transform: translateY(-5px) scale(1.03);
+        box-shadow: 0 15px 25px rgba(13, 110, 253, 0.4);
+        color: white;
+      }
+
+      .btn-shop-now:hover:before {
+        left: 100%;
+      }
+
+      .btn-shop-now i {
+        transition: transform 0.3s ease;
+      }
+
+      .btn-shop-now:hover i {
+        transform: scale(1.2);
+      }
+
+      @keyframes shop-now-pulse {
+        0% {
+          box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
+        }
+        50% {
+          box-shadow: 0 8px 25px rgba(13, 110, 253, 0.5);
+        }
+        100% {
+          box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
+        }
+      }
+
+      .animate-shop-now {
+        animation: shop-now-pulse 3s infinite;
+        animation-delay: 1s; /* Start after the rewards button animation is noticed */
+      }
+
+      @keyframes shop-now-pulse {
+        0% {
+          box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
+        }
+        50% {
+          box-shadow: 0 8px 25px rgba(13, 110, 253, 0.5),
+            0 0 15px rgba(13, 110, 253, 0.3);
+        }
+        100% {
+          box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
+        }
+      }
+
+      .hyperone-logo-btn {
+        height: 24px;
+        width: auto;
+        vertical-align: middle;
+        filter: brightness(0) invert(1); /* Make logo white */
+        transition: transform 0.3s ease;
+      }
+
+      .btn-shop-now:hover .hyperone-logo-btn {
+        transform: scale(1.2);
+      }
+    </style>
   </body>
 </html>
