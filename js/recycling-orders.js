@@ -686,27 +686,30 @@ function populateOrderModal(orderId) {
     pickupInfoContainer.classList.add("d-none");
   }
 
-  // Populate order items
+  // Populate order items with responsive classes
   const orderItemsContainer = document.getElementById("orderItemsContainer");
   orderItemsContainer.innerHTML = "";
 
   order.items.forEach((item) => {
     const row = document.createElement("tr");
+    row.className = "order-item-row";
 
-    // Add the row content
+    // Add the row content with mobile-friendly structure
     row.innerHTML = `
       <td>
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center flex-wrap">
           <img src="${item.image}" alt="${
       item.name
-    }" class="order-item-img me-3">
+    }" class="order-item-img me-3" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
           <div>
             <h6 class="mb-0">${item.name}</h6>
             <p class="text-muted mb-0">${item.brand} ${item.model}</p>
           </div>
         </div>
       </td>
-      <td>${capitalizeFirstLetter(item.type)}</td>
+      <td class="d-none d-md-table-cell">${capitalizeFirstLetter(
+        item.type
+      )}</td>
       <td>
         <span class="badge ${
           item.shippingMethod === "pickup" ? "badge-pickup" : "badge-dropoff"
@@ -714,8 +717,8 @@ function populateOrderModal(orderId) {
           ${item.shippingMethod === "pickup" ? "Pickup" : "Drop-off"}
         </span>
       </td>
-      <td>${item.customer.name}</td>
-      <td>${item.condition}</td>
+      <td class="d-none d-md-table-cell">${item.customer.name}</td>
+      <td class="d-none d-md-table-cell">${item.condition}</td>
     `;
 
     // Add to container

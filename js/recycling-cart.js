@@ -157,29 +157,29 @@ function updateCartUI() {
       day: "numeric",
     });
 
-    // Add the row content
+    // Add the row content with data-label attributes for mobile responsiveness
     row.innerHTML = `
-      <td>
+      <td data-label="Image">
         <img src="${item.image || "../images/placeholder-image.jpg"}" alt="${
       item.name
     }" class="device-img">
       </td>
-      <td>
+      <td data-label="Device">
         <div class="device-title">${item.name}</div>
         <div class="device-type">${item.condition}</div>
       </td>
-      <td>${capitalizeFirstLetter(item.type)}</td>
-      <td>
+      <td data-label="Type">${capitalizeFirstLetter(item.type)}</td>
+      <td data-label="Method">
         <span class="badge ${
           item.shippingMethod === "pickup" ? "badge-pickup" : "badge-dropoff"
         }">
           ${item.shippingMethod === "pickup" ? "Pickup" : "Drop-off"}
         </span>
       </td>
-      <td>
+      <td data-label="Location">
         <div class="device-location">${item.location}</div>
       </td>
-      <td>
+      <td data-label="Action">
         <button
           type="button"
           class="btn btn-outline-danger btn-sm remove-from-cart-btn"

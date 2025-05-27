@@ -36,6 +36,7 @@
     />
 
     <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/responsive.css" />
 
     <style>
       /* Recycling company specific styles */
@@ -231,6 +232,85 @@
         .cart-table .device-img {
           width: 50px;
           height: 50px;
+        }
+
+        /* Improve table responsiveness for small screens */
+        .cart-table {
+          overflow-x: auto;
+        }
+
+        /* Make order summary card stick closer to items */
+        .order-summary-card {
+          margin-top: 0;
+        }
+
+        /* Make buttons more usable on small screens */
+        .checkout-btn,
+        #clearCartBtn,
+        .btn-outline-primary {
+          width: 100%;
+          margin-bottom: 0.5rem;
+        }
+
+        /* Fix the button container */
+        .d-flex.justify-content-between.mt-3 {
+          flex-direction: column;
+        }
+      }
+
+      /* Add more specific styles for phone-sized screens */
+      @media (max-width: 575.98px) {
+        /* Make table cells stack on mobile for better visibility */
+        .cart-table thead {
+          display: none;
+        }
+
+        .cart-table tbody tr {
+          display: block;
+          border-bottom: 1px solid #dee2e6;
+          padding: 1rem 0.5rem;
+        }
+
+        .cart-table tbody td {
+          display: flex;
+          padding: 0.5rem;
+          border: none;
+        }
+
+        .cart-table tbody td:before {
+          content: attr(data-label);
+          font-weight: bold;
+          width: 120px;
+          min-width: 120px;
+        }
+
+        /* Make the cart header more compact */
+        .cart-header {
+          padding: 1.5rem 0;
+          margin-bottom: 1.5rem;
+        }
+
+        .cart-header h1 {
+          font-size: 1.75rem;
+        }
+
+        .cart-header .lead {
+          font-size: 1rem;
+        }
+
+        /* Make all buttons in modals full width */
+        .modal-footer {
+          flex-direction: column;
+        }
+
+        .modal-footer .btn {
+          width: 100%;
+          margin: 0.25rem 0;
+        }
+
+        /* Fix navbar brand on small screens */
+        .company-navbar .navbar-brand {
+          font-size: 1.1rem;
         }
       }
     </style>

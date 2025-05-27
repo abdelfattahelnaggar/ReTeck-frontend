@@ -1039,6 +1039,7 @@ body.modal-open {
 @media (max-width: 768px) {
   .hero-section h1 {
     font-size: 3rem;
+    padding: 0 1rem;
   }
 
   .hero-section p {
@@ -1049,12 +1050,52 @@ body.modal-open {
   .hero-section .btn {
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Improve button stacking on mobile */
+  .hero-overlay .d-flex {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* Adjust animation effects for mobile */
+  .animate-pulse,
+  .animate-shop-now {
+    animation: none; /* Disable animations on mobile for better performance */
+  }
+
+  /* Fix Shop Now button on mobile */
+  .btn-shop-now {
+    margin-top: 0.5rem;
+    width: 100%;
+    max-width: 250px;
+  }
+
+  .hyperone-logo-btn {
+    height: 20px;
   }
 }
 
 @media (max-width: 576px) {
   .hero-section h1 {
-    font-size: 2.5rem;
+    font-size: 2.25rem;
+    letter-spacing: 1px;
+  }
+
+  .hero-section p {
+    font-size: 1rem;
+  }
+
+  /* Make buttons full width on smallest screens */
+  .hero-section .btn {
+    width: 100%;
+    max-width: 280px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 

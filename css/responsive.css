@@ -1,0 +1,279 @@
+/**
+ * RETECH - Global Responsive Styles
+ *
+ * This file contains common responsive styles for the entire RETECH website.
+ * It provides mobile-first approach with breakpoints for different screen sizes.
+ */
+
+/* Base responsive adjustments */
+html {
+  font-size: 16px;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* Responsive utilities */
+.hide-xs {
+  display: none !important;
+}
+
+@media (min-width: 576px) {
+  .hide-xs {
+    display: initial !important;
+  }
+
+  .hide-sm-up {
+    display: none !important;
+  }
+}
+
+/* Responsive typography */
+@media (max-width: 767.98px) {
+  h1,
+  .h1 {
+    font-size: 1.75rem;
+  }
+
+  h2,
+  .h2 {
+    font-size: 1.5rem;
+  }
+
+  h3,
+  .h3 {
+    font-size: 1.25rem;
+  }
+
+  .lead {
+    font-size: 1rem;
+  }
+}
+
+/* Navbar adjustments for mobile */
+@media (max-width: 991.98px) {
+  .navbar-brand {
+    max-width: 70%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+  }
+
+  .dropdown-menu {
+    border-radius: 0;
+    margin-top: 0.5rem;
+    width: 100%;
+  }
+}
+
+/* Card adjustments for mobile */
+@media (max-width: 767.98px) {
+  .card {
+    margin-bottom: 1rem;
+  }
+
+  .card-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+
+  .card-footer {
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* Table adjustments for mobile */
+@media (max-width: 767.98px) {
+  .table-responsive {
+    margin-bottom: 1rem;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.5rem;
+  }
+}
+
+/* Modal adjustments for mobile */
+@media (max-width: 767.98px) {
+  .modal-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .modal-body {
+    padding: 1rem;
+  }
+
+  .modal-footer {
+    padding: 0.75rem 1rem;
+    flex-direction: column;
+  }
+
+  .modal-footer .btn {
+    width: 100%;
+    margin: 0.25rem 0;
+  }
+
+  .modal-footer .btn + .btn {
+    margin-left: 0;
+  }
+}
+
+/* Form adjustments for mobile */
+@media (max-width: 767.98px) {
+  .form-label {
+    margin-bottom: 0.25rem;
+  }
+
+  .form-control,
+  .form-select {
+    padding: 0.375rem 0.5rem;
+  }
+
+  .input-group {
+    flex-wrap: wrap;
+  }
+
+  .input-group .btn {
+    width: 100%;
+    border-radius: 0.25rem;
+    margin-top: 0.5rem;
+  }
+}
+
+/* Button adjustments for mobile */
+@media (max-width: 767.98px) {
+  .btn-group {
+    display: flex;
+    width: 100%;
+  }
+
+  .btn-group .btn {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* Spacing adjustments for mobile */
+@media (max-width: 767.98px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  section {
+    padding: 2rem 0;
+  }
+
+  .mb-4 {
+    margin-bottom: 1.5rem !important;
+  }
+
+  .mt-4 {
+    margin-top: 1.5rem !important;
+  }
+}
+
+/* Touch-friendly adjustments */
+@media (max-width: 767.98px) {
+  .btn,
+  .form-control,
+  .form-select,
+  .nav-link {
+    min-height: 44px; /* Minimum touch target size */
+  }
+
+  .btn-sm {
+    min-height: 38px;
+  }
+
+  /* Increase spacing between interactive elements */
+  .nav-item + .nav-item {
+    margin-top: 0.25rem;
+  }
+}
+
+/* Add styles for hero sections and buttons on mobile devices */
+@media (max-width: 767.98px) {
+  /* Improve hero sections */
+  .hero-section,
+  .banner-section {
+    min-height: 70vh;
+  }
+
+  .hero-section h1,
+  .banner-section h1 {
+    font-size: 2.25rem !important;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+
+  .hero-section p,
+  .banner-section p {
+    font-size: 1rem !important;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Hero buttons better layout */
+  .hero-buttons .btn,
+  .banner-buttons .btn {
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+    padding: 0.5rem 1.25rem;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Button alignment in general */
+  .d-flex.gap-3.flex-wrap {
+    gap: 0.5rem !important;
+  }
+
+  /* Improved CTA buttons */
+  .btn-primary,
+  .btn-success,
+  .btn-outline-light {
+    width: 100%;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0.75rem 1rem;
+  }
+
+  /* Make buttons easier to tap */
+  .btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  /* Even smaller devices */
+  .hero-section h1,
+  .banner-section h1 {
+    font-size: 1.75rem !important;
+  }
+
+  .hero-section .btn,
+  .banner-section .btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Reduce icon sizes on small screens */
+  .btn i {
+    font-size: 0.9em;
+  }
+}

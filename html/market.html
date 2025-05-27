@@ -610,29 +610,22 @@
                   <span id="voucherCount">0</span> voucher(s) available
                 </div>
               </div>
-              <a href="rewards.html" class="btn rewards-button">
-                <i class="fas fa-gift me-2"></i> My Rewards
-                <span class="rewards-badge" id="rewardsCount">0</span>
-              </a>
-              <!-- Developer Testing Controls (hidden in production) -->
-              <button
-                id="devTestBtn"
-                class="btn btn-outline-danger ms-2 d-none"
-              >
-                <i class="fas fa-flask me-1"></i> Add Test Vouchers
-              </button>
-              <!-- Cart Button -->
-              <button
-                id="cartBtn"
-                class="btn btn-primary ms-2 position-relative"
-              >
-                <i class="fas fa-shopping-cart"></i>
+              <!-- Cart Button (replacing rewards button) -->
+              <button id="cartBtn" class="btn rewards-button">
+                <i class="fas fa-shopping-cart me-2"></i> Your Cart
                 <span
                   class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                   id="cartBadgeCount"
                 >
                   0
                 </span>
+              </button>
+              <!-- Developer Testing Controls (hidden in production) -->
+              <button
+                id="devTestBtn"
+                class="btn btn-outline-danger ms-2 d-none"
+              >
+                <i class="fas fa-flask me-1"></i> Add Test Vouchers
               </button>
             </div>
           </div>
