@@ -12,6 +12,25 @@ let dropoffItems = [];
 
 // DOM Elements
 document.addEventListener("DOMContentLoaded", function () {
+  console.log("Recycling cart page loaded");
+
+  // Check for required DOM elements
+  const cartItemsList = document.getElementById("cartItemsList");
+  const emptyCartView = document.getElementById("emptyCartView");
+  const cartContent = document.getElementById("cartContent");
+
+  if (!cartItemsList) {
+    console.error("Critical error: Cart items list element not found!");
+  }
+
+  if (!emptyCartView) {
+    console.error("Critical error: Empty cart view element not found!");
+  }
+
+  if (!cartContent) {
+    console.error("Critical error: Cart content element not found!");
+  }
+
   // Load cart from localStorage
   loadCart();
 
@@ -55,6 +74,12 @@ function setupEventListeners() {
   const clearCartBtn = document.getElementById("clearCartBtn");
   if (clearCartBtn) {
     clearCartBtn.addEventListener("click", clearCart);
+  }
+
+  // Confirm clear cart button in the modal
+  const confirmClearCartBtn = document.getElementById("confirmClearCartBtn");
+  if (confirmClearCartBtn) {
+    confirmClearCartBtn.addEventListener("click", performClearCart);
   }
 
   // Process order button (renamed from checkoutBtn in HTML)
@@ -103,12 +128,38 @@ function setupEventListeners() {
  */
 function loadCart() {
   const savedCart = localStorage.getItem("recyclingCart");
-  if (savedCart) {
-    cart = JSON.parse(savedCart);
+  console.log("Loading cart from localStorage", { savedCart });
 
-    // Separate pickup and dropoff items
-    pickupItems = cart.filter((item) => item.shippingMethod === "pickup");
-    dropoffItems = cart.filter((item) => item.shippingMethod === "visit");
+  if (savedCart) {
+    try {
+      cart = JSON.parse(savedCart);
+      console.log("Cart parsed successfully:", cart);
+
+      if (!Array.isArray(cart)) {
+        console.error("Cart is not an array!", cart);
+        cart = [];
+      }
+
+      // Separate pickup and dropoff items
+      pickupItems = cart.filter((item) => item.shippingMethod === "pickup");
+      dropoffItems = cart.filter((item) => item.shippingMethod === "visit");
+
+      console.log("Cart items:", {
+        total: cart.length,
+        pickup: pickupItems.length,
+        dropoff: dropoffItems.length,
+      });
+    } catch (error) {
+      console.error("Error parsing cart from localStorage:", error);
+      cart = [];
+      pickupItems = [];
+      dropoffItems = [];
+    }
+  } else {
+    console.log("No cart found in localStorage");
+    cart = [];
+    pickupItems = [];
+    dropoffItems = [];
   }
 }
 
@@ -116,59 +167,106 @@ function loadCart() {
  * Save cart to localStorage
  */
 function saveCart() {
-  localStorage.setItem("recyclingCart", JSON.stringify(cart));
+  try {
+    const cartString = JSON.stringify(cart);
+    localStorage.setItem("recyclingCart", cartString);
+    console.log("Cart saved to localStorage successfully:", {
+      cartSize: cart.length,
+      storageKey: "recyclingCart",
+    });
+  } catch (error) {
+    console.error("Error saving cart to localStorage:", error);
+  }
 }
 
 /**
  * Update the cart UI based on current cart contents
  */
 function updateCartUI() {
+  console.log("Updating cart UI with", cart.length, "items");
+
   // Update cart count in navbar
   updateCartCount();
 
-  // Get the cart items container
+  // Get the cart items container and related elements
   const cartItemsList = document.getElementById("cartItemsList");
   const emptyCartView = document.getElementById("emptyCartView");
   const cartContent = document.getElementById("cartContent");
 
+  if (!cartItemsList) {
+    console.error("Cart items list element not found");
+    return;
+  }
+
   // Check if cart is empty
-  if (cart.length === 0) {
-    if (emptyCartView) emptyCartView.classList.remove("d-none");
-    if (cartContent) cartContent.classList.add("d-none");
+  if (!cart || cart.length === 0) {
+    console.log("Cart is empty, showing empty cart view");
+    if (emptyCartView) {
+      emptyCartView.classList.remove("d-none");
+    } else {
+      console.warn("Empty cart view element not found");
+    }
+
+    if (cartContent) {
+      cartContent.classList.add("d-none");
+    } else {
+      console.warn("Cart content element not found");
+    }
     return;
   } else {
-    if (emptyCartView) emptyCartView.classList.add("d-none");
-    if (cartContent) cartContent.classList.remove("d-none");
+    console.log("Cart has items, showing cart content");
+    if (emptyCartView) {
+      emptyCartView.classList.add("d-none");
+    }
+    if (cartContent) {
+      cartContent.classList.remove("d-none");
+    }
   }
+
+  // Debug log cart items
+  console.log("Cart items to display:", cart);
 
   // Clear existing items
   cartItemsList.innerHTML = "";
 
   // Add items to the cart table
-  cart.forEach((item) => {
+  cart.forEach((item, index) => {
+    console.log(`Processing cart item ${index}:`, item);
+
     const row = document.createElement("tr");
     row.className = "cart-item-row";
 
     // Format date
-    const dateReceived = new Date(item.dateReceived);
-    const formattedDate = dateReceived.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
+    let formattedDate = "N/A";
+    try {
+      if (item.dateReceived) {
+        const dateReceived = new Date(item.dateReceived);
+        formattedDate = dateReceived.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        });
+      }
+    } catch (error) {
+      console.error("Error formatting date:", error);
+    }
 
     // Add the row content with data-label attributes for mobile responsiveness
     row.innerHTML = `
       <td data-label="Image">
         <img src="${item.image || "../images/placeholder-image.jpg"}" alt="${
-      item.name
+      item.name || "Device"
     }" class="device-img">
       </td>
       <td data-label="Device">
-        <div class="device-title">${item.name}</div>
-        <div class="device-type">${item.condition}</div>
+        <div class="device-title">${item.name || "Unknown Device"}</div>
+        <div class="device-type">${
+          item.condition || "No condition specified"
+        }</div>
       </td>
-      <td data-label="Type">${capitalizeFirstLetter(item.type)}</td>
+      <td data-label="Type">${capitalizeFirstLetter(
+        item.type || "unknown"
+      )}</td>
       <td data-label="Method">
         <span class="badge ${
           item.shippingMethod === "pickup" ? "badge-pickup" : "badge-dropoff"
@@ -177,7 +275,9 @@ function updateCartUI() {
         </span>
       </td>
       <td data-label="Location">
-        <div class="device-location">${item.location}</div>
+        <div class="device-location">${
+          item.location || "No location specified"
+        }</div>
       </td>
       <td data-label="Action">
         <button
@@ -207,6 +307,8 @@ function updateCartUI() {
       pickupScheduleCard.classList.add("d-none");
     }
   }
+
+  console.log("Cart UI updated successfully");
 }
 
 /**
@@ -240,12 +342,15 @@ function updateCartCount() {
  * Remove an item from the cart
  */
 function removeFromCart(deviceId) {
+  console.log("Removing item from cart, ID:", deviceId);
+
   // Find the index of the item in the cart
   const itemIndex = cart.findIndex((item) => item.id === deviceId);
 
   if (itemIndex !== -1) {
     // Remove the item
     const removedItem = cart.splice(itemIndex, 1)[0];
+    console.log("Item removed from cart:", removedItem);
 
     // Save cart to localStorage
     saveCart();
@@ -257,11 +362,19 @@ function removeFromCart(deviceId) {
       dropoffItems = dropoffItems.filter((item) => item.id !== deviceId);
     }
 
+    console.log("Updated cart categories:", {
+      total: cart.length,
+      pickup: pickupItems.length,
+      dropoff: dropoffItems.length,
+    });
+
     // Update cart UI
     updateCartUI();
 
     // Show notification
     showNotification("Item removed from cart", "Success");
+  } else {
+    console.warn("Item not found in cart, ID:", deviceId);
   }
 }
 
@@ -275,21 +388,38 @@ function clearCart() {
     return;
   }
 
-  // Confirm before clearing
-  if (confirm("Are you sure you want to clear all items from your cart?")) {
-    // Clear cart arrays
-    cart = [];
-    pickupItems = [];
-    dropoffItems = [];
+  // Update the item count in the modal
+  document.getElementById("clearCartItemCount").textContent = cart.length;
 
-    // Save empty cart to localStorage
-    saveCart();
+  // Show the confirmation modal
+  const clearCartModal = new bootstrap.Modal(
+    document.getElementById("clearCartModal")
+  );
+  clearCartModal.show();
+}
 
-    // Update cart UI
-    updateCartUI();
+// The actual cart clearing function that will be called when confirmed
+function performClearCart() {
+  // Clear cart arrays
+  cart = [];
+  pickupItems = [];
+  dropoffItems = [];
 
-    // Show notification
-    showNotification("Cart has been cleared", "Success");
+  // Save empty cart to localStorage
+  saveCart();
+
+  // Update cart UI
+  updateCartUI();
+
+  // Show notification
+  showNotification("Cart has been cleared", "Success");
+
+  // Hide the modal
+  const clearCartModal = bootstrap.Modal.getInstance(
+    document.getElementById("clearCartModal")
+  );
+  if (clearCartModal) {
+    clearCartModal.hide();
   }
 }
 

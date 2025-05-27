@@ -709,20 +709,30 @@ function populateDeviceModal(deviceId) {
  * Add a device to the cart
  */
 function addToCart(deviceId) {
+  console.log("Adding device to cart, ID:", deviceId);
+
   const device = allDevices.find((d) => d.id === deviceId);
-  if (!device) return;
+  if (!device) {
+    console.error("Device not found with ID:", deviceId);
+    return;
+  }
+
+  console.log("Found device:", device);
 
   // Check if device is already in cart
   if (cart.some((item) => item.id === deviceId)) {
+    console.log("Device already in cart");
     showNotification("This device is already in your cart.", "Info");
     return;
   }
 
   // Add to cart
   cart.push(device);
+  console.log("Device added to cart. New cart:", cart);
 
   // Save cart to localStorage
   saveCart();
+  console.log("Cart saved to localStorage");
 
   // Update cart count in navbar
   updateCartCount();
@@ -738,16 +748,43 @@ function addToCart(deviceId) {
  * Save cart to localStorage
  */
 function saveCart() {
-  localStorage.setItem("recyclingCart", JSON.stringify(cart));
+  try {
+    const cartString = JSON.stringify(cart);
+    localStorage.setItem("recyclingCart", cartString);
+    console.log("Cart saved to localStorage successfully:", {
+      cartSize: cart.length,
+      cartString,
+    });
+  } catch (error) {
+    console.error("Error saving cart to localStorage:", error);
+  }
 }
 
 /**
  * Load cart from localStorage
  */
 function loadCart() {
-  const savedCart = localStorage.getItem("recyclingCart");
-  if (savedCart) {
-    cart = JSON.parse(savedCart);
+  try {
+    const savedCart = localStorage.getItem("recyclingCart");
+    console.log("Loading cart from localStorage:", savedCart);
+
+    if (savedCart) {
+      cart = JSON.parse(savedCart);
+
+      // Ensure cart is an array
+      if (!Array.isArray(cart)) {
+        console.error("Cart is not an array, resetting:", cart);
+        cart = [];
+      }
+
+      console.log("Cart loaded successfully:", { cartSize: cart.length, cart });
+    } else {
+      console.log("No cart found in localStorage, initializing empty cart");
+      cart = [];
+    }
+  } catch (error) {
+    console.error("Error loading cart from localStorage:", error);
+    cart = [];
   }
 }
 
