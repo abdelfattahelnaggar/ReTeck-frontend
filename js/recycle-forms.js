@@ -490,20 +490,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
       modal.innerHTML = `
         <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header bg-success text-white">
+            <div class="modal-content">
+              <div class="modal-header bg-success text-white">
               <h5 class="modal-title" id="successModalLabel">Request Submitted!</h5>
-              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <div class="text-center mb-4">
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="text-center mb-4">
                 <i class="fas fa-check-circle text-success" style="font-size: 3rem;"></i>
               </div>
               <p id="successMessage" class="lead text-center"></p>
               <p id="shippingMessage" class="text-center"></p>
               <p class="text-center mt-3">You will receive a confirmation email shortly.</p>
-            </div>
-            <div class="modal-footer">
+              </div>
+              <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
           </div>
