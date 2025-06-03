@@ -958,26 +958,37 @@ function checkProductImagesFolder() {
  * @param {Array} values - Array of voucher values to add
  */
 function addTestVouchers(values = [100, 150, 200]) {
-  if (!currentUser) {
+  // Get current user email from localStorage (more reliable than currentUser variable)
+  const userEmail = localStorage.getItem("userEmail");
+
+  if (!userEmail) {
     console.error("No user logged in. Please log in first.");
+    showNotification("Please log in first to add test vouchers.", "warning");
     return false;
   }
 
   try {
-    // Get user data
-    const userData = JSON.parse(
-      localStorage.getItem(`userData_${currentUser}`) || "{}"
-    );
+    // Get user data with fallback to empty object
+    let userData = {};
+    try {
+      userData = JSON.parse(
+        localStorage.getItem(`userData_${userEmail}`) || "{}"
+      );
+    } catch (parseError) {
+      console.error("Error parsing user data:", parseError);
+      userData = {};
+    }
 
     // Initialize rewards array if needed
     if (!userData.rewards) {
       userData.rewards = [];
     }
 
-    // Add test vouchers with specified values
+    // Add test vouchers with unique IDs
+    const timestamp = Date.now();
     values.forEach((value, index) => {
       userData.rewards.push({
-        id: `test_reward_${Date.now()}_${index}`,
+        id: `test_reward_${timestamp}_${index}`,
         type: "voucher",
         value: value.toString(),
         description: `E£${value} HyperOne Test Voucher`,
@@ -990,20 +1001,39 @@ function addTestVouchers(values = [100, 150, 200]) {
     });
 
     // Save updated user data
-    localStorage.setItem(`userData_${currentUser}`, JSON.stringify(userData));
+    localStorage.setItem(`userData_${userEmail}`, JSON.stringify(userData));
+
+    // Update currentUser variable to match localStorage
+    currentUser = userEmail;
 
     // Reload user vouchers to update UI
-    loadUserVouchers(currentUser);
+    loadUserVouchers(userEmail);
 
     // Refresh products to update disabled state
-    filterProducts(currentCategory);
+    filterProducts(currentCategory || "all");
 
-    console.log(
-      `Added ${values.length} test vouchers to account ${currentUser}`
+    // Also update cart UI if it exists
+    if (typeof updateCartUI === "function") {
+      updateCartUI();
+    }
+
+    // Calculate total value added
+    const totalValue = values.reduce((sum, val) => sum + val, 0);
+
+    // Show success notification instead of alert
+    showNotification(
+      `Added E£${totalValue} in test vouchers successfully! Balance: E£${userVoucherBalance}`,
+      "success"
     );
+
+    console.log(`Added ${values.length} test vouchers to account ${userEmail}`);
     return true;
   } catch (error) {
     console.error("Error adding test vouchers:", error);
+    showNotification(
+      "Failed to add test vouchers. See console for details.",
+      "danger"
+    );
     return false;
   }
 }
