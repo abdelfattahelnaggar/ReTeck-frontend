@@ -327,25 +327,27 @@
   <body>
     <div class="top-bar">
       <div class="container">
-        <div class="d-flex justify-content-between align-items-center py-3">
+        <div
+          class="d-flex justify-content-between align-items-center py-2 py-md-3"
+        >
           <a class="navbar-brand" href="index.html">
-            <h3 class="m-0">♻️ RETECH</h3>
+            <h3 class="m-0 fs-4 fs-md-3">♻️ RETECH</h3>
           </a>
 
           <div class="d-flex align-items-center">
             <a
               href="signup.html"
-              class="btn btn-outline-success me-2 d-flex align-items-center justify-content-center"
-              style="min-width: 100px; height: 38px"
+              class="btn btn-outline-success btn-sm btn-md-regular me-2 d-flex align-items-center justify-content-center"
             >
-              <i class="fas fa-user-plus me-2"></i>Sign Up
+              <i class="fas fa-user-plus me-1 me-md-2"></i
+              ><span class="d-none d-sm-inline">Sign Up</span>
             </a>
             <a
               href="login.html"
-              class="btn btn-success d-flex align-items-center justify-content-center active"
-              style="min-width: 100px; height: 38px"
+              class="btn btn-success btn-sm btn-md-regular d-flex align-items-center justify-content-center active"
             >
-              <i class="fas fa-sign-in-alt me-2"></i>Login
+              <i class="fas fa-sign-in-alt me-1 me-md-2"></i
+              ><span class="d-none d-sm-inline">Login</span>
             </a>
 
             <div id="userProfile" class="dropdown d-none">
@@ -357,7 +359,7 @@
                 aria-expanded="false"
               >
                 <span class="user-avatar-small me-2"></span>
-                <span id="userName">User Name</span>
+                <span id="userName" class="d-none d-sm-inline">User Name</span>
               </button>
               <ul
                 class="dropdown-menu dropdown-menu-end"
@@ -396,8 +398,11 @@
     </div>
 
     <!-- Main Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
       <div class="container">
+        <a class="navbar-brand d-lg-none" href="index.html">
+          <h3 class="m-0 fs-5">♻️ RETECH</h3>
+        </a>
         <button
           class="navbar-toggler"
           type="button"
@@ -412,55 +417,67 @@
         <div class="collapse navbar-collapse" id="mainNavigation">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link" href="index.html">Home</a>
+              <a class="nav-link py-2 py-lg-3" href="index.html">
+                <i class="fas fa-home me-1 d-inline d-lg-none"></i>Home
+              </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="about-us.html">About Us</a>
+              <a class="nav-link py-2 py-lg-3" href="about-us.html">
+                <i class="fas fa-info-circle me-1 d-inline d-lg-none"></i>About
+                Us
+              </a>
             </li>
             <li class="nav-item dropdown">
               <a
-                class="nav-link dropdown-toggle"
+                class="nav-link dropdown-toggle py-2 py-lg-3"
                 href="#"
                 id="servicesDropdown"
                 role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                Services
+                <i class="fas fa-recycle me-1 d-inline d-lg-none"></i>Services
               </a>
               <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
                 <li>
-                  <a class="dropdown-item" href="recycle-phone.html"
-                    >Recycle Phones</a
-                  >
+                  <a class="dropdown-item py-2" href="recycle-phone.html">
+                    <i class="fas fa-mobile-alt me-2"></i>Recycle Phones
+                  </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="recycle-laptop.html"
-                    >Recycle Laptops</a
-                  >
+                  <a class="dropdown-item py-2" href="recycle-laptop.html">
+                    <i class="fas fa-laptop me-2"></i>Recycle Laptops
+                  </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="recycle-kitchen.html"
-                    >Recycle Kitchen Appliances</a
-                  >
+                  <a class="dropdown-item py-2" href="recycle-kitchen.html">
+                    <i class="fas fa-blender me-2"></i>Recycle Kitchen
+                    Appliances
+                  </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="recycle-electronics.html"
-                    >Recycle Electronics</a
-                  >
+                  <a class="dropdown-item py-2" href="recycle-electronics.html">
+                    <i class="fas fa-tv me-2"></i>Recycle Electronics
+                  </a>
                 </li>
               </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="market.html">
+              <a class="nav-link py-2 py-lg-3" href="market.html">
                 <i class="fas fa-shopping-basket me-1"></i>Market
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="faq.html">FAQ</a>
+              <a class="nav-link py-2 py-lg-3" href="faq.html">
+                <i class="fas fa-question-circle me-1 d-inline d-lg-none"></i
+                >FAQ
+              </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="contact-us.html">Contact Us</a>
+              <a class="nav-link py-2 py-lg-3" href="contact-us.html">
+                <i class="fas fa-envelope me-1 d-inline d-lg-none"></i>Contact
+                Us
+              </a>
             </li>
           </ul>
           <div class="d-flex align-items-center">
@@ -479,17 +496,21 @@
     </nav>
 
     <div class="container login-container">
-      <div class="row w-100">
-        <div class="col-md-6 mx-auto">
-          <div class="card login-card">
-            <div class="card-header bg-success text-white p-4 text-center">
-              <i class="fas fa-leaf fa-2x mb-2"></i>
-              <h4 class="mb-0">Welcome to RETECH</h4>
-              <p class="text-white-50 mt-2 mb-0">
+      <div class="row justify-content-center">
+        <div
+          class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 d-flex align-items-center justify-content-center"
+        >
+          <div class="card login-card w-100">
+            <div
+              class="card-header bg-success text-white p-3 p-md-4 text-center"
+            >
+              <i class="fas fa-leaf fa-2x mb-2 mb-md-3"></i>
+              <h4 class="mb-1 mb-md-2">Welcome to RETECH</h4>
+              <p class="text-white-50 mt-2 mb-0 small">
                 Login to continue your recycling journey
               </p>
             </div>
-            <div class="card-body p-4">
+            <div class="card-body p-3 p-md-4">
               <div
                 id="loginAlert"
                 class="alert login-alert d-none"
@@ -501,7 +522,7 @@
               <form id="loginForm" class="needs-validation" novalidate>
                 <div class="mb-3">
                   <label for="email" class="form-label">Email address</label>
-                  <div class="input-group">
+                  <div class="input-group has-validation">
                     <span class="input-group-text bg-light">
                       <i class="fas fa-envelope text-muted"></i>
                     </span>
@@ -513,16 +534,17 @@
                       placeholder="Enter your email"
                       required
                       value="user@example.com"
+                      aria-describedby="emailFeedback"
                     />
-                  </div>
-                  <div class="invalid-feedback">
-                    Please enter a valid email address.
+                    <div id="emailFeedback" class="invalid-feedback">
+                      Please enter a valid email address.
+                    </div>
                   </div>
                 </div>
                 <div class="mb-4">
                   <label for="password" class="form-label">Password</label>
                   <div class="password-field">
-                    <div class="input-group">
+                    <div class="input-group has-validation">
                       <span class="input-group-text bg-light">
                         <i class="fas fa-lock text-muted"></i>
                       </span>
@@ -533,6 +555,7 @@
                         name="password"
                         placeholder="Enter your password"
                         required
+                        aria-describedby="passwordFeedback"
                       />
                       <span
                         class="toggle-password"
@@ -542,9 +565,9 @@
                       >
                         <i class="fas fa-eye"></i>
                       </span>
-                    </div>
-                    <div class="invalid-feedback">
-                      Please enter your password.
+                      <div id="passwordFeedback" class="invalid-feedback">
+                        Please enter your password.
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -556,8 +579,8 @@
                     <p>Select your account type</p>
                   </div>
                   <div class="role-selection-container">
-                    <div class="row g-2">
-                      <div class="col-md-4">
+                    <div class="row g-3">
+                      <div class="col-4 col-md-4">
                         <input
                           type="radio"
                           class="btn-check"
@@ -577,13 +600,13 @@
                               <i class="fas fa-user"></i>
                             </div>
                             <span class="role-title">Customer</span>
-                            <span class="role-description"
-                              >Recycle devices</span
+                            <span class="role-description d-none d-sm-inline"
+                              >Recycle devices & earn rewards</span
                             >
                           </div>
                         </label>
                       </div>
-                      <div class="col-md-4">
+                      <div class="col-4 col-md-4">
                         <input
                           type="radio"
                           class="btn-check"
@@ -601,14 +624,14 @@
                             <div class="icon-container">
                               <i class="fas fa-recycle"></i>
                             </div>
-                            <span class="role-title">Recycling Co.</span>
-                            <span class="role-description"
-                              >Process devices</span
+                            <span class="role-title">Company</span>
+                            <span class="role-description d-none d-sm-inline"
+                              >Process & manage recycling</span
                             >
                           </div>
                         </label>
                       </div>
-                      <div class="col-md-4">
+                      <div class="col-4 col-md-4">
                         <input
                           type="radio"
                           class="btn-check"
@@ -627,8 +650,8 @@
                               <i class="fas fa-shield-alt"></i>
                             </div>
                             <span class="role-title">Admin</span>
-                            <span class="role-description"
-                              >Manage platform</span
+                            <span class="role-description d-none d-sm-inline"
+                              >Manage platform & users</span
                             >
                           </div>
                         </label>
@@ -660,9 +683,12 @@
                   <button
                     id="loginButton"
                     type="submit"
-                    class="btn btn-success login-btn py-3 shadow-sm"
+                    class="btn btn-success login-btn py-3 shadow-sm d-flex align-items-center justify-content-center"
+                    aria-label="Sign in"
                   >
-                    <span><i class="fas fa-sign-in-alt me-2"></i>Sign In</span>
+                    <span class="d-flex align-items-center">
+                      <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                    </span>
                     <span
                       id="loginSpinner"
                       class="spinner-border spinner-border-sm ms-2 d-none"
@@ -674,38 +700,63 @@
               </form>
 
               <div class="mt-4 text-center">
-                <p>
-                  Don't have an account?
+                <div class="mb-3">
+                  <span class="me-2">Don't have an account?</span>
                   <a
                     href="signup.html"
-                    class="btn btn-outline-success btn-sm ms-2"
+                    class="btn btn-outline-success btn-sm"
+                    aria-label="Sign up for a new account"
                   >
                     <i class="fas fa-user-plus me-1"></i>Sign up
                   </a>
-                </p>
-                <p class="text-muted small">
-                  <a href="#" class="text-decoration-none text-success">
+                </div>
+                <p class="text-muted small mb-3">
+                  <a
+                    href="#"
+                    class="text-decoration-none text-success"
+                    aria-label="Reset password"
+                  >
                     <i class="fas fa-lock me-1"></i>Forgot your password?
                   </a>
                 </p>
                 <div class="mt-3 pt-3 border-top">
-                  <p class="text-muted small mb-1">For demo purposes:</p>
-                  <div class="d-flex justify-content-center flex-wrap gap-2">
-                    <div class="badge bg-light text-dark p-2">
-                      <i class="fas fa-user text-success me-1"></i>
-                      <strong>Customer:</strong> user@example.com / user123
-                      <span class="badge bg-secondary ms-1">Alt+T</span>
+                  <p class="text-muted small mb-2">For demo purposes:</p>
+                  <div class="demo-credentials d-flex flex-column gap-2">
+                    <div
+                      class="credential-badge bg-light text-dark p-2 text-start"
+                    >
+                      <i class="fas fa-user text-success me-2"></i>
+                      <strong>Customer:</strong>
+                      <span class="credential-text"
+                        >user@example.com / user123</span
+                      >
+                      <span class="badge bg-secondary ms-1 d-none d-md-inline"
+                        >Alt+T</span
+                      >
                     </div>
-                    <div class="badge bg-light text-dark p-2">
-                      <i class="fas fa-recycle text-success me-1"></i>
-                      <strong>Recycling Co.:</strong> company@recycling.com /
-                      company123
-                      <span class="badge bg-secondary ms-1">Alt+C</span>
+                    <div
+                      class="credential-badge bg-light text-dark p-2 w-100 text-start"
+                    >
+                      <i class="fas fa-recycle text-success me-2"></i>
+                      <strong>Recycling Co.:</strong>
+                      <span class="credential-text"
+                        >company@recycling.com / company123</span
+                      >
+                      <span class="badge bg-secondary ms-1 d-none d-md-inline"
+                        >Alt+C</span
+                      >
                     </div>
-                    <div class="badge bg-light text-dark p-2">
-                      <i class="fas fa-shield-alt text-danger me-1"></i>
-                      <strong>Admin:</strong> admin@retech.com / admin123
-                      <span class="badge bg-secondary ms-1">Alt+A</span>
+                    <div
+                      class="credential-badge bg-light text-dark p-2 text-start"
+                    >
+                      <i class="fas fa-shield-alt text-danger me-2"></i>
+                      <strong>Admin:</strong>
+                      <span class="credential-text"
+                        >admin@retech.com / admin123</span
+                      >
+                      <span class="badge bg-secondary ms-1 d-none d-md-inline"
+                        >Alt+A</span
+                      >
                     </div>
                   </div>
                 </div>
@@ -717,22 +768,22 @@
     </div>
 
     <footer class="footer mt-auto">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-3 mb-4 mb-md-0">
-            <h3><b>RETECH</b></h3>
-            <p>
+      <div class="container py-4">
+        <div class="row gy-4">
+          <div class="col-12 col-md-3 mb-4 mb-md-0">
+            <h3 class="fs-4"><b>RETECH</b></h3>
+            <p class="text-white-50 small">
               Making the world cleaner one device at a time through responsible
               recycling and sustainability.
             </p>
             <div class="social-icons">
-              <a href="#" aria-label="Facebook"
+              <a href="#" aria-label="Facebook" class="me-2"
                 ><i class="fab fa-facebook-f"></i
               ></a>
-              <a href="#" aria-label="Twitter"
+              <a href="#" aria-label="Twitter" class="me-2"
                 ><i class="fab fa-twitter"></i
               ></a>
-              <a href="#" aria-label="Instagram"
+              <a href="#" aria-label="Instagram" class="me-2"
                 ><i class="fab fa-instagram"></i
               ></a>
               <a href="#" aria-label="LinkedIn"
@@ -740,85 +791,94 @@
               ></a>
             </div>
           </div>
-          <div class="col-md-2 mb-4 mb-md-0">
-            <h5>Services</h5>
+          <div class="col-6 col-md-2 mb-4 mb-md-0">
+            <h5 class="fs-6">Services</h5>
             <ul class="list-unstyled">
-              <li>
-                <a href="recycle-phone.html"
+              <li class="mb-2">
+                <a href="recycle-phone.html" class="text-decoration-none"
                   ><i class="fas fa-mobile-alt me-2"></i>Recycle Phones</a
                 >
               </li>
-              <li>
-                <a href="recycle-laptop.html"
+              <li class="mb-2">
+                <a href="recycle-laptop.html" class="text-decoration-none"
                   ><i class="fas fa-laptop me-2"></i>Recycle Laptops</a
                 >
               </li>
-              <li>
-                <a href="recycle-kitchen.html"
-                  ><i class="fas fa-blender me-2"></i>Recycle Kitchen
-                  Appliances</a
+              <li class="mb-2">
+                <a href="recycle-kitchen.html" class="text-decoration-none"
+                  ><i class="fas fa-blender me-2"></i>Kitchen Appliances</a
                 >
               </li>
-              <li>
-                <a href="recycle-electronics.html"
-                  ><i class="fas fa-tv me-2"></i>Recycle Electronics</a
+              <li class="mb-2">
+                <a href="recycle-electronics.html" class="text-decoration-none"
+                  ><i class="fas fa-tv me-2"></i>Electronics</a
                 >
               </li>
             </ul>
           </div>
-          <div class="col-md-2 mb-4 mb-md-0">
-            <h5>Company</h5>
+          <div class="col-6 col-md-2 mb-4 mb-md-0">
+            <h5 class="fs-6">Company</h5>
             <ul class="list-unstyled">
-              <li>
-                <a href="about-us.html"
+              <li class="mb-2">
+                <a href="about-us.html" class="text-decoration-none"
                   ><i class="fas fa-info-circle me-2"></i>About Us</a
                 >
               </li>
-              <li>
-                <a href="contact-us.html"
+              <li class="mb-2">
+                <a href="contact-us.html" class="text-decoration-none"
                   ><i class="fas fa-phone me-2"></i>Contact Us</a
                 >
               </li>
-              <li>
-                <a href="faq.html"
+              <li class="mb-2">
+                <a href="faq.html" class="text-decoration-none"
                   ><i class="fas fa-question-circle me-2"></i>FAQ</a
                 >
               </li>
-              <li>
-                <a href="#"
+              <li class="mb-2">
+                <a href="#" class="text-decoration-none"
                   ><i class="fas fa-shield-alt me-2"></i>Privacy Policy</a
                 >
               </li>
             </ul>
           </div>
-          <div class="col-md-5">
+          <div class="col-12 col-md-5">
             <div class="footer-newsletter">
-              <h5>Stay Connected</h5>
-              <p>Subscribe to our newsletter for updates and eco-tips</p>
-              <div class="input-group">
-                <input
-                  type="email"
-                  class="form-control"
-                  placeholder="Your email address"
-                  aria-label="Email"
-                />
-                <button class="btn btn-success" type="button">Subscribe</button>
+              <h5 class="newsletter-title">Stay Connected</h5>
+              <p class="newsletter-description">
+                Subscribe to our newsletter for updates and eco-tips
+              </p>
+              <div class="newsletter-form">
+                <div class="input-group">
+                  <input
+                    type="email"
+                    class="form-control newsletter-input"
+                    placeholder="Your email address"
+                    aria-label="Email address for newsletter"
+                  />
+                  <button class="btn btn-success newsletter-btn" type="button">
+                    <span class="d-none d-sm-inline">Subscribe</span>
+                    <i class="fas fa-paper-plane d-sm-none"></i>
+                  </button>
+                </div>
               </div>
-              <small class="text-muted mt-2 d-block"
+              <small class="newsletter-disclaimer"
                 >We respect your privacy and will never share your
                 information.</small
               >
             </div>
           </div>
         </div>
-        <div class="footer-bottom">
-          <p>
+        <div
+          class="footer-bottom text-center mt-4 pt-4 border-top border-secondary"
+        >
+          <p class="mb-0 small">
             ©
             <script>
               document.write(new Date().getFullYear());
             </script>
-            RETECH. All rights reserved. | <a href="#">Terms of Service</a> |
-            <a href="#">Privacy Policy</a>
+            RETECH. All rights reserved. |
+            <a href="#" class="text-decoration-none">Terms</a> |
+            <a href="#" class="text-decoration-none">Privacy</a>
           </p>
         </div>
       </div>

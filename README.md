@@ -140,7 +140,7 @@ RETECH/
 ### Installation
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/abdelfattahelnaggar/ReTeck-frontend.git
+   git clone https://github.com/yourusername/retech-frontend.git
    cd retech-frontend
    ```
 2. **Open the project:**
@@ -184,9 +184,35 @@ RETECH/
 2. Manage users, content, and platform settings
 3. Monitor overall system performance
 
+## 📸 Screenshots
+
+_Visual examples of the platform coming soon. The platform includes:_
+- Home page with recycling categories
+- User profile with points and vouchers
+- Recycling request forms
+- Order tracking system
+
 ## 🤝 Contributing
 
 We welcome contributions to improve RETECH!
+
+### How to Contribute
+1. **Fork the repository**
+2. **Create a feature branch**:
+   ```bash
+   git checkout -b feature/amazing-feature
+   ```
+3. **Make your changes** - Follow the coding style and add appropriate comments
+4. **Test your changes** thoroughly
+5. **Commit your changes**:
+   ```bash
+   git commit -m 'Add some amazing feature'
+   ```
+6. **Push to your branch**:
+   ```bash
+   git push origin feature/amazing-feature
+   ```
+7. **Open a Pull Request**
 
 ### Development Guidelines
 - Maintain responsive design principles

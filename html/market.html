@@ -425,6 +425,112 @@
       .highlight-animation {
         animation: highlight-row 2s ease;
       }
+
+      /* Enhanced Voucher Section Styles */
+      .voucher-section {
+        border: 2px solid #007bff !important;
+        box-shadow: 0 4px 15px rgba(0, 123, 255, 0.1);
+      }
+
+      .voucher-code-display {
+        border: 2px dashed #007bff !important;
+        box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+      }
+
+      .voucher-code-display h3 {
+        letter-spacing: 3px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      .barcode-container {
+        padding: 15px;
+        background: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin: 15px 0;
+      }
+
+      .barcode-container svg {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+      }
+
+      /* Enhanced Transaction Summary Styles */
+      .summary-item {
+        text-align: center;
+        padding: 10px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      .remaining-balance-highlight {
+        animation: balance-glow 2s ease-in-out infinite alternate;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+      }
+
+      @keyframes balance-glow {
+        from {
+          box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+        }
+        to {
+          box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+        }
+      }
+
+      /* Voucher Instructions Enhancement */
+      .voucher-instructions .alert {
+        border-left: 4px solid #17a2b8;
+        background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+        border-color: #17a2b8;
+      }
+
+      /* Responsive Barcode Adjustments */
+      @media (max-width: 576px) {
+        .barcode-container {
+          padding: 10px;
+        }
+
+        .voucher-code-display h3 {
+          font-size: 1.5rem;
+          letter-spacing: 2px;
+        }
+
+        .summary-item {
+          margin-bottom: 10px;
+        }
+
+        .remaining-balance-highlight {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .remaining-balance-highlight .d-flex {
+          flex-direction: column;
+        }
+      }
+
+      /* Print Styles for Voucher */
+      @media print {
+        .modal-header,
+        .modal-footer,
+        .voucher-instructions {
+          display: none;
+        }
+
+        .voucher-section,
+        .barcode-container {
+          border: 2px solid #000 !important;
+          background: white !important;
+        }
+
+        .voucher-code-display h3 {
+          color: #000 !important;
+          font-size: 18pt;
+        }
+      }
     </style>
   </head>
   <body>
@@ -620,11 +726,8 @@
                   0
                 </span>
               </button>
-              <!-- Developer Testing Controls (hidden in production) -->
-              <button
-                id="devTestBtn"
-                class="btn btn-outline-danger ms-2 d-none"
-              >
+              <!-- Developer Testing Controls -->
+              <button id="devTestBtn" class="btn btn-outline-danger ms-2">
                 <i class="fas fa-flask me-1"></i> Add Test Vouchers
               </button>
             </div>
@@ -662,15 +765,19 @@
         <div class="cart-footer">
           <div class="cart-summary">
             <div class="d-flex justify-content-between mb-2">
-              <span>Subtotal:</span>
+              <span>Cart Total:</span>
               <span id="cartSubtotal">E£0</span>
             </div>
-            <div class="d-flex justify-content-between mb-3">
-              <span>Your Balance:</span>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Your Voucher Balance:</span>
               <span id="cartVoucherBalance">E£0</span>
             </div>
-            <div class="d-flex justify-content-between mb-3">
-              <span>Remaining After Purchase:</span>
+            <div class="d-flex justify-content-between mb-2 text-success">
+              <span>Voucher Discount:</span>
+              <span id="cartVoucherDiscount">E£0</span>
+            </div>
+            <div class="d-flex justify-content-between mb-3 fw-bold">
+              <span>Amount to Pay Separately:</span>
               <span id="cartRemainingBalance">E£0</span>
             </div>
           </div>
@@ -856,8 +963,9 @@
             </p>
             <div class="alert alert-info">
               <i class="fas fa-info-circle me-2"></i>
-              After purchase, please visit the HyperOne store and show your
-              voucher code to redeem your product.
+              Your voucher discount will be applied automatically. For any
+              remaining amount, you can pay separately. After purchase, visit
+              any HyperOne store with your voucher code to redeem your items.
             </div>
           </div>
           <div class="modal-footer">
@@ -908,34 +1016,111 @@
             <h4>Thank You for Your Purchase!</h4>
             <p class="mb-4">Your order has been processed successfully.</p>
 
-            <div class="alert alert-info">
-              <p class="mb-1">Your voucher code:</p>
-              <h4 id="voucherCode" class="mb-3"></h4>
-              <small class="text-muted"
-                >Present this code at any HyperOne store to collect your
-                products.</small
-              >
+            <!-- Enhanced Voucher Code Section with Barcode -->
+            <div
+              class="voucher-section p-4 border rounded mb-4"
+              style="
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+              "
+            >
+              <div class="mb-3">
+                <h5 class="text-primary mb-2">
+                  <i class="fas fa-ticket-alt me-2"></i>Your Voucher Code
+                </h5>
+                <div class="voucher-code-display p-3 bg-white rounded border">
+                  <h3
+                    id="voucherCode"
+                    class="text-dark mb-3 font-monospace fw-bold"
+                  ></h3>
+
+                  <!-- Barcode Container -->
+                  <div class="barcode-container mb-3">
+                    <svg id="voucherBarcode" class="img-fluid"></svg>
+                  </div>
+
+                  <div class="voucher-instructions">
+                    <div class="alert alert-info mb-0">
+                      <i class="fas fa-info-circle me-2"></i>
+                      <strong>How to use:</strong> Present this code and barcode
+                      at any HyperOne store to collect your products.
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div
-              class="transaction-summary mt-4 p-3 bg-light rounded text-start"
-            >
+            <!-- Enhanced Transaction Summary -->
+            <div class="transaction-summary p-4 bg-light rounded text-start">
               <h5 class="mb-3 border-bottom pb-2 d-flex align-items-center">
                 <i class="fas fa-receipt text-success me-2"></i>
                 Transaction Summary
               </h5>
-              <div class="d-flex justify-content-between mb-2">
-                <span>Total Amount:</span>
-                <span id="summaryTotal" class="fw-bold text-success">E£0</span>
+
+              <div class="row mb-3">
+                <div class="col-6">
+                  <div class="summary-item">
+                    <small class="text-muted">Total Purchase</small>
+                    <div id="summaryTotal" class="h5 text-success mb-0">
+                      E£0
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="summary-item">
+                    <small class="text-muted">Voucher Used</small>
+                    <div id="summaryVoucherUsed" class="h5 text-primary mb-0">
+                      E£0
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="d-flex justify-content-between mb-2">
-                <span>Previous Balance:</span>
-                <span id="summaryPrevBalance">E£0</span>
+
+              <div class="row mb-3">
+                <div class="col-6">
+                  <div class="summary-item">
+                    <small class="text-muted">Previous Balance</small>
+                    <div id="summaryPrevBalance" class="h6 text-secondary mb-0">
+                      E£0
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="summary-item">
+                    <small class="text-muted">Amount to Pay</small>
+                    <div id="summaryAmountToPay" class="h6 text-warning mb-0">
+                      E£0
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="d-flex justify-content-between">
-                <span>Remaining Balance:</span>
-                <span id="summaryRemBalance" class="fw-bold">E£0</span>
+
+              <!-- Prominent Remaining Balance Display -->
+              <div
+                class="remaining-balance-highlight p-3 border rounded mt-3"
+                style="
+                  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+                  border-color: #28a745 !important;
+                "
+              >
+                <div class="d-flex align-items-center justify-content-between">
+                  <div class="d-flex align-items-center">
+                    <i class="fas fa-wallet text-success me-2 fa-lg"></i>
+                    <span class="fw-bold text-success"
+                      >Your Remaining Balance:</span
+                    >
+                  </div>
+                  <span
+                    id="summaryRemBalance"
+                    class="h4 text-success mb-0 fw-bold"
+                    >E£0</span
+                  >
+                </div>
+                <small class="text-success d-block mt-1">
+                  <i class="fas fa-check-circle me-1"></i>
+                  Available for future purchases
+                </small>
               </div>
+
               <div class="text-center mt-3 pt-3 border-top">
                 <small class="text-muted">
                   <i class="fas fa-calendar-check me-1"></i>
@@ -944,13 +1129,21 @@
               </div>
             </div>
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer d-flex justify-content-between">
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              onclick="window.print()"
+              title="Print voucher with barcode"
+            >
+              <i class="fas fa-print me-2"></i>Print Voucher
+            </button>
             <button
               type="button"
               class="btn btn-success"
               data-bs-dismiss="modal"
             >
-              Continue Shopping
+              <i class="fas fa-shopping-cart me-2"></i>Continue Shopping
             </button>
           </div>
         </div>
@@ -993,23 +1186,29 @@
             <div class="checkout-summary p-3 bg-light rounded">
               <h5 class="border-bottom pb-2 mb-3">Order Summary</h5>
               <div class="d-flex justify-content-between mb-2">
-                <span>Total Amount:</span>
+                <span>Cart Total:</span>
                 <span id="checkoutTotalAmount" class="fw-bold">E£0</span>
               </div>
               <div class="d-flex justify-content-between mb-2">
                 <span>Your Voucher Balance:</span>
                 <span id="checkoutCurrentBalance">E£0</span>
               </div>
-              <div class="d-flex justify-content-between">
-                <span>Remaining After Purchase:</span>
-                <span id="checkoutRemainingBalance" class="fw-bold">E£0</span>
+              <div class="d-flex justify-content-between mb-2 text-success">
+                <span>Voucher Discount Applied:</span>
+                <span id="checkoutVoucherDiscount">E£0</span>
+              </div>
+              <div class="d-flex justify-content-between fw-bold">
+                <span>Amount to Pay Separately:</span>
+                <span id="checkoutRemainingBalance">E£0</span>
               </div>
             </div>
 
             <div class="alert alert-info mt-3">
               <i class="fas fa-info-circle me-2"></i>
-              A voucher code will be generated for your purchase, which you can
-              use at any HyperOne store to redeem your items.
+              Your voucher discount will be applied automatically. A voucher
+              code will be generated for your purchase. Any remaining amount can
+              be paid separately at the HyperOne store when you redeem your
+              items.
             </div>
           </div>
           <div class="modal-footer">
@@ -1188,6 +1387,9 @@
 
     <!-- Bootstrap JS Bundle (includes Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JsBarcode for generating voucher barcodes -->
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 
     <!-- Custom JavaScript -->
     <script src="../js/main.js"></script>

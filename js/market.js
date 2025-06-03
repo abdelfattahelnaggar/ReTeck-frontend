@@ -147,6 +147,39 @@ let selectedProduct = null;
 let currentCategory = "all";
 let cart = []; // Shopping cart items
 
+/**
+ * Enhanced voucher discount calculation for flexible partial discount system
+ * @param {number} cartTotal - Total amount of cart
+ * @param {number} voucherValue - Available voucher balance
+ * @param {string} voucherCode - Voucher code for tracking
+ * @returns {Object} Discount calculation result
+ */
+function calculateVoucherDiscount(cartTotal, voucherValue, voucherCode = "") {
+  const discountResult = {
+    voucherCode: voucherCode,
+    originalCartTotal: cartTotal,
+    voucherValue: voucherValue,
+    discountApplied: 0,
+    remainingCartAmount: 0,
+    remainingVoucherBalance: 0,
+    canProceedToPurchase: true, // Always true in flexible system
+  };
+
+  if (cartTotal <= voucherValue) {
+    // Cart total is less than or equal to voucher value
+    discountResult.discountApplied = cartTotal;
+    discountResult.remainingCartAmount = 0;
+    discountResult.remainingVoucherBalance = voucherValue - cartTotal;
+  } else {
+    // Cart total exceeds voucher value
+    discountResult.discountApplied = voucherValue;
+    discountResult.remainingCartAmount = cartTotal - voucherValue;
+    discountResult.remainingVoucherBalance = 0;
+  }
+
+  return discountResult;
+}
+
 // DOM Elements
 const productsContainer = document.getElementById("productsContainer");
 const userVoucherBalanceEl = document.getElementById("userVoucherBalance");
@@ -394,14 +427,27 @@ function renderProducts(products) {
     // Extract price value without currency
     const priceValue = parseFloat(product.price.replace("E£", "").trim());
 
-    // Check if user has enough voucher balance for this product
-    const hasEnoughBalance = userVoucherBalance >= priceValue;
+    // Calculate discount that would be applied for this product
+    const discountInfo = calculateVoucherDiscount(
+      priceValue,
+      userVoucherBalance
+    );
 
-    // Create product card
+    // Create product card (never disabled in flexible system)
     const productCard = document.createElement("div");
-    productCard.className = `col-lg-3 col-md-4 col-sm-6 mb-4 ${
-      hasEnoughBalance ? "" : "disabled"
-    }`;
+    productCard.className = `col-lg-3 col-md-4 col-sm-6 mb-4`;
+
+    // Determine discount info text
+    let discountText = "";
+    if (discountInfo.discountApplied === priceValue) {
+      discountText = "Full voucher coverage";
+    } else if (discountInfo.discountApplied > 0) {
+      discountText = `E£${discountInfo.discountApplied.toFixed(
+        0
+      )} voucher discount`;
+    } else {
+      discountText = "No voucher discount available";
+    }
 
     productCard.innerHTML = `
       <div class="card product-card ${product.isNew ? "new-product" : ""}">
@@ -417,9 +463,7 @@ function renderProducts(products) {
           <div class="d-flex justify-content-between align-items-center mb-3">
             <span class="product-card-price">${product.price}</span>
             <span class="voucher-required-tag">
-              <i class="fas fa-ticket-alt me-1"></i> ${
-                hasEnoughBalance ? "Affordable" : "Not enough balance"
-              }
+              <i class="fas fa-ticket-alt me-1"></i> ${discountText}
             </span>
           </div>
           <div class="d-flex gap-2">
@@ -430,7 +474,7 @@ function renderProducts(products) {
             </button>
             <button class="btn btn-success btn-add-to-cart" data-product-id="${
               product.id
-            }" ${hasEnoughBalance ? "" : "disabled"}>
+            }">
               <i class="fas fa-cart-plus"></i>
             </button>
           </div>
@@ -479,27 +523,36 @@ function openProductDetails(productId) {
   document.getElementById("modalProductPrice").textContent = product.price;
   document.getElementById("modalProductDescription").textContent =
     product.description;
-  document.getElementById(
-    "modalVoucherRequired"
-  ).textContent = `E£${priceValue} will be deducted from your voucher balance`;
+  // Calculate discount information
+  const discountInfo = calculateVoucherDiscount(priceValue, userVoucherBalance);
 
-  // Check if user has enough voucher balance
-  const purchaseButton = document.getElementById("purchaseButton");
-  const hasEnoughBalance = userVoucherBalance >= priceValue;
-
-  if (hasEnoughBalance) {
-    purchaseButton.disabled = false;
-    purchaseButton.innerHTML = `<i class="fas fa-shopping-cart me-1"></i> Purchase with Voucher`;
+  // Update voucher information with flexible discount details
+  if (discountInfo.discountApplied === priceValue) {
+    document.getElementById(
+      "modalVoucherRequired"
+    ).textContent = `E£${priceValue} - Full voucher coverage available`;
+  } else if (discountInfo.discountApplied > 0) {
+    document.getElementById(
+      "modalVoucherRequired"
+    ).textContent = `E£${discountInfo.discountApplied.toFixed(
+      2
+    )} voucher discount available, E£${discountInfo.remainingCartAmount.toFixed(
+      2
+    )} to pay separately`;
   } else {
-    purchaseButton.disabled = true;
-    purchaseButton.innerHTML = `<i class="fas fa-times-circle me-1"></i> Insufficient Voucher Balance`;
+    document.getElementById(
+      "modalVoucherRequired"
+    ).textContent = `E£${priceValue} - No voucher discount available, full amount to pay separately`;
   }
 
-  // Setup purchase button click
+  // Purchase button is always enabled in flexible system
+  const purchaseButton = document.getElementById("purchaseButton");
+  purchaseButton.disabled = false;
+  purchaseButton.innerHTML = `<i class="fas fa-shopping-cart me-1"></i> Purchase Product`;
+
+  // Setup purchase button click (always works in flexible system)
   purchaseButton.onclick = function () {
-    if (userVoucherBalance >= priceValue) {
-      openConfirmPurchase(product);
-    }
+    openConfirmPurchase(product);
   };
 
   // Add "Add to Cart" button to the modal footer
@@ -533,7 +586,7 @@ function openProductDetails(productId) {
 }
 
 /**
- * Open confirm purchase modal
+ * Open confirm purchase modal with flexible discount information
  */
 function openConfirmPurchase(product) {
   // Hide product details modal
@@ -542,17 +595,20 @@ function openConfirmPurchase(product) {
   // Extract price value without currency
   const priceValue = parseFloat(product.price.replace("E£", "").trim());
 
-  // Update confirmation modal content
+  // Calculate discount information
+  const discountInfo = calculateVoucherDiscount(priceValue, userVoucherBalance);
+
+  // Update confirmation modal content with discount breakdown
   document.getElementById("confirmProductName").textContent = product.name;
   document.getElementById(
     "confirmCurrentVouchers"
   ).textContent = `E£${userVoucherBalance}`;
   document.getElementById(
     "confirmRequiredVouchers"
-  ).textContent = `E£${priceValue}`;
-  document.getElementById("confirmRemainingVouchers").textContent = `E£${
-    userVoucherBalance - priceValue
-  }`;
+  ).textContent = `E£${discountInfo.discountApplied} (voucher discount) + E£${discountInfo.remainingCartAmount} (to pay separately)`;
+  document.getElementById(
+    "confirmRemainingVouchers"
+  ).textContent = `E£${discountInfo.remainingVoucherBalance}`;
 
   // Setup confirm button
   document.getElementById("confirmPurchaseButton").onclick = function () {
@@ -564,24 +620,73 @@ function openConfirmPurchase(product) {
 }
 
 /**
- * Complete purchase
+ * Complete purchase with flexible voucher discount
  */
 function completePurchase(product) {
   // Hide confirmation modal
   confirmPurchaseModal.hide();
 
-  // Generate voucher code
-  const voucherCode = generateVoucherCode();
-
   // Extract price value without currency
   const priceValue = parseFloat(product.price.replace("E£", "").trim());
 
-  // Update user data
-  updateUserVouchers(priceValue, voucherCode, product.name);
+  // Calculate discount information
+  const discountInfo = calculateVoucherDiscount(priceValue, userVoucherBalance);
 
-  // Show success modal
+  // Generate voucher code
+  const voucherCode = generateVoucherCode();
+
+  // Update user vouchers with only the discount amount used
+  const voucherAmountUsed = discountInfo.discountApplied;
+
+  if (voucherAmountUsed > 0) {
+    updateUserVouchers(voucherAmountUsed, voucherCode, product.name);
+  }
+
+  // Show success modal with enhanced information
   document.getElementById("voucherCode").textContent = voucherCode;
+
+  // Generate barcode for the voucher code
+  generateVoucherBarcode(voucherCode);
+
+  // Update enhanced transaction summary for single product
+  const summaryTotal = document.getElementById("summaryTotal");
+  const summaryVoucherUsed = document.getElementById("summaryVoucherUsed");
+  const summaryPrevBalance = document.getElementById("summaryPrevBalance");
+  const summaryAmountToPay = document.getElementById("summaryAmountToPay");
+  const summaryRemBalance = document.getElementById("summaryRemBalance");
+
+  if (summaryTotal) summaryTotal.textContent = `E£${priceValue.toFixed(2)}`;
+  if (summaryVoucherUsed)
+    summaryVoucherUsed.textContent = `E£${discountInfo.discountApplied.toFixed(
+      2
+    )}`;
+  if (summaryPrevBalance)
+    summaryPrevBalance.textContent = `E£${userVoucherBalance.toFixed(2)}`;
+  if (summaryAmountToPay)
+    summaryAmountToPay.textContent = `E£${discountInfo.remainingCartAmount.toFixed(
+      2
+    )}`;
+  if (summaryRemBalance)
+    summaryRemBalance.textContent = `E£${discountInfo.remainingVoucherBalance.toFixed(
+      2
+    )}`;
+
   purchaseSuccessModal.show();
+
+  // Show notification with discount information
+  if (discountInfo.remainingCartAmount > 0) {
+    showNotification(
+      `Purchase completed! Voucher discount: E£${discountInfo.discountApplied.toFixed(
+        2
+      )}, Pay separately: E£${discountInfo.remainingCartAmount.toFixed(2)}`,
+      "success"
+    );
+  } else {
+    showNotification(
+      "Purchase completed with full voucher coverage!",
+      "success"
+    );
+  }
 }
 
 /**
@@ -711,6 +816,104 @@ function generateVoucherCode() {
   }
 
   return code;
+}
+
+/**
+ * Generate a barcode for the voucher code using JsBarcode
+ * @param {string} voucherCode - The voucher code to generate barcode for
+ */
+function generateVoucherBarcode(voucherCode) {
+  const barcodeContainer = document.querySelector(".barcode-container");
+  const barcodeElement = document.getElementById("voucherBarcode");
+
+  try {
+    // Show loading state
+    if (barcodeContainer) {
+      barcodeContainer.innerHTML = `
+        <div class="text-center p-3">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Generating barcode...</span>
+          </div>
+          <p class="mt-2 mb-0 text-muted">Generating barcode...</p>
+        </div>
+      `;
+    }
+
+    // Check if JsBarcode is available
+    if (typeof JsBarcode === "undefined") {
+      console.warn("JsBarcode library not loaded. Showing fallback message.");
+      showBarcodeFallback();
+      return;
+    }
+
+    // Restore the barcode container with SVG element
+    if (barcodeContainer) {
+      barcodeContainer.innerHTML =
+        '<svg id="voucherBarcode" class="img-fluid"></svg>';
+    }
+
+    // Get the fresh barcode SVG element
+    const newBarcodeElement = document.getElementById("voucherBarcode");
+    if (!newBarcodeElement) {
+      console.warn("Barcode SVG element not found.");
+      showBarcodeFallback();
+      return;
+    }
+
+    // Remove dashes from voucher code for barcode generation
+    const cleanCode = voucherCode.replace(/-/g, "");
+
+    // Add a small delay to show the loading state
+    setTimeout(() => {
+      try {
+        // Generate CODE128 barcode
+        JsBarcode(newBarcodeElement, cleanCode, {
+          format: "CODE128",
+          width: 2,
+          height: 60,
+          displayValue: true,
+          fontSize: 14,
+          fontOptions: "bold",
+          textAlign: "center",
+          textPosition: "bottom",
+          textMargin: 8,
+          background: "#ffffff",
+          lineColor: "#000000",
+          margin: 10,
+          flat: true,
+        });
+
+        console.log(
+          `Barcode generated successfully for voucher: ${voucherCode}`
+        );
+
+        // Show success message briefly
+        showNotification("Voucher barcode generated successfully!", "success");
+      } catch (barcodeError) {
+        console.error("Error in barcode generation:", barcodeError);
+        showBarcodeFallback();
+      }
+    }, 500);
+  } catch (error) {
+    console.error("Error generating barcode:", error);
+    showBarcodeFallback();
+  }
+}
+
+/**
+ * Show fallback message when barcode generation fails
+ */
+function showBarcodeFallback() {
+  const barcodeContainer = document.querySelector(".barcode-container");
+  if (barcodeContainer) {
+    barcodeContainer.innerHTML = `
+      <div class="text-center p-3 bg-light border rounded">
+        <i class="fas fa-exclamation-triangle text-warning mb-2" style="font-size: 2rem;"></i>
+        <p class="mb-1 fw-bold">Barcode not available</p>
+        <small class="text-muted">Please use the voucher code above at the store</small>
+      </div>
+    `;
+  }
 }
 
 /**
@@ -876,12 +1079,92 @@ function initDevTestMode() {
     console.log(
       "- checkVoucherBalance() - Check current voucher balance and details"
     );
+    console.log(
+      "- testVoucherDiscountScenarios() - Test the enhanced flexible discount scenarios"
+    );
   }
+}
+
+/**
+ * Test the enhanced voucher discount scenarios
+ */
+function testVoucherDiscountScenarios() {
+  console.log("=== Testing Enhanced Voucher Discount Scenarios ===");
+
+  const testScenarios = [
+    {
+      scenario: "Cart less than voucher",
+      cartTotal: 75,
+      voucherValue: 100,
+      expected: {
+        discountApplied: 75,
+        remainingCartAmount: 0,
+        remainingVoucherBalance: 25,
+      },
+    },
+    {
+      scenario: "Cart equals voucher",
+      cartTotal: 100,
+      voucherValue: 100,
+      expected: {
+        discountApplied: 100,
+        remainingCartAmount: 0,
+        remainingVoucherBalance: 0,
+      },
+    },
+    {
+      scenario: "Cart exceeds voucher",
+      cartTotal: 250,
+      voucherValue: 150,
+      expected: {
+        discountApplied: 150,
+        remainingCartAmount: 100,
+        remainingVoucherBalance: 0,
+      },
+    },
+  ];
+
+  testScenarios.forEach((test, index) => {
+    console.log(`\n--- Test ${index + 1}: ${test.scenario} ---`);
+    console.log(
+      `Cart Total: E£${test.cartTotal}, Voucher Value: E£${test.voucherValue}`
+    );
+
+    const result = calculateVoucherDiscount(
+      test.cartTotal,
+      test.voucherValue,
+      `TEST-${index + 1}`
+    );
+
+    console.log("Expected:", test.expected);
+    console.log("Actual  :", {
+      discountApplied: result.discountApplied,
+      remainingCartAmount: result.remainingCartAmount,
+      remainingVoucherBalance: result.remainingVoucherBalance,
+    });
+
+    // Verify results
+    const passed =
+      result.discountApplied === test.expected.discountApplied &&
+      result.remainingCartAmount === test.expected.remainingCartAmount &&
+      result.remainingVoucherBalance ===
+        test.expected.remainingVoucherBalance &&
+      result.canProceedToPurchase === true;
+
+    console.log(`Result: ${passed ? "✅ PASSED" : "❌ FAILED"}`);
+
+    if (!passed) {
+      console.error("Test failed! Expected values don't match actual values.");
+    }
+  });
+
+  console.log("\n=== Voucher Discount Test Complete ===");
 }
 
 // Make functions available globally for testing
 window.addTestVouchers = addTestVouchers;
 window.testPurchase = testPurchase;
+window.testVoucherDiscountScenarios = testVoucherDiscountScenarios;
 window.checkVoucherBalance = function () {
   console.log(`Current voucher balance: E£${userVoucherBalance}`);
   console.log(`Number of vouchers: ${userVouchers.length}`);
@@ -1071,7 +1354,7 @@ function calculateCartTotal() {
 }
 
 /**
- * Update cart UI
+ * Update cart UI with flexible voucher discount system
  */
 function updateCartUI() {
   // Update cart badge count
@@ -1090,18 +1373,33 @@ function updateCartUI() {
     // Calculate cart total
     const cartTotal = calculateCartTotal();
 
+    // Calculate voucher discount using new flexible system
+    const discountResult = calculateVoucherDiscount(
+      cartTotal,
+      userVoucherBalance
+    );
+
     // Update subtotal
     cartSubtotal.textContent = `E£${cartTotal.toFixed(2)}`;
 
     // Update voucher balance
     cartVoucherBalance.textContent = `E£${userVoucherBalance}`;
 
-    // Update remaining balance
-    const remainingBalance = userVoucherBalance - cartTotal;
-    cartRemainingBalance.textContent = `E£${remainingBalance.toFixed(2)}`;
+    // Update voucher discount applied
+    const cartVoucherDiscount = document.getElementById("cartVoucherDiscount");
+    if (cartVoucherDiscount) {
+      cartVoucherDiscount.textContent = `E£${discountResult.discountApplied.toFixed(
+        2
+      )}`;
+    }
 
-    // Enable/disable checkout button based on balance
-    checkoutBtn.disabled = cartTotal <= 0 || cartTotal > userVoucherBalance;
+    // Update remaining balance (now shows amount to pay after discount)
+    cartRemainingBalance.textContent = `E£${discountResult.remainingCartAmount.toFixed(
+      2
+    )}`;
+
+    // Enable checkout button if cart has items (never block in flexible system)
+    checkoutBtn.disabled = cartTotal <= 0;
 
     // Render cart items
     renderCartItems();
@@ -1173,7 +1471,7 @@ function renderCartItems() {
 }
 
 /**
- * Process checkout
+ * Process checkout with flexible voucher discount system
  */
 function processCheckout() {
   // Check if cart is empty
@@ -1185,22 +1483,34 @@ function processCheckout() {
   // Calculate cart total
   const cartTotal = calculateCartTotal();
 
-  // Check if user has enough balance
-  if (cartTotal > userVoucherBalance) {
-    showNotification("Insufficient voucher balance", "danger");
-    return;
-  }
+  // Calculate voucher discount using flexible system
+  const discountResult = calculateVoucherDiscount(
+    cartTotal,
+    userVoucherBalance
+  );
 
-  // Show checkout confirmation modal instead of default confirm
+  // Show checkout confirmation modal with discount breakdown
   document.getElementById(
     "checkoutTotalAmount"
   ).textContent = `E£${cartTotal.toFixed(2)}`;
   document.getElementById(
     "checkoutCurrentBalance"
   ).textContent = `E£${userVoucherBalance.toFixed(2)}`;
-  document.getElementById("checkoutRemainingBalance").textContent = `E£${(
-    userVoucherBalance - cartTotal
-  ).toFixed(2)}`;
+
+  // Show voucher discount applied
+  const checkoutVoucherDiscount = document.getElementById(
+    "checkoutVoucherDiscount"
+  );
+  if (checkoutVoucherDiscount) {
+    checkoutVoucherDiscount.textContent = `E£${discountResult.discountApplied.toFixed(
+      2
+    )}`;
+  }
+
+  // Show amount to pay after voucher discount
+  document.getElementById(
+    "checkoutRemainingBalance"
+  ).textContent = `E£${discountResult.remainingCartAmount.toFixed(2)}`;
 
   // Get cart item count
   const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
@@ -1211,9 +1521,18 @@ function processCheckout() {
 }
 
 /**
- * Process cart purchase
+ * Process cart purchase with flexible voucher discount system
  */
 function processCartPurchase() {
+  // Calculate total
+  const cartTotal = calculateCartTotal();
+
+  // Calculate voucher discount
+  const discountResult = calculateVoucherDiscount(
+    cartTotal,
+    userVoucherBalance
+  );
+
   // Generate voucher code
   const voucherCode = generateVoucherCode();
 
@@ -1222,15 +1541,16 @@ function processCartPurchase() {
     .map((item) => `${item.name} (x${item.quantity})`)
     .join(", ");
 
-  // Calculate total
-  const cartTotal = calculateCartTotal();
-
   // Store the previous balance for display
   const previousBalance = userVoucherBalance;
 
   try {
-    // Update user vouchers with the total purchase
-    updateUserVouchers(cartTotal, voucherCode, productNames);
+    // Update user vouchers with only the discount amount used (not full cart total)
+    const voucherAmountUsed = discountResult.discountApplied;
+
+    if (voucherAmountUsed > 0) {
+      updateUserVouchers(voucherAmountUsed, voucherCode, productNames);
+    }
 
     // Clear cart after successful purchase
     cart = [];
@@ -1245,15 +1565,28 @@ function processCartPurchase() {
     // Update success modal with transaction details
     document.getElementById("voucherCode").textContent = voucherCode;
 
-    // Update transaction summary with animations
+    // Generate barcode for the voucher code
+    generateVoucherBarcode(voucherCode);
+
+    // Update enhanced transaction summary with discount breakdown
     const summaryTotal = document.getElementById("summaryTotal");
+    const summaryVoucherUsed = document.getElementById("summaryVoucherUsed");
     const summaryPrevBalance = document.getElementById("summaryPrevBalance");
+    const summaryAmountToPay = document.getElementById("summaryAmountToPay");
     const summaryRemBalance = document.getElementById("summaryRemBalance");
     const transactionDate = document.getElementById("transactionDate");
 
     summaryTotal.textContent = `E£${cartTotal.toFixed(2)}`;
+    if (summaryVoucherUsed)
+      summaryVoucherUsed.textContent = `E£${discountResult.discountApplied.toFixed(
+        2
+      )}`;
     summaryPrevBalance.textContent = `E£${previousBalance.toFixed(2)}`;
-    summaryRemBalance.textContent = `E£${(previousBalance - cartTotal).toFixed(
+    if (summaryAmountToPay)
+      summaryAmountToPay.textContent = `E£${discountResult.remainingCartAmount.toFixed(
+        2
+      )}`;
+    summaryRemBalance.textContent = `E£${discountResult.remainingVoucherBalance.toFixed(
       2
     )}`;
 
@@ -1280,14 +1613,34 @@ function processCartPurchase() {
     // Show success modal
     purchaseSuccessModal.show();
 
-    // Log success to console
+    // Log success to console with enhanced details
     console.log("Purchase completed successfully!");
-    console.log(`Previous balance: E£${previousBalance}`);
-    console.log(`Amount spent: E£${cartTotal}`);
-    console.log(`New balance: E£${userVoucherBalance}`);
+    console.log(`Cart Total: E£${cartTotal}`);
+    console.log(`Previous Voucher Balance: E£${previousBalance}`);
+    console.log(
+      `Voucher Discount Applied: E£${discountResult.discountApplied}`
+    );
+    console.log(
+      `Amount to Pay Separately: E£${discountResult.remainingCartAmount}`
+    );
+    console.log(
+      `Remaining Voucher Balance: E£${discountResult.remainingVoucherBalance}`
+    );
 
-    // Show a notification as well
-    showNotification("Purchase completed successfully!", "success");
+    // Show enhanced notification
+    if (discountResult.remainingCartAmount > 0) {
+      showNotification(
+        `Purchase completed! Voucher discount: E£${discountResult.discountApplied.toFixed(
+          2
+        )}, Pay separately: E£${discountResult.remainingCartAmount.toFixed(2)}`,
+        "success"
+      );
+    } else {
+      showNotification(
+        `Purchase completed with full voucher coverage!`,
+        "success"
+      );
+    }
   } catch (error) {
     console.error("Error processing purchase:", error);
     showNotification("Error processing purchase", "danger");

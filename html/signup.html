@@ -396,71 +396,71 @@
   <body>
     <div class="top-bar">
       <div class="container">
-        <div class="d-flex justify-content-between align-items-center">
-          <a class="navbar-brand" href="index.html">♻️ RETECH</a>
+        <div
+          class="d-flex justify-content-between align-items-center py-2 py-md-3"
+        >
+          <a class="navbar-brand" href="index.html">
+            <h3 class="m-0 fs-4 fs-md-3">♻️ RETECH</h3>
+          </a>
 
           <div class="d-flex align-items-center">
-            <!-- Auth buttons - will be shown/hidden based on login state -->
-            <div id="authButtons" class="d-flex">
-              <a
-                class="btn btn-outline-success me-2 d-flex align-items-center justify-content-center"
-                href="login.html"
-                style="min-width: 100px; height: 38px"
-              >
-                <i class="fas fa-sign-in-alt me-2"></i>Login
-              </a>
-              <a
-                class="btn btn-success d-flex align-items-center justify-content-center"
-                href="signup.html"
-                style="min-width: 100px; height: 38px"
-              >
-                <i class="fas fa-user-plus me-2"></i>SignUp
-              </a>
-            </div>
+            <a
+              href="login.html"
+              class="btn btn-outline-success btn-sm btn-md-regular me-2 d-flex align-items-center justify-content-center"
+            >
+              <i class="fas fa-sign-in-alt me-1 me-md-2"></i
+              ><span class="d-none d-sm-inline">Login</span>
+            </a>
+            <a
+              href="signup.html"
+              class="btn btn-success btn-sm btn-md-regular d-flex align-items-center justify-content-center active"
+            >
+              <i class="fas fa-user-plus me-1 me-md-2"></i
+              ><span class="d-none d-sm-inline">Sign Up</span>
+            </a>
 
             <!-- User profile - will be shown when logged in -->
-            <div id="userProfile" class="d-none">
-              <div class="dropdown">
-                <button
-                  class="btn btn-outline-primary dropdown-toggle"
-                  type="button"
-                  id="userDropdown"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  <span class="user-avatar-small me-2">
-                    <i class="fas fa-user-circle"></i>
-                  </span>
-                  <span id="userName">Account</span>
-                </button>
-                <ul
-                  class="dropdown-menu dropdown-menu-end"
-                  aria-labelledby="userDropdown"
-                >
-                  <div class="user-dropdown-header">
-                    <div class="user-dropdown-avatar">
-                      <i class="fas fa-user-circle fa-2x"></i>
-                    </div>
-                    <div class="user-dropdown-info">
-                      <div class="name" id="dropdownUserName">User Name</div>
-                      <div class="email" id="dropdownUserEmail">
-                        user@example.com
-                      </div>
+            <div id="userProfile" class="dropdown d-none">
+              <button
+                class="btn btn-outline-success dropdown-toggle"
+                type="button"
+                id="userDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <span class="user-avatar-small me-2"></span>
+                <span id="userName" class="d-none d-sm-inline">User Name</span>
+              </button>
+              <ul
+                class="dropdown-menu dropdown-menu-end"
+                aria-labelledby="userDropdown"
+              >
+                <li>
+                  <div class="dropdown-header d-flex align-items-center gap-2">
+                    <div class="user-dropdown-avatar"></div>
+                    <div>
+                      <h6 class="mb-0" id="dropdownUserName">User Name</h6>
+                      <small
+                        class="text-muted"
+                        id="dropdownUserEmail"
+                        style="font-size: 0.75rem"
+                        >user@example.com</small
+                      >
                     </div>
                   </div>
-                  <li>
-                    <a class="dropdown-item" href="profile.html"
-                      ><i class="fas fa-user me-2"></i>Profile</a
-                    >
-                  </li>
-                  <li><hr class="dropdown-divider" /></li>
-                  <li>
-                    <a class="dropdown-item" href="#" onclick="logout()"
-                      ><i class="fas fa-sign-out-alt me-2"></i>Logout</a
-                    >
-                  </li>
-                </ul>
-              </div>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="profile.html"
+                    ><i class="fas fa-user me-2"></i>Profile</a
+                  >
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item" href="#" onclick="logout()"
+                    ><i class="fas fa-sign-out-alt me-2"></i>Logout</a
+                  >
+                </li>
+              </ul>
             </div>
           </div>
         </div>
@@ -468,8 +468,11 @@
     </div>
 
     <!-- Main Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
       <div class="container">
+        <a class="navbar-brand d-lg-none" href="index.html">
+          <h3 class="m-0 fs-5">♻️ RETECH</h3>
+        </a>
         <button
           class="navbar-toggler"
           type="button"
@@ -484,55 +487,67 @@
         <div class="collapse navbar-collapse" id="mainNavigation">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link" href="index.html">Home</a>
+              <a class="nav-link py-2 py-lg-3" href="index.html">
+                <i class="fas fa-home me-1 d-inline d-lg-none"></i>Home
+              </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="about-us.html">About Us</a>
+              <a class="nav-link py-2 py-lg-3" href="about-us.html">
+                <i class="fas fa-info-circle me-1 d-inline d-lg-none"></i>About
+                Us
+              </a>
             </li>
             <li class="nav-item dropdown">
               <a
-                class="nav-link dropdown-toggle"
+                class="nav-link dropdown-toggle py-2 py-lg-3"
                 href="#"
                 id="servicesDropdown"
                 role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                Services
+                <i class="fas fa-recycle me-1 d-inline d-lg-none"></i>Services
               </a>
               <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
                 <li>
-                  <a class="dropdown-item" href="recycle-phone.html"
-                    >Recycle Phones</a
-                  >
+                  <a class="dropdown-item py-2" href="recycle-phone.html">
+                    <i class="fas fa-mobile-alt me-2"></i>Recycle Phones
+                  </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="recycle-laptop.html"
-                    >Recycle Laptops</a
-                  >
+                  <a class="dropdown-item py-2" href="recycle-laptop.html">
+                    <i class="fas fa-laptop me-2"></i>Recycle Laptops
+                  </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="recycle-kitchen.html"
-                    >Recycle Kitchen Appliances</a
-                  >
+                  <a class="dropdown-item py-2" href="recycle-kitchen.html">
+                    <i class="fas fa-blender me-2"></i>Recycle Kitchen
+                    Appliances
+                  </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="recycle-electronics.html"
-                    >Recycle Electronics</a
-                  >
+                  <a class="dropdown-item py-2" href="recycle-electronics.html">
+                    <i class="fas fa-tv me-2"></i>Recycle Electronics
+                  </a>
                 </li>
               </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="market.html">
+              <a class="nav-link py-2 py-lg-3" href="market.html">
                 <i class="fas fa-shopping-basket me-1"></i>Market
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="faq.html">FAQ</a>
+              <a class="nav-link py-2 py-lg-3" href="faq.html">
+                <i class="fas fa-question-circle me-1 d-inline d-lg-none"></i
+                >FAQ
+              </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="contact-us.html">Contact Us</a>
+              <a class="nav-link py-2 py-lg-3" href="contact-us.html">
+                <i class="fas fa-envelope me-1 d-inline d-lg-none"></i>Contact
+                Us
+              </a>
             </li>
           </ul>
           <div class="d-flex align-items-center">
@@ -550,18 +565,22 @@
       </div>
     </nav>
 
-    <div class="container signup-container">
-      <div class="row w-100">
-        <div class="col-md-6 mx-auto">
-          <div class="card signup-card">
-            <div class="card-header bg-success text-white p-4 text-center">
-              <i class="fas fa-recycle fa-2x mb-2"></i>
-              <h4 class="mb-0">Create Your Account</h4>
-              <p class="text-white-50 mt-2 mb-0">
+    <div class="container login-container">
+      <div class="row justify-content-center">
+        <div
+          class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 d-flex align-items-center justify-content-center"
+        >
+          <div class="card login-card signup-form-container w-100">
+            <div
+              class="card-header bg-success text-white p-3 p-md-4 text-center"
+            >
+              <i class="fas fa-leaf fa-2x mb-2 mb-md-3"></i>
+              <h4 class="mb-1 mb-md-2">Create Your Account</h4>
+              <p class="text-white-50 mt-2 mb-0 small">
                 Join our community and start recycling today!
               </p>
             </div>
-            <div class="card-body p-4">
+            <div class="card-body p-3 p-md-4">
               <!-- Hidden button for test user (accessible via Alt+T) -->
               <button
                 type="button"
