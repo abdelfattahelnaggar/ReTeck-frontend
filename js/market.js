@@ -221,6 +221,9 @@ const checkoutConfirmModal = new bootstrap.Modal(
 
 // Initialize when document is ready
 document.addEventListener("DOMContentLoaded", function () {
+  // Ensure all modals are properly initialized
+  initializeModals();
+
   // Check if user is logged in and has the customer role
   checkUserAccess();
 
@@ -245,6 +248,49 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+/**
+ * Initialize all Bootstrap modals to ensure they're working properly
+ */
+function initializeModals() {
+  try {
+    // Get all modal elements
+    const modalElements = document.querySelectorAll(".modal");
+
+    // Reinitialize all modals to ensure they work properly
+    modalElements.forEach((modalElement) => {
+      const modalId = modalElement.id;
+      try {
+        // Create a new Bootstrap modal instance
+        window[modalId + "Modal"] = new bootstrap.Modal(modalElement);
+        console.log(`Initialized modal: ${modalId}`);
+      } catch (err) {
+        console.error(`Error initializing modal ${modalId}:`, err);
+      }
+    });
+
+    // Ensure our main modals are properly assigned to global variables
+    window.productModal = new bootstrap.Modal(
+      document.getElementById("productModal")
+    );
+    window.confirmPurchaseModal = new bootstrap.Modal(
+      document.getElementById("confirmPurchaseModal")
+    );
+    window.purchaseSuccessModal = new bootstrap.Modal(
+      document.getElementById("purchaseSuccessModal")
+    );
+    window.nonCustomerModal = new bootstrap.Modal(
+      document.getElementById("nonCustomerModal")
+    );
+    window.checkoutConfirmModal = new bootstrap.Modal(
+      document.getElementById("checkoutConfirmModal")
+    );
+
+    console.log("All modals initialized successfully");
+  } catch (error) {
+    console.error("Error initializing modals:", error);
+  }
+}
 
 /**
  * Check if the user has access to the market page
@@ -505,84 +551,163 @@ function renderProducts(products) {
  * Open product details modal
  */
 function openProductDetails(productId) {
-  // Find product by id
-  const product = productData.find((p) => p.id === productId);
-  if (!product) return;
+  try {
+    // Find product by id
+    const product = productData.find((p) => p.id === productId);
+    if (!product) {
+      console.error(`Product with ID ${productId} not found`);
+      showNotification("Product not found", "danger");
+      return;
+    }
 
-  // Save selected product
-  selectedProduct = product;
+    // Save selected product
+    selectedProduct = product;
 
-  // Extract price value without currency
-  const priceValue = parseFloat(product.price.replace("E£", "").trim());
+    // Extract price value without currency
+    const priceValue = parseFloat(product.price.replace("E£", "").trim());
 
-  // Update modal content
-  document.getElementById("modalProductImage").src = product.image;
-  document.getElementById("modalProductName").textContent = product.name;
-  document.getElementById("modalProductCategory").textContent =
-    product.category;
-  document.getElementById("modalProductPrice").textContent = product.price;
-  document.getElementById("modalProductDescription").textContent =
-    product.description;
-  // Calculate discount information
-  const discountInfo = calculateVoucherDiscount(priceValue, userVoucherBalance);
-
-  // Update voucher information with flexible discount details
-  if (discountInfo.discountApplied === priceValue) {
-    document.getElementById(
+    // Check if modal elements exist
+    const modalProductImage = document.getElementById("modalProductImage");
+    const modalProductName = document.getElementById("modalProductName");
+    const modalProductCategory = document.getElementById(
+      "modalProductCategory"
+    );
+    const modalProductPrice = document.getElementById("modalProductPrice");
+    const modalProductDescription = document.getElementById(
+      "modalProductDescription"
+    );
+    const modalVoucherRequired = document.getElementById(
       "modalVoucherRequired"
-    ).textContent = `E£${priceValue} - Full voucher coverage available`;
-  } else if (discountInfo.discountApplied > 0) {
-    document.getElementById(
-      "modalVoucherRequired"
-    ).textContent = `E£${discountInfo.discountApplied.toFixed(
-      2
-    )} voucher discount available, E£${discountInfo.remainingCartAmount.toFixed(
-      2
-    )} to pay separately`;
-  } else {
-    document.getElementById(
-      "modalVoucherRequired"
-    ).textContent = `E£${priceValue} - No voucher discount available, full amount to pay separately`;
+    );
+
+    if (
+      !modalProductImage ||
+      !modalProductName ||
+      !modalProductCategory ||
+      !modalProductPrice ||
+      !modalProductDescription ||
+      !modalVoucherRequired
+    ) {
+      console.error("One or more modal elements not found");
+      showNotification("Error loading product details", "danger");
+      return;
+    }
+
+    // Update modal content
+    modalProductImage.src = product.image;
+    modalProductName.textContent = product.name;
+    modalProductCategory.textContent = product.category;
+    modalProductPrice.textContent = product.price;
+    modalProductDescription.textContent = product.description;
+
+    // Calculate discount information
+    const discountInfo = calculateVoucherDiscount(
+      priceValue,
+      userVoucherBalance
+    );
+
+    // Update voucher information with flexible discount details
+    if (discountInfo.discountApplied === priceValue) {
+      modalVoucherRequired.textContent = `E£${priceValue} - Full voucher coverage available`;
+    } else if (discountInfo.discountApplied > 0) {
+      modalVoucherRequired.textContent = `E£${discountInfo.discountApplied.toFixed(
+        2
+      )} voucher discount available, E£${discountInfo.remainingCartAmount.toFixed(
+        2
+      )} to pay separately`;
+    } else {
+      modalVoucherRequired.textContent = `E£${priceValue} - No voucher discount available, full amount to pay separately`;
+    }
+
+    // Purchase button is always enabled in flexible system
+    const purchaseButton = document.getElementById("purchaseButton");
+    if (!purchaseButton) {
+      console.error("Purchase button not found");
+    } else {
+      purchaseButton.disabled = false;
+      purchaseButton.innerHTML = `<i class="fas fa-shopping-cart me-1"></i> Purchase Product`;
+
+      // Setup purchase button click (always works in flexible system)
+      purchaseButton.onclick = function () {
+        openConfirmPurchase(product);
+      };
+    }
+
+    // Add "Add to Cart" button to the modal footer
+    const modalFooter = document.querySelector("#productModal .modal-footer");
+    if (!modalFooter) {
+      console.error("Modal footer not found");
+    } else {
+      // Remove existing add to cart button if it exists
+      const existingAddToCartBtn = document.getElementById("modalAddToCartBtn");
+      if (existingAddToCartBtn) {
+        existingAddToCartBtn.remove();
+      }
+
+      // Create add to cart button
+      const addToCartBtn = document.createElement("button");
+      addToCartBtn.type = "button";
+      addToCartBtn.className = "btn btn-primary me-auto";
+      addToCartBtn.id = "modalAddToCartBtn";
+      addToCartBtn.innerHTML =
+        '<i class="fas fa-cart-plus me-1"></i> Add to Cart';
+
+      // Always enable the Add to Cart button in the flexible system
+      addToCartBtn.disabled = false;
+
+      // Add click event
+      addToCartBtn.addEventListener("click", function () {
+        addToCart(product.id);
+        if (window.productModal) {
+          window.productModal.hide();
+        } else {
+          const modalElement = document.getElementById("productModal");
+          if (modalElement) {
+            bootstrap.Modal.getInstance(modalElement)?.hide();
+          }
+        }
+      });
+
+      // Insert at the beginning of modal footer
+      modalFooter.insertBefore(addToCartBtn, modalFooter.firstChild);
+    }
+
+    // Get the modal instance using the global reference first
+    let modalInstance = window.productModal;
+
+    // If not found, try to get it directly as a fallback
+    if (!modalInstance) {
+      console.warn(
+        "Global productModal not found, trying alternate methods..."
+      );
+
+      const modalElement = document.getElementById("productModal");
+      if (!modalElement) {
+        console.error("Product modal element not found");
+        showNotification("Error opening product details", "danger");
+        return;
+      }
+
+      // Try to get existing instance
+      modalInstance = bootstrap.Modal.getInstance(modalElement);
+
+      // If no instance exists, create a new one
+      if (!modalInstance) {
+        console.warn("Creating new modal instance");
+        modalInstance = new bootstrap.Modal(modalElement);
+        window.productModal = modalInstance;
+      }
+    }
+
+    // Show the modal
+    modalInstance.show();
+    console.log(
+      `Successfully opened product details for "${product.name}" (ID: ${product.id})`
+    );
+  } catch (error) {
+    console.error("Error in openProductDetails:", error);
+    showNotification("Error opening product details", "danger");
   }
-
-  // Purchase button is always enabled in flexible system
-  const purchaseButton = document.getElementById("purchaseButton");
-  purchaseButton.disabled = false;
-  purchaseButton.innerHTML = `<i class="fas fa-shopping-cart me-1"></i> Purchase Product`;
-
-  // Setup purchase button click (always works in flexible system)
-  purchaseButton.onclick = function () {
-    openConfirmPurchase(product);
-  };
-
-  // Add "Add to Cart" button to the modal footer
-  const modalFooter = document.querySelector("#productModal .modal-footer");
-
-  // Remove existing add to cart button if it exists
-  const existingAddToCartBtn = document.getElementById("modalAddToCartBtn");
-  if (existingAddToCartBtn) {
-    existingAddToCartBtn.remove();
-  }
-
-  // Create add to cart button
-  const addToCartBtn = document.createElement("button");
-  addToCartBtn.type = "button";
-  addToCartBtn.className = "btn btn-primary me-auto";
-  addToCartBtn.id = "modalAddToCartBtn";
-  addToCartBtn.innerHTML = '<i class="fas fa-cart-plus me-1"></i> Add to Cart';
-  addToCartBtn.disabled = !hasEnoughBalance;
-
-  // Add click event
-  addToCartBtn.addEventListener("click", function () {
-    addToCart(product.id);
-    productModal.hide();
-  });
-
-  // Insert at the beginning of modal footer
-  modalFooter.insertBefore(addToCartBtn, modalFooter.firstChild);
-
-  // Show modal
-  productModal.show();
 }
 
 /**
@@ -1238,12 +1363,36 @@ function initCart() {
 }
 
 /**
- * Toggle cart sidebar
+ * Toggle cart sidebar with animation
  */
 function toggleCart() {
-  cartSidebar.classList.toggle("active");
-  cartOverlay.classList.toggle("active");
-  document.body.classList.toggle("overflow-hidden");
+  const cartSidebar = document.getElementById("cartSidebar");
+  const cartOverlay = document.getElementById("cartOverlay");
+  const body = document.body;
+
+  if (cartSidebar.classList.contains("active")) {
+    // Close cart
+    cartSidebar.classList.remove("active");
+    cartOverlay.classList.remove("active");
+    body.classList.remove("overflow-hidden");
+
+    // Allow time for animation to complete
+    setTimeout(() => {
+      if (!cartSidebar.classList.contains("active")) {
+        // Re-enable scrolling only if cart is still closed
+        body.style.removeProperty("padding-right");
+      }
+    }, 400);
+  } else {
+    // Open cart
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
+    body.style.paddingRight = `${scrollbarWidth}px`;
+
+    cartSidebar.classList.add("active");
+    cartOverlay.classList.add("active");
+    body.classList.add("overflow-hidden");
+  }
 }
 
 /**
@@ -1277,7 +1426,7 @@ function saveCart() {
 }
 
 /**
- * Add product to cart
+ * Add product to cart with animation
  */
 function addToCart(productId) {
   // Find product
@@ -1290,6 +1439,19 @@ function addToCart(productId) {
   if (existingItem) {
     // Increment quantity
     existingItem.quantity += 1;
+
+    // Update UI to highlight the item in cart
+    const cartItemElement = document.querySelector(
+      `.cart-item-quantity input[data-product-id="${productId}"]`
+    );
+    if (cartItemElement) {
+      // Cart is currently open, animate the quantity change
+      cartItemElement.classList.add("highlight-change");
+      setTimeout(
+        () => cartItemElement.classList.remove("highlight-change"),
+        1000
+      );
+    }
   } else {
     // Add new item
     cart.push({
@@ -1300,6 +1462,12 @@ function addToCart(productId) {
       image: product.image,
       quantity: 1,
     });
+
+    // If cart is closed, open it to show the new item (but don't auto-close it)
+    const cartSidebar = document.getElementById("cartSidebar");
+    if (!cartSidebar.classList.contains("active")) {
+      toggleCart(); // Open cart and keep it open
+    }
   }
 
   // Save cart
@@ -1308,12 +1476,21 @@ function addToCart(productId) {
   // Update cart UI
   updateCartUI();
 
+  // Animate the cart button
+  const cartBtn = document.getElementById("cartBtn");
+  if (cartBtn) {
+    cartBtn.classList.add("pulse-animation");
+    setTimeout(() => {
+      cartBtn.classList.remove("pulse-animation");
+    }, 1000);
+  }
+
   // Show notification
-  showNotification(`${product.name} added to cart`);
+  showNotification(`${product.name} added to cart`, "success");
 }
 
 /**
- * Remove item from cart
+ * Remove item from cart with animation
  */
 function removeFromCart(productId) {
   // Find item index
@@ -1333,11 +1510,11 @@ function removeFromCart(productId) {
   updateCartUI();
 
   // Show notification
-  showNotification(`${item.name} removed from cart`);
+  showNotification(`${item.name} removed from cart`, "warning");
 }
 
 /**
- * Update item quantity in cart
+ * Update item quantity in cart with animation
  */
 function updateCartItemQuantity(productId, quantity) {
   // Validate quantity
@@ -1348,6 +1525,9 @@ function updateCartItemQuantity(productId, quantity) {
   const item = cart.find((item) => item.id === productId);
   if (!item) return;
 
+  // Get previous quantity for animation
+  const previousQuantity = item.quantity;
+
   // Update quantity
   item.quantity = quantity;
 
@@ -1356,148 +1536,185 @@ function updateCartItemQuantity(productId, quantity) {
 
   // Update cart UI
   updateCartUI();
-}
 
-/**
- * Clear all items from cart
- */
-function clearCart() {
-  // Confirm before clearing
-  if (
-    cart.length === 0 ||
-    confirm("Are you sure you want to clear your cart?")
-  ) {
-    cart = [];
-    saveCart();
-    updateCartUI();
-    showNotification("Cart cleared");
+  // Find and animate the updated quantity in the DOM
+  const qtyInput = document.querySelector(
+    `.qty-input[data-product-id="${productId}"]`
+  );
+  if (qtyInput) {
+    // Add highlight animation
+    qtyInput.classList.add("highlight-change");
+
+    // Remove the class after animation completes
+    setTimeout(() => {
+      qtyInput.classList.remove("highlight-change");
+    }, 500);
+  }
+
+  // Show feedback if quantity increased
+  if (quantity > previousQuantity) {
+    showNotification(`Added another ${item.name} to cart`, "success");
   }
 }
 
 /**
- * Calculate cart total
- */
-function calculateCartTotal() {
-  return cart.reduce((total, item) => {
-    return total + item.priceValue * item.quantity;
-  }, 0);
-}
-
-/**
- * Update cart UI with flexible voucher discount system
+ * Update cart UI with animation and format numbers properly
  */
 function updateCartUI() {
   // Update cart badge count
   const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-  cartBadgeCount.textContent = totalItems;
+  const cartBadgeCount = document.getElementById("cartBadgeCount");
+
+  if (cartBadgeCount) {
+    // Animate count change
+    if (cartBadgeCount.textContent !== totalItems.toString()) {
+      cartBadgeCount.classList.add("scale-animation");
+      setTimeout(() => cartBadgeCount.classList.remove("scale-animation"), 500);
+    }
+    cartBadgeCount.textContent = totalItems;
+  }
 
   // Toggle empty cart message
-  if (cart.length === 0) {
-    cartEmptyMessage.classList.remove("d-none");
-    cartItems.classList.add("d-none");
-    checkoutBtn.disabled = true;
-  } else {
-    cartEmptyMessage.classList.add("d-none");
-    cartItems.classList.remove("d-none");
+  const cartEmptyMessage = document.getElementById("cartEmptyMessage");
+  const cartItems = document.getElementById("cartItems");
 
-    // Calculate cart total
-    const cartTotal = calculateCartTotal();
-
-    // Calculate voucher discount using new flexible system
-    const discountResult = calculateVoucherDiscount(
-      cartTotal,
-      userVoucherBalance
-    );
-
-    // Update subtotal
-    cartSubtotal.textContent = `E£${cartTotal.toFixed(2)}`;
-
-    // Update voucher balance
-    cartVoucherBalance.textContent = `E£${userVoucherBalance}`;
-
-    // Update voucher discount applied
-    const cartVoucherDiscount = document.getElementById("cartVoucherDiscount");
-    if (cartVoucherDiscount) {
-      cartVoucherDiscount.textContent = `E£${discountResult.discountApplied.toFixed(
-        2
-      )}`;
+  if (cartEmptyMessage && cartItems) {
+    if (cart.length === 0) {
+      cartEmptyMessage.classList.remove("d-none");
+      cartItems.classList.add("d-none");
+    } else {
+      cartEmptyMessage.classList.add("d-none");
+      cartItems.classList.remove("d-none");
     }
+  }
 
-    // Update remaining balance (now shows amount to pay after discount)
-    cartRemainingBalance.textContent = `E£${discountResult.remainingCartAmount.toFixed(
-      2
+  // Calculate cart total
+  const cartTotal = calculateCartTotal();
+
+  // Calculate voucher discount using flexible system
+  const discountResult = calculateVoucherDiscount(
+    cartTotal,
+    userVoucherBalance
+  );
+
+  // Update subtotal with proper formatting
+  const cartSubtotal = document.getElementById("cartSubtotal");
+  if (cartSubtotal) {
+    cartSubtotal.textContent = `E£${formatCurrency(cartTotal)}`;
+  }
+
+  // Update voucher balance
+  const cartVoucherBalance = document.getElementById("cartVoucherBalance");
+  if (cartVoucherBalance) {
+    cartVoucherBalance.textContent = `E£${formatCurrency(userVoucherBalance)}`;
+  }
+
+  // Update voucher discount applied
+  const cartVoucherDiscount = document.getElementById("cartVoucherDiscount");
+  if (cartVoucherDiscount) {
+    cartVoucherDiscount.textContent = `E£${formatCurrency(
+      discountResult.discountApplied
+    )}`;
+  }
+
+  // Update remaining balance
+  const cartRemainingBalance = document.getElementById("cartRemainingBalance");
+  if (cartRemainingBalance) {
+    cartRemainingBalance.textContent = `E£${formatCurrency(
+      discountResult.remainingCartAmount
     )}`;
 
-    // Enable checkout button if cart has items (never block in flexible system)
-    checkoutBtn.disabled = cartTotal <= 0;
-
-    // Render cart items
-    renderCartItems();
+    // Highlight if the amount changes
+    cartRemainingBalance.classList.add("highlight-change");
+    setTimeout(
+      () => cartRemainingBalance.classList.remove("highlight-change"),
+      500
+    );
   }
+
+  // Enable/disable checkout button
+  const checkoutBtn = document.getElementById("checkoutBtn");
+  if (checkoutBtn) {
+    checkoutBtn.disabled = cartTotal <= 0;
+  }
+
+  // Render cart items
+  renderCartItems();
 }
 
 /**
- * Render cart items
+ * Format currency with 2 decimal places
+ * @param {number} value - The value to format
+ * @returns {string} Formatted value
  */
-function renderCartItems() {
-  // Clear items container
-  cartItems.innerHTML = "";
+function formatCurrency(value) {
+  return value.toFixed(2);
+}
 
-  // Render each item
-  cart.forEach((item) => {
-    const itemElement = document.createElement("div");
-    itemElement.className = "cart-item";
-    itemElement.innerHTML = `
-      <img src="${item.image}" alt="${item.name}" class="cart-item-image">
-      <div class="cart-item-details">
-        <div class="cart-item-title">${item.name}</div>
-        <div class="cart-item-price">${item.price}</div>
-        <div class="cart-item-quantity">
-          <button class="qty-btn-minus" data-product-id="${item.id}">-</button>
-          <input type="number" min="1" value="${item.quantity}" class="qty-input" data-product-id="${item.id}">
-          <button class="qty-btn-plus" data-product-id="${item.id}">+</button>
-          <span class="cart-item-remove" data-product-id="${item.id}">
-            <i class="fas fa-trash-alt"></i>
-          </span>
+/**
+ * Clear all items from cart with confirmation
+ */
+function clearCart() {
+  // Check if cart has items first
+  if (cart.length === 0) {
+    showNotification("Your cart is already empty", "info");
+    return;
+  }
+
+  // Create or get confirmation modal
+  let confirmModal = document.getElementById("clearCartConfirmModal");
+
+  if (!confirmModal) {
+    // Create modal if it doesn't exist
+    const modalHTML = `
+      <div class="modal fade" id="clearCartConfirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header bg-warning">
+              <h5 class="modal-title">Clear Cart</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+              <i class="fas fa-trash-alt fa-3x text-warning mb-3"></i>
+              <h5>Are you sure you want to clear your cart?</h5>
+              <p class="text-muted mb-0">This will remove all items from your cart.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-warning" id="confirmClearCartBtn">Clear Cart</button>
+            </div>
+          </div>
         </div>
       </div>
     `;
 
-    // Add to container
-    cartItems.appendChild(itemElement);
+    // Add modal to body
+    document.body.insertAdjacentHTML("beforeend", modalHTML);
+    confirmModal = document.getElementById("clearCartConfirmModal");
 
-    // Add event listeners for quantity buttons
-    const minusBtn = itemElement.querySelector(".qty-btn-minus");
-    const plusBtn = itemElement.querySelector(".qty-btn-plus");
-    const qtyInput = itemElement.querySelector(".qty-input");
-    const removeBtn = itemElement.querySelector(".cart-item-remove");
+    // Initialize Bootstrap modal
+    const bsModal = new bootstrap.Modal(confirmModal);
 
-    minusBtn.addEventListener("click", function () {
-      const productId = this.getAttribute("data-product-id");
-      const item = cart.find((item) => item.id === productId);
-      if (item && item.quantity > 1) {
-        updateCartItemQuantity(productId, item.quantity - 1);
-      }
-    });
+    // Add event listener to confirm button
+    document
+      .getElementById("confirmClearCartBtn")
+      .addEventListener("click", function () {
+        // Actually clear the cart
+        cart = [];
+        saveCart();
+        updateCartUI();
 
-    plusBtn.addEventListener("click", function () {
-      const productId = this.getAttribute("data-product-id");
-      const item = cart.find((item) => item.id === productId);
-      if (item) {
-        updateCartItemQuantity(productId, item.quantity + 1);
-      }
-    });
+        // Hide modal
+        bsModal.hide();
 
-    qtyInput.addEventListener("change", function () {
-      const productId = this.getAttribute("data-product-id");
-      updateCartItemQuantity(productId, this.value);
-    });
-
-    removeBtn.addEventListener("click", function () {
-      const productId = this.getAttribute("data-product-id");
-      removeFromCart(productId);
-    });
-  });
+        // Show notification
+        showNotification("Cart cleared successfully", "success");
+      });
+  } else {
+    // Initialize Bootstrap modal if it already exists
+    const bsModal = new bootstrap.Modal(confirmModal);
+    bsModal.show();
+  }
 }
 
 /**
@@ -1679,8 +1896,21 @@ function processCartPurchase() {
 
 /**
  * Show notification
+ * @param {string} message - Message to show
+ * @param {string} type - Notification type (success, warning, danger)
  */
 function showNotification(message, type = "success") {
+  // Clean up any existing notifications to prevent stacking
+  const existingNotifications = document.querySelectorAll(".notification");
+  existingNotifications.forEach((notif) => {
+    notif.classList.remove("show");
+    setTimeout(() => {
+      if (notif.parentNode) {
+        notif.parentNode.removeChild(notif);
+      }
+    }, 300);
+  });
+
   // Create notification element
   const notification = document.createElement("div");
   notification.className = `notification notification-${type}`;
@@ -1697,19 +1927,302 @@ function showNotification(message, type = "success") {
     </div>
   `;
 
+  // Ensure notification is on top of other elements
+  notification.style.zIndex = "9999";
+
+  // Add close button
+  const closeButton = document.createElement("button");
+  closeButton.innerHTML = `<i class="fas fa-times"></i>`;
+  closeButton.className = "notification-close";
+  closeButton.style.background = "transparent";
+  closeButton.style.border = "none";
+  closeButton.style.color = "inherit";
+  closeButton.style.opacity = "0.7";
+  closeButton.style.marginLeft = "10px";
+  closeButton.style.cursor = "pointer";
+  closeButton.style.padding = "0";
+  closeButton.onclick = function () {
+    notification.classList.remove("show");
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.parentNode.removeChild(notification);
+      }
+    }, 300);
+  };
+
+  notification.querySelector(".notification-content").appendChild(closeButton);
+
   // Add to body
   document.body.appendChild(notification);
 
-  // Trigger animation
+  // Trigger animation after a short delay to ensure proper rendering
   setTimeout(() => {
     notification.classList.add("show");
   }, 10);
 
   // Remove after delay
   setTimeout(() => {
-    notification.classList.remove("show");
-    setTimeout(() => {
-      notification.remove();
-    }, 300);
-  }, 3000);
+    if (notification.parentNode) {
+      notification.classList.remove("show");
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification);
+        }
+      }, 300);
+    }
+  }, 5000); // Increased to 5 seconds for better readability
+}
+
+/**
+ * Render cart items with animation
+ */
+function renderCartItems() {
+  // Get the cart items container
+  const cartItems = document.getElementById("cartItemsList");
+
+  if (!cartItems) return;
+
+  // Clear items container
+  cartItems.innerHTML = "";
+
+  // Render each item with staggered animation delay
+  cart.forEach((item, index) => {
+    const itemElement = document.createElement("div");
+    itemElement.className = "cart-item";
+    itemElement.style.animationDelay = `${index * 0.1}s`;
+
+    itemElement.innerHTML = `
+      <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+      <div class="cart-item-details">
+        <div class="cart-item-title">${item.name}</div>
+        <div class="cart-item-price">${item.price}</div>
+        <div class="cart-item-quantity">
+          <button class="qty-btn-minus" data-product-id="${item.id}">−</button>
+          <input type="number" min="1" value="${item.quantity}" class="qty-input" data-product-id="${item.id}">
+          <button class="qty-btn-plus" data-product-id="${item.id}">+</button>
+          <span class="cart-item-remove" data-product-id="${item.id}" title="Remove item">
+            <i class="fas fa-trash-alt"></i>
+          </span>
+        </div>
+      </div>
+    `;
+
+    // Add to container
+    cartItems.appendChild(itemElement);
+
+    // Add event listeners for quantity buttons
+    const minusBtn = itemElement.querySelector(".qty-btn-minus");
+    const plusBtn = itemElement.querySelector(".qty-btn-plus");
+    const qtyInput = itemElement.querySelector(".qty-input");
+    const removeBtn = itemElement.querySelector(".cart-item-remove");
+
+    minusBtn.addEventListener("click", function () {
+      const productId = this.getAttribute("data-product-id");
+      const item = cart.find((item) => item.id === productId);
+      if (item && item.quantity > 1) {
+        updateCartItemQuantity(productId, item.quantity - 1);
+      }
+    });
+
+    plusBtn.addEventListener("click", function () {
+      const productId = this.getAttribute("data-product-id");
+      const item = cart.find((item) => item.id === productId);
+      if (item) {
+        updateCartItemQuantity(productId, item.quantity + 1);
+      }
+    });
+
+    qtyInput.addEventListener("change", function () {
+      const productId = this.getAttribute("data-product-id");
+      const newQuantity = parseInt(this.value);
+      if (!isNaN(newQuantity) && newQuantity > 0) {
+        updateCartItemQuantity(productId, newQuantity);
+      } else {
+        // Reset to 1 if invalid value
+        this.value = 1;
+        updateCartItemQuantity(productId, 1);
+      }
+    });
+
+    removeBtn.addEventListener("click", function () {
+      const productId = this.getAttribute("data-product-id");
+
+      // Add remove animation
+      this.closest(".cart-item").classList.add("removing");
+
+      // Wait for animation before actually removing
+      setTimeout(() => {
+        removeFromCart(productId);
+      }, 300);
+    });
+  });
+
+  // Add "Browse Products" button event
+  const browseProductsBtn = document.getElementById("browseProductsBtn");
+  if (browseProductsBtn) {
+    browseProductsBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      toggleCart(); // Close the cart
+
+      // Scroll to products with animation
+      setTimeout(() => {
+        const productsSection = document.querySelector("#productsContainer");
+        if (productsSection) {
+          productsSection.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 400);
+    });
+  }
+}
+
+/**
+ * Calculate cart total
+ * @returns {number} Total cart value
+ */
+function calculateCartTotal() {
+  return cart.reduce((total, item) => {
+    return total + item.priceValue * item.quantity;
+  }, 0);
+}
+
+/**
+ * Print voucher with proper styling
+ * This function creates a new window with just the voucher content for printing
+ */
+function printVoucher() {
+  // Get the voucher code and barcode content
+  const voucherCode = document.getElementById("voucherCode").textContent;
+  const barcodeContainer =
+    document.querySelector(".barcode-container").innerHTML;
+
+  // Create transaction details
+  const totalAmount = document.getElementById("summaryTotal").textContent;
+  const voucherUsed = document.getElementById("summaryVoucherUsed").textContent;
+  const remainingBalance =
+    document.getElementById("summaryRemBalance").textContent;
+  const transactionDate =
+    document.getElementById("transactionDate").textContent;
+
+  // Create print window
+  const printWindow = window.open("", "_blank");
+
+  // Create print content with clean styling
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Voucher: ${voucherCode}</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+          color: #000;
+        }
+        .print-container {
+          max-width: 800px;
+          margin: 0 auto;
+          border: 2px solid #000;
+          padding: 20px;
+        }
+        .header {
+          text-align: center;
+          margin-bottom: 20px;
+          padding-bottom: 15px;
+          border-bottom: 2px solid #000;
+        }
+        .logo {
+          font-size: 24px;
+          font-weight: bold;
+        }
+        .voucher-code {
+          font-size: 24px;
+          font-weight: bold;
+          text-align: center;
+          margin: 20px 0;
+          padding: 10px;
+          border: 2px dashed #000;
+          letter-spacing: 3px;
+          font-family: monospace;
+        }
+        .barcode-container {
+          text-align: center;
+          margin: 20px 0;
+          padding: 15px;
+          border: 1px solid #ccc;
+        }
+        .details {
+          margin-top: 30px;
+          border-top: 1px solid #ccc;
+          padding-top: 15px;
+        }
+        .detail-row {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 10px;
+        }
+        .footer {
+          margin-top: 40px;
+          text-align: center;
+          font-size: 12px;
+          color: #666;
+        }
+        @media print {
+          body {
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
+          }
+          .print-button {
+            display: none;
+          }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="print-container">
+        <div class="header">
+          <div class="logo">♻️ RETECH - HyperOne Voucher</div>
+          <div>Transaction Date: ${transactionDate}</div>
+        </div>
+        
+        <div class="voucher-code">
+          ${voucherCode}
+        </div>
+        
+        <div class="barcode-container">
+          ${barcodeContainer}
+        </div>
+        
+        <div class="details">
+          <div class="detail-row">
+            <strong>Total Purchase:</strong>
+            <span>${totalAmount}</span>
+          </div>
+          <div class="detail-row">
+            <strong>Voucher Used:</strong>
+            <span>${voucherUsed}</span>
+          </div>
+          <div class="detail-row">
+            <strong>Remaining Balance:</strong>
+            <span>${remainingBalance}</span>
+          </div>
+        </div>
+        
+        <div class="footer">
+          <p>Present this voucher at any HyperOne store to redeem your purchase.</p>
+          <p>Voucher valid for 30 days from issue date.</p>
+        </div>
+      </div>
+      
+      <div class="print-button" style="text-align: center; margin-top: 20px;">
+        <button onclick="window.print(); setTimeout(function() { window.close(); }, 500);" 
+                style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
+          Print Voucher
+        </button>
+      </div>
+    </body>
+    </html>
+  `);
+
+  printWindow.document.close();
 }

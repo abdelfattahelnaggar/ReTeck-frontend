@@ -141,7 +141,7 @@ function setupLoginForm() {
 
       // Validate email format
       if (!isValidEmail(email)) {
-        showToast("Please enter a valid email address", "danger");
+        showNotification("Please enter a valid email address", "danger");
         return;
       }
 
@@ -149,19 +149,19 @@ function setupLoginForm() {
       let userData = getUserData(email);
 
       if (!userData) {
-        showToast("No account found with this email", "danger");
+        showNotification("No account found with this email", "danger");
         return;
       }
 
       // Validate password (in a real app, this would be done securely on the server)
       if (!validatePassword(password, userData.passwordHash)) {
-        showToast("Invalid password", "danger");
+        showNotification("Invalid password", "danger");
         return;
       }
 
       // Validate selected role matches user role if role selection exists
       if (selectedRole && userData.role !== selectedRole) {
-        showToast(
+        showNotification(
           `This email is not registered as a ${selectedRole} account`,
           "danger"
         );
@@ -201,9 +201,12 @@ function setupLoginForm() {
 
       const email = document.getElementById("loginEmail").value.trim();
       if (email && isValidEmail(email)) {
-        showToast("Password reset instructions sent to your email", "info");
+        showNotification(
+          "Password reset instructions sent to your email",
+          "info"
+        );
       } else {
-        showToast("Please enter your email address first", "warning");
+        showNotification("Please enter your email address first", "warning");
       }
     });
   }
@@ -255,7 +258,7 @@ function setupSignupForm() {
 
       // Validate email format
       if (!isValidEmail(email)) {
-        showToast("Please enter a valid email address", "danger");
+        showNotification("Please enter a valid email address", "danger");
         resetButtonState();
         return;
       }
@@ -263,14 +266,17 @@ function setupSignupForm() {
       // Check if email already exists
       const existingUser = getUserData(email);
       if (existingUser) {
-        showToast("An account with this email already exists", "danger");
+        showNotification("An account with this email already exists", "danger");
         resetButtonState();
         return;
       }
 
       // Validate password
       if (password.length < 8) {
-        showToast("Password must be at least 8 characters long", "danger");
+        showNotification(
+          "Password must be at least 8 characters long",
+          "danger"
+        );
         resetButtonState();
         return;
       }
@@ -278,7 +284,7 @@ function setupSignupForm() {
       // Check password strength
       const strengthResult = checkPasswordStrength(password);
       if (strengthResult.score < 2) {
-        showToast(
+        showNotification(
           "Please use a stronger password: " + strengthResult.feedback,
           "danger"
         );
@@ -288,7 +294,7 @@ function setupSignupForm() {
 
       // Check if passwords match
       if (password !== confirmPassword) {
-        showToast("Passwords do not match", "danger");
+        showNotification("Passwords do not match", "danger");
         resetButtonState();
         return;
       }
@@ -297,7 +303,10 @@ function setupSignupForm() {
       createUserAccount(email, password, firstName, lastName);
 
       // Show success message
-      showToast("Account created successfully! You can now log in.", "success");
+      showNotification(
+        "Account created successfully! You can now log in.",
+        "success"
+      );
 
       // Redirect to login page after short delay
       setTimeout(() => {
@@ -486,12 +495,12 @@ function setupNewsletterSubscription() {
       const email = inputField.value.trim();
 
       if (!email) {
-        showToast("Please enter your email address", "warning");
+        showNotification("Please enter your email address", "warning");
         return;
       }
 
       if (!validateEmail(email)) {
-        showToast("Please enter a valid email address", "warning");
+        showNotification("Please enter a valid email address", "warning");
         return;
       }
 
@@ -502,7 +511,10 @@ function setupNewsletterSubscription() {
       inputField.value = "";
 
       // Show success message
-      showToast("Thank you for subscribing to our newsletter!", "success");
+      showNotification(
+        "Thank you for subscribing to our newsletter!",
+        "success"
+      );
     });
   });
 }
@@ -538,55 +550,79 @@ function saveNewsletterSubscription(email) {
 }
 
 /**
- * Shows a toast notification
- * @param {string} message - The message to display
- * @param {string} type - The type of toast (success, warning, info, error)
+ * Show notification
+ * @param {string} message - Message to show
+ * @param {string} type - Notification type (success, warning, danger)
  */
-function showToast(message, type = "info") {
-  // Check if toast container exists
-  let toastContainer = document.querySelector(".toast-container");
+function showNotification(message, type = "success") {
+  // Clean up any existing notifications to prevent stacking
+  const existingNotifications = document.querySelectorAll(".notification");
+  existingNotifications.forEach((notif) => {
+    notif.classList.remove("show");
+    setTimeout(() => {
+      if (notif.parentNode) {
+        notif.parentNode.removeChild(notif);
+      }
+    }, 300);
+  });
 
-  if (!toastContainer) {
-    // Create toast container
-    toastContainer = document.createElement("div");
-    toastContainer.className =
-      "toast-container position-fixed bottom-0 end-0 p-3";
-    document.body.appendChild(toastContainer);
-  }
-
-  // Create toast element
-  const toastId = "toast-" + Date.now();
-  const toast = document.createElement("div");
-  toast.className = `toast align-items-center text-white bg-${type} border-0`;
-  toast.id = toastId;
-  toast.setAttribute("role", "alert");
-  toast.setAttribute("aria-live", "assertive");
-  toast.setAttribute("aria-atomic", "true");
-
-  // Create toast content
-  toast.innerHTML = `
-    <div class="d-flex">
-      <div class="toast-body">
-        ${message}
-      </div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+  // Create notification element
+  const notification = document.createElement("div");
+  notification.className = `notification notification-${type}`;
+  notification.innerHTML = `
+    <div class="notification-content">
+      <i class="fas ${
+        type === "success"
+          ? "fa-check-circle"
+          : type === "warning"
+          ? "fa-exclamation-triangle"
+          : "fa-times-circle"
+      }"></i>
+      <span>${message}</span>
     </div>
   `;
 
-  // Add toast to container
-  toastContainer.appendChild(toast);
+  // Add close button
+  const closeButton = document.createElement("button");
+  closeButton.innerHTML = `<i class="fas fa-times"></i>`;
+  closeButton.className = "notification-close";
+  closeButton.style.background = "transparent";
+  closeButton.style.border = "none";
+  closeButton.style.color = "inherit";
+  closeButton.style.opacity = "0.7";
+  closeButton.style.marginLeft = "10px";
+  closeButton.style.cursor = "pointer";
+  closeButton.style.padding = "0";
+  closeButton.onclick = function () {
+    notification.classList.remove("show");
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.parentNode.removeChild(notification);
+      }
+    }, 300);
+  };
 
-  // Initialize and show toast
-  const bsToast = new bootstrap.Toast(toast, {
-    autohide: true,
-    delay: 3000,
-  });
-  bsToast.show();
+  notification.querySelector(".notification-content").appendChild(closeButton);
 
-  // Remove toast after it's hidden
-  toast.addEventListener("hidden.bs.toast", function () {
-    toast.remove();
-  });
+  // Add to body
+  document.body.appendChild(notification);
+
+  // Trigger animation after a short delay to ensure proper rendering
+  setTimeout(() => {
+    notification.classList.add("show");
+  }, 10);
+
+  // Remove after delay
+  setTimeout(() => {
+    if (notification.parentNode) {
+      notification.classList.remove("show");
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification);
+        }
+      }, 300);
+    }
+  }, 5000); // 5 seconds display time
 }
 
 // Setup logout functionality
@@ -615,7 +651,7 @@ function setupLogout() {
       }
 
       // Show a success message
-      showToast("Logged out successfully", "success");
+      showNotification("Logged out successfully", "success");
 
       // Redirect to home page
       setTimeout(() => {

@@ -343,13 +343,16 @@
         position: fixed;
         bottom: 20px;
         right: 20px;
-        z-index: 1060;
+        z-index: 9999;
         padding: 15px 20px;
         border-radius: 10px;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         transform: translateY(30px);
         opacity: 0;
         transition: transform 0.3s, opacity 0.3s;
+        width: auto;
+        max-width: 90%;
+        margin-left: 20px;
       }
 
       .notification.show {
@@ -365,6 +368,11 @@
       .notification-content i {
         font-size: 1.2rem;
         margin-right: 10px;
+        flex-shrink: 0;
+      }
+
+      .notification-content span {
+        word-break: break-word;
       }
 
       .notification-success {
@@ -383,6 +391,23 @@
         background-color: #f8d7da;
         color: #721c24;
         border-left: 5px solid #dc3545;
+      }
+
+      /* Additional responsive notification styles */
+      @media (max-width: 576px) {
+        .notification {
+          bottom: 70px; /* Move up to avoid bottom nav on mobile */
+          right: 10px;
+          left: 10px;
+          width: auto;
+          max-width: calc(100% - 20px);
+          margin: 0;
+          padding: 12px 15px;
+        }
+
+        .notification-content i {
+          font-size: 1rem;
+        }
       }
 
       /* Checkout Confirmation Modal Styles */
@@ -568,26 +593,67 @@
                 <ul
                   class="dropdown-menu dropdown-menu-end"
                   aria-labelledby="userDropdown"
+                  style="
+                    border: 2px solid #28a745;
+                    border-radius: 10px;
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                  "
                 >
-                  <div class="user-dropdown-header">
+                  <div
+                    class="user-dropdown-header"
+                    style="
+                      background-color: #e8f5e9;
+                      padding: 12px;
+                      border-radius: 8px 8px 0 0;
+                    "
+                  >
                     <div class="user-dropdown-avatar">
                       <!-- Will be filled with user image or initials -->
                     </div>
                     <div class="user-dropdown-info">
-                      <div class="name" id="dropdownUserName">Account</div>
-                      <div class="email" id="dropdownUserEmail">
+                      <div
+                        class="name"
+                        id="dropdownUserName"
+                        style="font-weight: 600; color: #2e7d32"
+                      >
+                        Account
+                      </div>
+                      <div
+                        class="email"
+                        id="dropdownUserEmail"
+                        style="color: #66bb6a; font-size: 0.9rem"
+                      >
                         user@example.com
                       </div>
                     </div>
                   </div>
                   <li>
-                    <a class="dropdown-item" href="profile.html"
+                    <a
+                      class="dropdown-item"
+                      href="profile.html"
+                      style="
+                        color: #28a745;
+                        padding: 10px 15px;
+                        transition: all 0.2s ease;
+                      "
+                      onmouseover="this.style.backgroundColor='#e8f5e9'"
+                      onmouseout="this.style.backgroundColor=''"
                       ><i class="fas fa-user me-2"></i>Profile</a
                     >
                   </li>
                   <li><hr class="dropdown-divider" /></li>
                   <li>
-                    <a class="dropdown-item" href="#" data-action="logout"
+                    <a
+                      class="dropdown-item"
+                      href="#"
+                      data-action="logout"
+                      style="
+                        color: #dc3545;
+                        padding: 10px 15px;
+                        transition: all 0.2s ease;
+                      "
+                      onmouseover="this.style.backgroundColor='#ffebee'"
+                      onmouseout="this.style.backgroundColor=''"
                       ><i class="fas fa-sign-out-alt me-2"></i>Logout</a
                     >
                   </li>
@@ -756,40 +822,54 @@
           <div id="cartEmptyMessage" class="text-center py-4">
             <i class="fas fa-shopping-basket fa-3x text-muted mb-3"></i>
             <p class="mb-0">Your cart is empty</p>
-            <p class="text-muted">Add products to get started</p>
+            <p class="text-muted">Add items to get started</p>
+            <a
+              href="#productsContainer"
+              class="btn btn-outline-success btn-sm mt-3"
+              id="browseProductsBtn"
+            >
+              <i class="fas fa-search me-1"></i> Browse Products
+            </a>
           </div>
           <div id="cartItems" class="d-none">
-            <!-- Cart items will be inserted here -->
+            <!-- Cart items will be inserted here dynamically -->
+            <div id="cartItemsList"></div>
           </div>
         </div>
         <div class="cart-footer">
           <div class="cart-summary">
             <div class="d-flex justify-content-between mb-2">
               <span>Cart Total:</span>
-              <span id="cartSubtotal">E£0</span>
+              <span id="cartSubtotal">E£0.00</span>
             </div>
             <div class="d-flex justify-content-between mb-2">
               <span>Your Voucher Balance:</span>
-              <span id="cartVoucherBalance">E£0</span>
+              <span id="cartVoucherBalance">E£0.00</span>
             </div>
             <div class="d-flex justify-content-between mb-2 text-success">
               <span>Voucher Discount:</span>
-              <span id="cartVoucherDiscount">E£0</span>
+              <span id="cartVoucherDiscount">E£0.00</span>
             </div>
-            <div class="d-flex justify-content-between mb-3 fw-bold">
+            <div class="d-flex justify-content-between mb-0 fw-bold">
               <span>Amount to Pay Separately:</span>
-              <span id="cartRemainingBalance">E£0</span>
+              <span id="cartRemainingBalance">E£0.00</span>
             </div>
           </div>
           <button
             id="clearCartBtn"
             class="btn btn-outline-secondary mb-2 w-100"
           >
-            <i class="fas fa-trash-alt me-2"></i> Clear Cart
+            <i class="fas fa-trash-alt me-1"></i> Clear Cart
           </button>
           <button id="checkoutBtn" class="btn btn-success w-100" disabled>
-            <i class="fas fa-check-circle me-2"></i> Checkout
+            <i class="fas fa-check-circle me-1"></i> Checkout
           </button>
+          <div class="cart-info text-center mt-3">
+            <small class="text-muted">
+              <i class="fas fa-info-circle me-1"></i>
+              Your voucher discount will be automatically applied at checkout
+            </small>
+          </div>
         </div>
       </div>
 
@@ -1133,7 +1213,7 @@
             <button
               type="button"
               class="btn btn-outline-primary"
-              onclick="window.print()"
+              onclick="printVoucher()"
               title="Print voucher with barcode"
             >
               <i class="fas fa-print me-2"></i>Print Voucher
