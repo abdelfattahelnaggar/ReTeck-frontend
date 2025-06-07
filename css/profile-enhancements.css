@@ -1,0 +1,1668 @@
+/* ===========================================
+   RETECH PROFILE PAGE ENHANCEMENTS
+   Enhanced styling for points, vouchers, and UI
+   =========================================== */
+
+/* ===========================================
+   ENHANCED MY POINTS SECTION 
+   Progressive enhancements for existing structure
+   =========================================== */
+
+/* Enhanced Points Display */
+#points .card {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: none;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+}
+
+#points .card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #28a745, #20c997, #17a2b8);
+  z-index: 1;
+}
+
+#points .card-header {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  border: none;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+#points .card-header::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transform: rotate(45deg);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) rotate(45deg);
+  }
+}
+
+/* Enhanced Points Balance Display */
+#points .card-body .card {
+  background: linear-gradient(135deg, #fff 0%, #f8f9fc 100%);
+  border: 1px solid rgba(40, 167, 69, 0.1);
+  box-shadow: 0 4px 20px rgba(40, 167, 69, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+#points .card-body .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(40, 167, 69, 0.2);
+}
+
+#points .card-body .card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(40, 167, 69, 0.05),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#points .card-body .card:hover::before {
+  opacity: 1;
+}
+
+/* Enhanced Coins Icon */
+#points .fa-coins {
+  background: linear-gradient(45deg, #ffc107, #fd7e14);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(2px 2px 4px rgba(255, 193, 7, 0.3));
+  animation: coinFloat 3s ease-in-out infinite;
+}
+
+@keyframes coinFloat {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+}
+
+/* Enhanced Points Value */
+#totalPointsDisplay {
+  background: linear-gradient(45deg, #28a745, #20c997);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+  animation: pointsGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes pointsGlow {
+  0% {
+    filter: drop-shadow(0 0 5px rgba(40, 167, 69, 0.3));
+  }
+  100% {
+    filter: drop-shadow(0 0 15px rgba(40, 167, 69, 0.6));
+  }
+}
+
+/* Enhanced Progress Bar */
+#points .progress {
+  background: #e9ecef;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+#points .progress-bar {
+  background: linear-gradient(90deg, #28a745, #20c997, #17a2b8);
+  position: relative;
+  overflow: hidden;
+}
+
+#points .progress-bar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: progressShine 2s infinite;
+}
+
+@keyframes progressShine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Enhanced Voucher Cards */
+#points .row.g-3 .card {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+#points .row.g-3 .card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #007bff, #0056b3);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+#points .row.g-3 .card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(0, 123, 255, 0.2);
+  border-color: #007bff;
+}
+
+#points .row.g-3 .card:hover::before {
+  transform: scaleX(1);
+}
+
+/* Enhanced Voucher Values */
+#points .text-primary.fw-bold {
+  background: linear-gradient(45deg, #007bff, #0056b3);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+}
+
+/* Enhanced Badges */
+#points .badge {
+  background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+  color: #495057;
+  border: 1px solid #dee2e6;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+#points .badge::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+#points .badge:hover::before {
+  left: 100%;
+}
+
+/* Enhanced Redeem Buttons */
+#points .btn-primary {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  border: none;
+  border-radius: 25px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+  transform: translateY(0);
+}
+
+#points .btn-primary::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+#points .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
+}
+
+#points .btn-primary:hover::before {
+  left: 100%;
+}
+
+#points .btn-primary:active {
+  transform: translateY(0px);
+}
+
+/* Enhanced Points History */
+#points .card.shadow-sm {
+  background: #fff;
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+#points .card-header.bg-light {
+  background: linear-gradient(135deg, #f8f9fc 0%, #e9ecef 100%);
+  border-bottom: 1px solid #dee2e6;
+  padding: 1.25rem 1.5rem;
+}
+
+#points .table {
+  margin: 0;
+}
+
+#points .table thead th {
+  background: #f8f9fc;
+  border: none;
+  font-weight: 600;
+  color: #495057;
+  padding: 1rem 1.5rem;
+  position: relative;
+}
+
+#points .table tbody tr {
+  transition: all 0.3s ease;
+  border-bottom: 1px solid #f8f9fc;
+}
+
+#points .table tbody tr:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(40, 167, 69, 0.05),
+    rgba(32, 201, 151, 0.05)
+  );
+  transform: translateX(5px);
+}
+
+#points .table tbody td {
+  padding: 1rem 1.5rem;
+  vertical-align: middle;
+  border: none;
+}
+
+/* Enhanced Empty States */
+#points .empty-history-row td {
+  background: linear-gradient(135deg, #f8f9fc 0%, #e9ecef 100%);
+  border-radius: 12px;
+  margin: 1rem;
+  padding: 2rem;
+}
+
+#points .empty-coupons {
+  background: linear-gradient(135deg, #f8f9fc 0%, #e9ecef 100%);
+  border-radius: 12px;
+  margin: 1rem;
+  padding: 2rem;
+}
+
+/* Voucher Section Enhancements */
+#points .card.shadow-sm:last-child {
+  background: linear-gradient(135deg, #fff 0%, #f8f9fc 100%);
+}
+
+#points .enhanced-vouchers-container .enhanced-voucher-card {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+#points .enhanced-vouchers-container .enhanced-voucher-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #28a745, #20c997);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+#points .enhanced-vouchers-container .enhanced-voucher-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(40, 167, 69, 0.15);
+}
+
+#points .enhanced-vouchers-container .enhanced-voucher-card:hover::before {
+  transform: scaleX(1);
+}
+
+/* Responsive Enhancements */
+@media (max-width: 768px) {
+  #points .card-header::after {
+    display: none;
+  }
+
+  #points .row.g-3 .card:hover {
+    transform: translateY(-4px);
+  }
+
+  #points .table tbody tr:hover {
+    transform: translateX(2px);
+  }
+}
+
+/* Loading States */
+.points-loading {
+  opacity: 0.7;
+  pointer-events: none;
+  position: relative;
+}
+
+.points-loading::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+/* Points Animation Effects */
+.points-updated {
+  animation: pointsUpdate 0.5s ease-out;
+}
+
+@keyframes pointsUpdate {
+  0% {
+    transform: scale(1);
+    color: inherit;
+  }
+  50% {
+    transform: scale(1.1);
+    color: #28a745;
+    text-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+  }
+  100% {
+    transform: scale(1);
+    color: inherit;
+  }
+}
+
+.points-celebration {
+  animation: pointsCelebration 1s ease-out;
+}
+
+@keyframes pointsCelebration {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.2) rotate(-2deg);
+  }
+  75% {
+    transform: scale(1.15) rotate(2deg);
+  }
+}
+
+/* Celebration Particles */
+@keyframes celebrationFloat {
+  0% {
+    opacity: 1;
+    transform: translateY(0px) scale(0.5) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-20px) scale(1) rotate(180deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.3) rotate(360deg);
+  }
+}
+
+.celebration-particle {
+  animation: celebrationFloat 2s ease-out forwards;
+}
+
+/* Enhanced Hover Effects for Interactive Elements */
+#points .btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  transition: all 0.2s ease;
+}
+
+#points .card:hover .fa-coins {
+  animation: coinBounce 0.6s ease-in-out;
+}
+
+@keyframes coinBounce {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-5px) rotate(-5deg);
+  }
+  75% {
+    transform: translateY(-3px) rotate(5deg);
+  }
+}
+
+/* Pulse effect for progress bar */
+#points .progress-bar {
+  animation: progressPulse 3s ease-in-out infinite;
+}
+
+@keyframes progressPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.1);
+  }
+}
+
+/* Enhanced table row interactions */
+#points .table tbody tr {
+  cursor: pointer;
+}
+
+#points .table tbody tr:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(40, 167, 69, 0.05),
+    rgba(32, 201, 151, 0.05)
+  );
+  transform: translateX(5px);
+  border-left: 3px solid #28a745;
+}
+
+/* Interactive button states */
+#points .btn-primary:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+/* Enhanced Button States */
+#points .btn-primary.loading {
+  background: linear-gradient(135deg, #6c757d, #5a6268);
+  pointer-events: none;
+  animation: pulseLoading 1.5s ease-in-out infinite;
+}
+
+@keyframes pulseLoading {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+#points .btn-primary.success {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  animation: successPulse 0.6s ease-out;
+}
+
+@keyframes successPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+#points .btn-primary.error {
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  animation: errorShake 0.5s ease-in-out;
+}
+
+@keyframes errorShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+#points .btn-primary:disabled {
+  background: #e9ecef;
+  color: #6c757d;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Enhanced Confirmation Modal */
+.enhanced-confirmation-modal {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.enhanced-modal-content {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fc 100%);
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes modalSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.enhanced-modal-header {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
+  padding: 2rem 2rem 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.enhanced-modal-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at 30% 20%,
+    rgba(255, 255, 255, 0.1),
+    transparent 50%
+  );
+  pointer-events: none;
+}
+
+.enhanced-modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.modal-reward-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  animation: iconFloat 2s ease-in-out infinite;
+}
+
+@keyframes iconFloat {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.enhanced-modal-body {
+  padding: 2rem;
+  text-align: center;
+}
+
+.reward-preview-section {
+  background: linear-gradient(135deg, #f8f9fc 0%, #e3f2fd 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  margin: 1.5rem 0;
+  border: 1px solid rgba(0, 123, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.reward-preview-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at 70% 30%,
+    rgba(0, 123, 255, 0.05),
+    transparent 60%
+  );
+  pointer-events: none;
+}
+
+.reward-value-display {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(45deg, #007bff, #0056b3);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.reward-name-display {
+  font-size: 1.2rem;
+  color: #495057;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.points-breakdown {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.points-item {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.points-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.points-label {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+}
+
+.points-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #007bff;
+}
+
+.balance-warning {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  border: 1px solid #ffc107;
+  border-radius: 12px;
+  padding: 1rem;
+  margin: 1rem 0;
+  color: #856404;
+}
+
+.balance-error {
+  background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+  border: 1px solid #dc3545;
+  border-radius: 12px;
+  padding: 1rem;
+  margin: 1rem 0;
+  color: #721c24;
+}
+
+.enhanced-modal-footer {
+  padding: 1.5rem 2rem 2rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  background: linear-gradient(135deg, #f8f9fc 0%, #e9ecef 100%);
+}
+
+.modal-btn-cancel {
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.modal-btn-cancel:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(108, 117, 125, 0.3);
+}
+
+.modal-btn-confirm {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-btn-confirm::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.modal-btn-confirm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+}
+
+.modal-btn-confirm:hover::before {
+  left: 100%;
+}
+
+.modal-btn-confirm.loading {
+  background: #6c757d;
+  pointer-events: none;
+}
+
+.modal-btn-confirm.loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -8px;
+  border: 2px solid transparent;
+  border-top: 2px solid #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Loading spinner for buttons */
+#points .btn.loading {
+  position: relative;
+  pointer-events: none;
+}
+
+#points .btn.loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -8px;
+  border: 2px solid transparent;
+  border-top: 2px solid #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Redemption Success Effects */
+.redemption-success {
+  animation: redemptionPulse 2s ease-out;
+}
+
+@keyframes redemptionPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 10px rgba(40, 167, 69, 0.2);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+  }
+}
+
+/* Confetti Animation */
+@keyframes confettiFall {
+  0% {
+    opacity: 1;
+    transform: translateY(-100vh) rotate(0deg) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(50vh) rotate(180deg) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(100vh) rotate(360deg) scale(0.5);
+  }
+}
+
+.confetti-particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Points Change Indicator */
+@keyframes pointsChangeSlide {
+  0% {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  20% {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+  80% {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+}
+
+.points-change-indicator {
+  font-size: 1rem;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Enhanced button success state */
+#points .btn-success {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  border: none;
+  animation: successGlow 0.5s ease-out;
+}
+
+@keyframes successGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(40, 167, 69, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+  }
+}
+
+/* Smooth transitions for all interactive elements */
+#points * {
+  transition: all 0.3s ease;
+}
+
+#points .card,
+#points .btn,
+#points .badge,
+#points .progress-bar {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Responsive Modal Design */
+@media (max-width: 768px) {
+  .enhanced-modal-content {
+    margin: 1rem;
+    border-radius: 16px;
+  }
+
+  .enhanced-modal-header {
+    padding: 1.5rem 1.5rem 1rem;
+  }
+
+  .enhanced-modal-body {
+    padding: 1.5rem;
+  }
+
+  .enhanced-modal-footer {
+    padding: 1rem 1.5rem 1.5rem;
+    flex-direction: column;
+  }
+
+  .modal-btn-cancel,
+  .modal-btn-confirm {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .points-breakdown {
+    grid-template-columns: 1fr;
+  }
+
+  .reward-value-display {
+    font-size: 2rem;
+  }
+
+  .modal-reward-icon {
+    font-size: 2.5rem;
+  }
+}
+
+/* Enhanced Focus States for Accessibility */
+.modal-btn-confirm:focus,
+.modal-btn-cancel:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+/* Enhanced Animation Timing */
+.enhanced-confirmation-modal.show .enhanced-modal-content {
+  animation-duration: 0.4s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Sound Effect Trigger Classes (for future enhancement) */
+.redemption-success-sound {
+  /* Placeholder for sound effect triggers */
+}
+
+.button-click-sound {
+  /* Placeholder for button sound effects */
+}
+
+/* Points History Enhancements */
+.points-history-row {
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
+}
+
+.points-history-row:hover {
+  background-color: rgba(0, 123, 255, 0.05);
+  border-left-color: #007bff;
+  transform: translateX(5px);
+}
+
+.points-history-row.recent-activity {
+  background-color: rgba(40, 167, 69, 0.1);
+  border-left-color: #28a745;
+}
+
+.points-history-row.animate-fade-in {
+  animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Points Display Enhancements */
+.points-updated {
+  animation: pointsUpdate 2s ease;
+}
+
+@keyframes pointsUpdate {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+    color: #28a745;
+    text-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Enhanced Reward Cards */
+.enhanced-reward-item {
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.enhanced-reward-item.animate-entrance {
+  animation: slideInUp 0.6s ease;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reward-card {
+  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.reward-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #007bff, #28a745);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.enhanced-reward-item:hover .reward-card {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.enhanced-reward-item:hover .reward-card::before {
+  transform: scaleX(1);
+}
+
+.reward-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.platform-badge {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.popularity-badge {
+  background: linear-gradient(135deg, #ffc107, #e0a800);
+  color: #212529;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.reward-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #28a745;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.reward-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #495057;
+  margin: 5px 0;
+}
+
+.reward-description {
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+}
+
+.reward-stats {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 0;
+  padding: 10px;
+  background: rgba(0, 123, 255, 0.05);
+  border-radius: 6px;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin-bottom: 2px;
+}
+
+.stat-value {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.reward-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.points-info {
+  font-size: 0.85rem;
+}
+
+.enhanced-redeem-btn {
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.enhanced-redeem-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.enhanced-redeem-btn:active {
+  transform: translateY(0);
+}
+
+/* Insufficient Points State */
+.insufficient-points .reward-card {
+  opacity: 0.7;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.insufficient-points .reward-value {
+  color: #6c757d;
+}
+
+/* Enhanced Voucher Cards */
+.enhanced-voucher-card {
+  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.enhanced-voucher-card.animate-entrance {
+  animation: slideInRight 0.6s ease;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.enhanced-voucher-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.voucher-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.voucher-platform {
+  background: linear-gradient(135deg, #17a2b8, #138496);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.voucher-status {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-active {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-used {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.status-expired {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.status-expiring {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.voucher-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #007bff;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  margin: 10px 0;
+}
+
+.voucher-name {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #495057;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.voucher-code-section {
+  background: #f8f9fa;
+  border: 2px dashed #dee2e6;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 15px 0;
+}
+
+.voucher-code-label {
+  font-size: 0.85rem;
+  color: #6c757d;
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.voucher-code-display {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.voucher-code {
+  background: #fff;
+  border: 1px solid #ced4da;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-family: "Courier New", monospace;
+  font-size: 1rem;
+  flex: 1;
+  letter-spacing: 2px;
+  transition: all 0.3s ease;
+}
+
+.voucher-code.copied {
+  background: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+}
+
+.copy-code-btn {
+  transition: all 0.3s ease;
+}
+
+.copy-code-btn:hover {
+  transform: scale(1.1);
+}
+
+.voucher-details {
+  margin: 15px 0;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #6c757d;
+}
+
+.detail-value {
+  color: #495057;
+}
+
+.voucher-footer {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.use-voucher-btn {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  transition: all 0.3s ease;
+}
+
+.use-voucher-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+/* Empty States */
+.empty-vouchers-state,
+.empty-history-row {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  color: #dee2e6;
+  margin-bottom: 20px;
+}
+
+/* Modal Enhancements */
+.voucher-details-content .voucher-value-large {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #007bff;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.voucher-name-large {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #495057;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* Redemption Summary */
+.redemption-summary {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e3f2fd 100%);
+  border: 1px solid #bee5eb;
+  border-radius: 8px;
+  animation: slideInUp 0.5s ease;
+}
+
+.progress {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Celebration Effect */
+.celebration-effect {
+  animation: celebrationBounce 2s ease-out;
+}
+
+@keyframes celebrationBounce {
+  0%,
+  20%,
+  53%,
+  80%,
+  100% {
+    transform: translate(-50%, -50%) translateY(0);
+  }
+  40%,
+  43% {
+    transform: translate(-50%, -50%) translateY(-30px);
+  }
+  70% {
+    transform: translate(-50%, -50%) translateY(-15px);
+  }
+  90% {
+    transform: translate(-50%, -50%) translateY(-4px);
+  }
+}
+
+/* Button Loading States */
+.enhanced-redeem-btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .reward-card,
+  .enhanced-voucher-card {
+    padding: 15px;
+  }
+
+  .reward-value,
+  .voucher-value {
+    font-size: 1.8rem;
+  }
+
+  .reward-stats {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .reward-footer {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .voucher-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .voucher-code-display {
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+
+/* Statistics Cards */
+.stats-card {
+  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stats-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.stats-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #007bff;
+  margin-bottom: 5px;
+}
+
+.stats-label {
+  color: #6c757d;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Enhanced Tooltips */
+[title] {
+  position: relative;
+}
+
+/* Filter Count Badges */
+.filter-count {
+  transition: all 0.3s ease;
+}
+
+.count-updated {
+  animation: pulse 1s ease;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Success and Error States */
+.success-glow {
+  box-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+}
+
+.error-shake {
+  animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+/* Loading Spinners */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit;
+}
+
+/* Smooth Transitions */
+* {
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+/* Print Styles */
+@media print {
+  .enhanced-voucher-card {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 2px solid #000;
+  }
+
+  .voucher-code {
+    border: 2px solid #000;
+    background: #fff;
+  }
+}
