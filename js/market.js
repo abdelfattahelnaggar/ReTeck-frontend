@@ -3,141 +3,8 @@
  * Handles product loading, filtering, and purchase functionality
  */
 
-// Mock data for products
-const productData = [
-  {
-    id: "p001",
-    name: "Fresh Milk",
-    category: "food",
-    price: "E£25.99",
-    image: "../images/market/milk.jpg",
-    description:
-      "Fresh cow milk, pasteurized and homogenized. Rich in calcium and vitamin D.",
-    vouchersRequired: 1,
-    isNew: true,
-  },
-  {
-    id: "p002",
-    name: "Organic Eggs (12-pack)",
-    category: "food",
-    price: "E£45.50",
-    image: "../images/market/eggs.jpg",
-    description:
-      "Farm-fresh organic eggs from free-range chickens. No hormones or antibiotics.",
-    vouchersRequired: 1,
-    isNew: false,
-  },
-  {
-    id: "p003",
-    name: "Whole Grain Bread",
-    category: "food",
-    price: "E£18.75",
-    image: "../images/market/bread.jpg",
-    description:
-      "Freshly baked whole grain bread made with natural ingredients and no preservatives.",
-    vouchersRequired: 1,
-    isNew: false,
-  },
-  {
-    id: "p004",
-    name: "Premium Coffee Beans",
-    category: "beverages",
-    price: "E£89.99",
-    image: "../images/market/coffee.jpg",
-    description:
-      "Premium Arabica coffee beans, medium roast with rich flavor and aromatic notes.",
-    vouchersRequired: 2,
-    isNew: true,
-  },
-  {
-    id: "p005",
-    name: "Herbal Tea Collection",
-    category: "beverages",
-    price: "E£65.50",
-    image: "../images/market/tea.jpg",
-    description:
-      "Assorted herbal teas including chamomile, peppermint, and lemon ginger.",
-    vouchersRequired: 1,
-    isNew: false,
-  },
-  {
-    id: "p006",
-    name: "Fresh Orange Juice",
-    category: "beverages",
-    price: "E£35.25",
-    image: "../images/market/juice.jpg",
-    description:
-      "Freshly squeezed orange juice with no added sugar or preservatives.",
-    vouchersRequired: 1,
-    isNew: false,
-  },
-  {
-    id: "p007",
-    name: "Eco-Friendly Dish Soap",
-    category: "household",
-    price: "E£42.99",
-    image: "../images/market/dish-soap.jpg",
-    description:
-      "Plant-based dish soap that is tough on grease but gentle on the environment.",
-    vouchersRequired: 1,
-    isNew: false,
-  },
-  {
-    id: "p008",
-    name: "Bamboo Paper Towels",
-    category: "household",
-    price: "E£55.75",
-    image: "../images/market/paper-towels.jpg",
-    description:
-      "Sustainable bamboo paper towels that are reusable and biodegradable.",
-    vouchersRequired: 1,
-    isNew: true,
-  },
-  {
-    id: "p009",
-    name: "Natural Laundry Detergent",
-    category: "household",
-    price: "E£79.50",
-    image: "../images/market/detergent.jpg",
-    description:
-      "Hypoallergenic laundry detergent made from natural ingredients, free from harsh chemicals.",
-    vouchersRequired: 2,
-    isNew: false,
-  },
-  {
-    id: "p010",
-    name: "Organic Shampoo",
-    category: "personal",
-    price: "E£62.25",
-    image: "../images/market/shampoo.jpg",
-    description:
-      "Organic shampoo with natural oils that nourish and strengthen hair.",
-    vouchersRequired: 1,
-    isNew: false,
-  },
-  {
-    id: "p011",
-    name: "Natural Moisturizer",
-    category: "personal",
-    price: "E£85.99",
-    image: "../images/market/moisturizer.jpg",
-    description:
-      "Hydrating moisturizer made with aloe vera and essential oils for all skin types.",
-    vouchersRequired: 2,
-    isNew: true,
-  },
-  {
-    id: "p012",
-    name: "Bamboo Toothbrushes (4-pack)",
-    category: "personal",
-    price: "E£45.50",
-    image: "../images/market/toothbrushes.jpg",
-    description:
-      "Eco-friendly bamboo toothbrushes with soft bristles for gentle cleaning.",
-    vouchersRequired: 1,
-    isNew: false,
-  },
-];
+// Sample product data - in a real application, this would come from an API
+let allProducts = [];
 
 // Global variables
 let currentUser = null;
@@ -145,7 +12,7 @@ let userVouchers = []; // Will store actual voucher objects
 let userVoucherBalance = 0; // Total monetary value of available vouchers
 let selectedProduct = null;
 let currentCategory = "all";
-let cart = []; // Shopping cart items
+let cart = JSON.parse(localStorage.getItem("marketCart")) || [];
 
 /**
  * Enhanced voucher discount calculation for flexible partial discount system
@@ -221,8 +88,11 @@ const checkoutConfirmModal = new bootstrap.Modal(
 
 // Initialize when document is ready
 document.addEventListener("DOMContentLoaded", function () {
-  // Ensure all modals are properly initialized
-  initializeModals();
+  // Load products from the centralized data source
+  allProducts = getInventoryData();
+
+  // Initialize the market page
+  initializeMarket();
 
   // Check if user is logged in and has the customer role
   checkUserAccess();
@@ -248,49 +118,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
-
-/**
- * Initialize all Bootstrap modals to ensure they're working properly
- */
-function initializeModals() {
-  try {
-    // Get all modal elements
-    const modalElements = document.querySelectorAll(".modal");
-
-    // Reinitialize all modals to ensure they work properly
-    modalElements.forEach((modalElement) => {
-      const modalId = modalElement.id;
-      try {
-        // Create a new Bootstrap modal instance
-        window[modalId + "Modal"] = new bootstrap.Modal(modalElement);
-        console.log(`Initialized modal: ${modalId}`);
-      } catch (err) {
-        console.error(`Error initializing modal ${modalId}:`, err);
-      }
-    });
-
-    // Ensure our main modals are properly assigned to global variables
-    window.productModal = new bootstrap.Modal(
-      document.getElementById("productModal")
-    );
-    window.confirmPurchaseModal = new bootstrap.Modal(
-      document.getElementById("confirmPurchaseModal")
-    );
-    window.purchaseSuccessModal = new bootstrap.Modal(
-      document.getElementById("purchaseSuccessModal")
-    );
-    window.nonCustomerModal = new bootstrap.Modal(
-      document.getElementById("nonCustomerModal")
-    );
-    window.checkoutConfirmModal = new bootstrap.Modal(
-      document.getElementById("checkoutConfirmModal")
-    );
-
-    console.log("All modals initialized successfully");
-  } catch (error) {
-    console.error("Error initializing modals:", error);
-  }
-}
 
 /**
  * Check if the user has access to the market page
@@ -429,8 +256,8 @@ function filterProducts(category) {
   setTimeout(() => {
     const filteredProducts =
       category === "all"
-        ? productData
-        : productData.filter((product) => product.category === category);
+        ? allProducts
+        : allProducts.filter((product) => product.category === category);
 
     renderProducts(filteredProducts);
   }, 300);
@@ -445,7 +272,7 @@ function loadProducts() {
 
   // Simulate loading delay
   setTimeout(() => {
-    renderProducts(productData);
+    renderProducts(allProducts);
   }, 800);
 }
 
@@ -553,7 +380,7 @@ function renderProducts(products) {
 function openProductDetails(productId) {
   try {
     // Find product by id
-    const product = productData.find((p) => p.id === productId);
+    const product = allProducts.find((p) => p.id === productId);
     if (!product) {
       console.error(`Product with ID ${productId} not found`);
       showNotification("Product not found", "danger");
@@ -658,49 +485,15 @@ function openProductDetails(productId) {
       // Add click event
       addToCartBtn.addEventListener("click", function () {
         addToCart(product.id);
-        if (window.productModal) {
-          window.productModal.hide();
-        } else {
-          const modalElement = document.getElementById("productModal");
-          if (modalElement) {
-            bootstrap.Modal.getInstance(modalElement)?.hide();
-          }
-        }
+        productModal.hide();
       });
 
       // Insert at the beginning of modal footer
       modalFooter.insertBefore(addToCartBtn, modalFooter.firstChild);
     }
 
-    // Get the modal instance using the global reference first
-    let modalInstance = window.productModal;
-
-    // If not found, try to get it directly as a fallback
-    if (!modalInstance) {
-      console.warn(
-        "Global productModal not found, trying alternate methods..."
-      );
-
-      const modalElement = document.getElementById("productModal");
-      if (!modalElement) {
-        console.error("Product modal element not found");
-        showNotification("Error opening product details", "danger");
-        return;
-      }
-
-      // Try to get existing instance
-      modalInstance = bootstrap.Modal.getInstance(modalElement);
-
-      // If no instance exists, create a new one
-      if (!modalInstance) {
-        console.warn("Creating new modal instance");
-        modalInstance = new bootstrap.Modal(modalElement);
-        window.productModal = modalInstance;
-      }
-    }
-
     // Show the modal
-    modalInstance.show();
+    productModal.show();
     console.log(
       `Successfully opened product details for "${product.name}" (ID: ${product.id})`
     );
@@ -768,34 +561,6 @@ function completePurchase(product) {
   }
 
   // Show success modal with enhanced information
-  document.getElementById("voucherCode").textContent = voucherCode;
-
-  // Generate barcode for the voucher code
-  generateVoucherBarcode(voucherCode);
-
-  // Update enhanced transaction summary for single product
-  const summaryTotal = document.getElementById("summaryTotal");
-  const summaryVoucherUsed = document.getElementById("summaryVoucherUsed");
-  const summaryPrevBalance = document.getElementById("summaryPrevBalance");
-  const summaryAmountToPay = document.getElementById("summaryAmountToPay");
-  const summaryRemBalance = document.getElementById("summaryRemBalance");
-
-  if (summaryTotal) summaryTotal.textContent = `E£${priceValue.toFixed(2)}`;
-  if (summaryVoucherUsed)
-    summaryVoucherUsed.textContent = `E£${discountInfo.discountApplied.toFixed(
-      2
-    )}`;
-  if (summaryPrevBalance)
-    summaryPrevBalance.textContent = `E£${userVoucherBalance.toFixed(2)}`;
-  if (summaryAmountToPay)
-    summaryAmountToPay.textContent = `E£${discountInfo.remainingCartAmount.toFixed(
-      2
-    )}`;
-  if (summaryRemBalance)
-    summaryRemBalance.textContent = `E£${discountInfo.remainingVoucherBalance.toFixed(
-      2
-    )}`;
-
   purchaseSuccessModal.show();
 
   // Show notification with discount information
@@ -944,104 +709,6 @@ function generateVoucherCode() {
 }
 
 /**
- * Generate a barcode for the voucher code using JsBarcode
- * @param {string} voucherCode - The voucher code to generate barcode for
- */
-function generateVoucherBarcode(voucherCode) {
-  const barcodeContainer = document.querySelector(".barcode-container");
-  const barcodeElement = document.getElementById("voucherBarcode");
-
-  try {
-    // Show loading state
-    if (barcodeContainer) {
-      barcodeContainer.innerHTML = `
-        <div class="text-center p-3">
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Generating barcode...</span>
-          </div>
-          <p class="mt-2 mb-0 text-muted">Generating barcode...</p>
-        </div>
-      `;
-    }
-
-    // Check if JsBarcode is available
-    if (typeof JsBarcode === "undefined") {
-      console.warn("JsBarcode library not loaded. Showing fallback message.");
-      showBarcodeFallback();
-      return;
-    }
-
-    // Restore the barcode container with SVG element
-    if (barcodeContainer) {
-      barcodeContainer.innerHTML =
-        '<svg id="voucherBarcode" class="img-fluid"></svg>';
-    }
-
-    // Get the fresh barcode SVG element
-    const newBarcodeElement = document.getElementById("voucherBarcode");
-    if (!newBarcodeElement) {
-      console.warn("Barcode SVG element not found.");
-      showBarcodeFallback();
-      return;
-    }
-
-    // Remove dashes from voucher code for barcode generation
-    const cleanCode = voucherCode.replace(/-/g, "");
-
-    // Add a small delay to show the loading state
-    setTimeout(() => {
-      try {
-        // Generate CODE128 barcode
-        JsBarcode(newBarcodeElement, cleanCode, {
-          format: "CODE128",
-          width: 2,
-          height: 60,
-          displayValue: true,
-          fontSize: 14,
-          fontOptions: "bold",
-          textAlign: "center",
-          textPosition: "bottom",
-          textMargin: 8,
-          background: "#ffffff",
-          lineColor: "#000000",
-          margin: 10,
-          flat: true,
-        });
-
-        console.log(
-          `Barcode generated successfully for voucher: ${voucherCode}`
-        );
-
-        // Show success message briefly
-        showNotification("Voucher barcode generated successfully!", "success");
-      } catch (barcodeError) {
-        console.error("Error in barcode generation:", barcodeError);
-        showBarcodeFallback();
-      }
-    }, 500);
-  } catch (error) {
-    console.error("Error generating barcode:", error);
-    showBarcodeFallback();
-  }
-}
-
-/**
- * Show fallback message when barcode generation fails
- */
-function showBarcodeFallback() {
-  const barcodeContainer = document.querySelector(".barcode-container");
-  if (barcodeContainer) {
-    barcodeContainer.innerHTML = `
-      <div class="text-center p-3 bg-light border rounded">
-        <i class="fas fa-exclamation-triangle text-warning mb-2" style="font-size: 2rem;"></i>
-        <p class="mb-1 fw-bold">Barcode not available</p>
-        <small class="text-muted">Please use the voucher code above at the store</small>
-      </div>
-    `;
-  }
-}
-
-/**
  * Check if the DOM images folder exists and create it if not
  */
 function checkProductImagesFolder() {
@@ -1049,7 +716,7 @@ function checkProductImagesFolder() {
   // In a real app, you would create this folder if needed
 
   // For now, we'll create image placeholders
-  productData.forEach((product) => {
+  allProducts.forEach((product) => {
     // Use a placeholder image if product image is missing
     if (!product.image || product.image.includes("market/")) {
       let category = product.category;
@@ -1169,7 +836,7 @@ function addTestVouchers(values = [100, 150, 200]) {
  */
 function testPurchase(productId) {
   // Find the product
-  const product = productData.find((p) => p.id === productId);
+  const product = allProducts.find((p) => p.id === productId);
   if (!product) {
     console.error(`Product with ID ${productId} not found`);
     return;
@@ -1430,7 +1097,7 @@ function saveCart() {
  */
 function addToCart(productId) {
   // Find product
-  const product = productData.find((p) => p.id === productId);
+  const product = allProducts.find((p) => p.id === productId);
   if (!product) return;
 
   // Check if product is already in cart
@@ -1809,54 +1476,6 @@ function processCartPurchase() {
       toggleCart();
     }
 
-    // Update success modal with transaction details
-    document.getElementById("voucherCode").textContent = voucherCode;
-
-    // Generate barcode for the voucher code
-    generateVoucherBarcode(voucherCode);
-
-    // Update enhanced transaction summary with discount breakdown
-    const summaryTotal = document.getElementById("summaryTotal");
-    const summaryVoucherUsed = document.getElementById("summaryVoucherUsed");
-    const summaryPrevBalance = document.getElementById("summaryPrevBalance");
-    const summaryAmountToPay = document.getElementById("summaryAmountToPay");
-    const summaryRemBalance = document.getElementById("summaryRemBalance");
-    const transactionDate = document.getElementById("transactionDate");
-
-    summaryTotal.textContent = `E£${cartTotal.toFixed(2)}`;
-    if (summaryVoucherUsed)
-      summaryVoucherUsed.textContent = `E£${discountResult.discountApplied.toFixed(
-        2
-      )}`;
-    summaryPrevBalance.textContent = `E£${previousBalance.toFixed(2)}`;
-    if (summaryAmountToPay)
-      summaryAmountToPay.textContent = `E£${discountResult.remainingCartAmount.toFixed(
-        2
-      )}`;
-    summaryRemBalance.textContent = `E£${discountResult.remainingVoucherBalance.toFixed(
-      2
-    )}`;
-
-    // Set transaction date with formatted date
-    const now = new Date();
-    const options = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    };
-    transactionDate.textContent = now.toLocaleDateString("en-US", options);
-
-    // Add highlight animation class
-    const transactionSummary = document.querySelector(".transaction-summary");
-    transactionSummary.classList.add("highlight-animation");
-
-    // Remove the animation class after it completes
-    setTimeout(() => {
-      transactionSummary.classList.remove("highlight-animation");
-    }, 2000);
-
     // Show success modal
     purchaseSuccessModal.show();
 
@@ -2083,146 +1702,4 @@ function calculateCartTotal() {
   return cart.reduce((total, item) => {
     return total + item.priceValue * item.quantity;
   }, 0);
-}
-
-/**
- * Print voucher with proper styling
- * This function creates a new window with just the voucher content for printing
- */
-function printVoucher() {
-  // Get the voucher code and barcode content
-  const voucherCode = document.getElementById("voucherCode").textContent;
-  const barcodeContainer =
-    document.querySelector(".barcode-container").innerHTML;
-
-  // Create transaction details
-  const totalAmount = document.getElementById("summaryTotal").textContent;
-  const voucherUsed = document.getElementById("summaryVoucherUsed").textContent;
-  const remainingBalance =
-    document.getElementById("summaryRemBalance").textContent;
-  const transactionDate =
-    document.getElementById("transactionDate").textContent;
-
-  // Create print window
-  const printWindow = window.open("", "_blank");
-
-  // Create print content with clean styling
-  printWindow.document.write(`
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <title>Voucher: ${voucherCode}</title>
-      <style>
-        body {
-          font-family: Arial, sans-serif;
-          margin: 0;
-          padding: 20px;
-          color: #000;
-        }
-        .print-container {
-          max-width: 800px;
-          margin: 0 auto;
-          border: 2px solid #000;
-          padding: 20px;
-        }
-        .header {
-          text-align: center;
-          margin-bottom: 20px;
-          padding-bottom: 15px;
-          border-bottom: 2px solid #000;
-        }
-        .logo {
-          font-size: 24px;
-          font-weight: bold;
-        }
-        .voucher-code {
-          font-size: 24px;
-          font-weight: bold;
-          text-align: center;
-          margin: 20px 0;
-          padding: 10px;
-          border: 2px dashed #000;
-          letter-spacing: 3px;
-          font-family: monospace;
-        }
-        .barcode-container {
-          text-align: center;
-          margin: 20px 0;
-          padding: 15px;
-          border: 1px solid #ccc;
-        }
-        .details {
-          margin-top: 30px;
-          border-top: 1px solid #ccc;
-          padding-top: 15px;
-        }
-        .detail-row {
-          display: flex;
-          justify-content: space-between;
-          margin-bottom: 10px;
-        }
-        .footer {
-          margin-top: 40px;
-          text-align: center;
-          font-size: 12px;
-          color: #666;
-        }
-        @media print {
-          body {
-            print-color-adjust: exact;
-            -webkit-print-color-adjust: exact;
-          }
-          .print-button {
-            display: none;
-          }
-        }
-      </style>
-    </head>
-    <body>
-      <div class="print-container">
-        <div class="header">
-          <div class="logo">♻️ RETECH - HyperOne Voucher</div>
-          <div>Transaction Date: ${transactionDate}</div>
-        </div>
-        
-        <div class="voucher-code">
-          ${voucherCode}
-        </div>
-        
-        <div class="barcode-container">
-          ${barcodeContainer}
-        </div>
-        
-        <div class="details">
-          <div class="detail-row">
-            <strong>Total Purchase:</strong>
-            <span>${totalAmount}</span>
-          </div>
-          <div class="detail-row">
-            <strong>Voucher Used:</strong>
-            <span>${voucherUsed}</span>
-          </div>
-          <div class="detail-row">
-            <strong>Remaining Balance:</strong>
-            <span>${remainingBalance}</span>
-          </div>
-        </div>
-        
-        <div class="footer">
-          <p>Present this voucher at any HyperOne store to redeem your purchase.</p>
-          <p>Voucher valid for 30 days from issue date.</p>
-        </div>
-      </div>
-      
-      <div class="print-button" style="text-align: center; margin-top: 20px;">
-        <button onclick="window.print(); setTimeout(function() { window.close(); }, 500);" 
-                style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
-          Print Voucher
-        </button>
-      </div>
-    </body>
-    </html>
-  `);
-
-  printWindow.document.close();
 }

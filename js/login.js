@@ -69,6 +69,9 @@ document.addEventListener("DOMContentLoaded", function () {
   // Set up keyboard shortcuts
   setupKeyboardShortcuts();
 
+  // Set up forgot password form
+  initForgotPasswordForm();
+
   if (window.performanceMonitor) {
     window.performanceMonitor.endTiming("loginScriptInit");
   }
@@ -217,8 +220,8 @@ function initLoginForm() {
         // Ensure company user exists in localStorage
         createCompanyUserIfNeeded(email);
 
-        // Redirect to recycling dashboard
-        window.location.href = "recycling-dashboard.html";
+        // Redirect to inventory store
+        window.location.href = "inventory-store.html";
         return;
       }
 
@@ -289,7 +292,7 @@ function initLoginForm() {
             window.location.href = "index.html";
             break;
           case "company":
-            window.location.href = "recycling-dashboard.html";
+            window.location.href = "inventory-store.html";
             break;
           case "admin":
             window.location.href = "admin-dashboard.html";
@@ -607,5 +610,62 @@ function createAdminUserIfNeeded(email) {
     };
 
     localStorage.setItem(`userData_${email}`, JSON.stringify(userData));
+  }
+}
+
+/**
+ * Initialize forgot password form
+ */
+function initForgotPasswordForm() {
+  const forgotPasswordForm = document.getElementById("forgotPasswordForm");
+  if (!forgotPasswordForm) {
+    console.warn("Forgot password form not found.");
+    return;
+  }
+
+  const forgotPasswordModalEl = document.getElementById("forgotPasswordModal");
+
+  forgotPasswordForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    const emailInput = document.getElementById("resetEmail");
+    const email = emailInput.value.trim();
+    const messageDiv = document.getElementById("forgotPasswordMessage");
+
+    if (!validateEmail(email)) {
+      messageDiv.className = "alert alert-danger";
+      messageDiv.textContent = "Please enter a valid email address.";
+      messageDiv.classList.remove("d-none");
+      return;
+    }
+
+    // In a real application, you would make an API call here.
+    // For this demo, we just show a confirmation message.
+    console.log(`Password reset requested for: ${email}`);
+
+    // Hide form and show success message
+    forgotPasswordForm.classList.add("d-none");
+    messageDiv.className = "alert alert-success";
+    messageDiv.innerHTML = `<i class="fas fa-check-circle me-2"></i>If an account with that email exists, a password reset link has been sent. Please check your inbox.`;
+    messageDiv.classList.remove("d-none");
+
+    // Optional: Reset form state after modal is closed
+    if (forgotPasswordModalEl) {
+      forgotPasswordModalEl.addEventListener(
+        "hidden.bs.modal",
+        () => {
+          forgotPasswordForm.classList.remove("d-none");
+          messageDiv.classList.add("d-none");
+          emailInput.value = "";
+        },
+        { once: true }
+      );
+    }
+  });
+
+  // Scroll to top when modal is shown
+  if (forgotPasswordModalEl) {
+    forgotPasswordModalEl.addEventListener("show.bs.modal", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
   }
 }

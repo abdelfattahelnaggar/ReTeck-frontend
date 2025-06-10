@@ -1539,3 +1539,73 @@ button,
     height: auto;
   }
 }
+
+/* Forgot Password Modal Styles */
+#forgotPasswordModal .modal-content {
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: none;
+  overflow: hidden; /* Ensures the header gradient doesn't bleed out */
+}
+
+#forgotPasswordModal .modal-header {
+  background: linear-gradient(135deg, #2e8b57, #3cb371);
+  color: white;
+  border-bottom: none;
+  padding: 1.25rem;
+}
+
+#forgotPasswordModal .modal-title {
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+#forgotPasswordModal .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+#forgotPasswordModal .modal-body {
+  padding: 1.5rem;
+}
+
+#forgotPasswordModal #forgotPasswordMessage {
+  padding: 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  animation: fadeIn 0.5s;
+}
+
+#forgotPasswordModal .form-label {
+  font-weight: 500;
+}
+
+#forgotPasswordModal #sendResetLinkBtn {
+  height: 48px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+#forgotPasswordModal #sendResetLinkBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(46, 139, 87, 0.25);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#forgotPasswordModal .modal-dialog {
+  margin-top: 10vh;
+  transition: transform 0.3s ease-out;
+}

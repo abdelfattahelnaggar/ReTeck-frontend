@@ -3,166 +3,6 @@
  * Handles all functionality for the inventory store page
  */
 
-// Sample inventory data - in production this would come from an API
-const inventoryData = [
-  {
-    id: 1,
-    name: "iPhone 13",
-    brand: "Apple",
-    description: "128GB, Blue, Unlocked",
-    type: "smartphone",
-    condition: "like-new",
-    price: 450.0,
-    stock: 5,
-    status: "available",
-    image: "https://via.placeholder.com/300x300?text=iPhone+13",
-    dateAdded: new Date(2023, 10, 15),
-  },
-  {
-    id: 2,
-    name: "Samsung Galaxy S21",
-    brand: "Samsung",
-    description: "256GB, Phantom Black",
-    type: "smartphone",
-    condition: "good",
-    price: 380.0,
-    stock: 3,
-    status: "available",
-    image: "https://via.placeholder.com/300x300?text=Samsung+Galaxy+S21",
-    dateAdded: new Date(2023, 9, 25),
-  },
-  {
-    id: 3,
-    name: 'MacBook Pro 13"',
-    brand: "Apple",
-    description: "M1, 8GB RAM, 256GB SSD",
-    type: "laptop",
-    condition: "good",
-    price: 750.0,
-    stock: 1,
-    status: "available",
-    image: "https://via.placeholder.com/300x300?text=MacBook+Pro",
-    dateAdded: new Date(2023, 11, 5),
-  },
-  {
-    id: 4,
-    name: "iPad Air (4th Gen)",
-    brand: "Apple",
-    description: "64GB, Space Gray, Wi-Fi",
-    type: "tablet",
-    condition: "new",
-    price: 480.0,
-    stock: 8,
-    status: "available",
-    image: "https://via.placeholder.com/300x300?text=iPad+Air",
-    dateAdded: new Date(2023, 11, 20),
-  },
-  {
-    id: 5,
-    name: "Galaxy Tab S7",
-    brand: "Samsung",
-    description: "128GB, Mystic Silver, Wi-Fi",
-    type: "tablet",
-    condition: "like-new",
-    price: 420.0,
-    stock: 4,
-    status: "available",
-    image: "https://via.placeholder.com/300x300?text=Samsung+Galaxy+Tab+S7",
-    dateAdded: new Date(2023, 10, 30),
-  },
-  {
-    id: 6,
-    name: "iPhone 12 Mini",
-    brand: "Apple",
-    description: "64GB, Product RED, Unlocked",
-    type: "smartphone",
-    condition: "good",
-    price: 350.0,
-    stock: 2,
-    status: "pending",
-    image: "https://via.placeholder.com/300x300?text=iPhone+12+Mini",
-    dateAdded: new Date(2023, 8, 10),
-  },
-  {
-    id: 7,
-    name: "Dell XPS 13",
-    brand: "Dell",
-    description: "Intel Core i7, 16GB RAM, 512GB SSD",
-    type: "laptop",
-    condition: "like-new",
-    price: 820.0,
-    stock: 2,
-    status: "available",
-    image: "https://via.placeholder.com/300x300?text=Dell+XPS+13",
-    dateAdded: new Date(2023, 11, 12),
-  },
-  {
-    id: 8,
-    name: "HP Pavilion",
-    brand: "HP",
-    description: "AMD Ryzen 5, 8GB RAM, 256GB SSD",
-    type: "desktop",
-    condition: "good",
-    price: 450.0,
-    stock: 3,
-    status: "available",
-    image: "https://via.placeholder.com/300x300?text=HP+Pavilion",
-    dateAdded: new Date(2023, 10, 20),
-  },
-  {
-    id: 9,
-    name: "Apple Watch Series 7",
-    brand: "Apple",
-    description: "GPS, 45mm, Aluminum Case",
-    type: "accessory",
-    condition: "new",
-    price: 380.0,
-    stock: 6,
-    status: "available",
-    image: "https://via.placeholder.com/300x300?text=Apple+Watch+Series+7",
-    dateAdded: new Date(2023, 11, 18),
-  },
-  {
-    id: 10,
-    name: "Sony PlayStation 5",
-    brand: "Sony",
-    description: "Disc Edition, White, 1TB SSD",
-    type: "accessory",
-    condition: "fair",
-    price: 450.0,
-    stock: 1,
-    status: "available",
-    image: "https://via.placeholder.com/300x300?text=PlayStation+5",
-    dateAdded: new Date(2023, 7, 30),
-  },
-  {
-    id: 11,
-    name: "LG Gram 17",
-    brand: "LG",
-    description: "Intel Core i7, 16GB RAM, 1TB SSD",
-    type: "laptop",
-    condition: "poor",
-    price: 580.0,
-    stock: 2,
-    status: "pending",
-    image: "https://via.placeholder.com/300x300?text=LG+Gram+17",
-    dateAdded: new Date(2023, 9, 15),
-  },
-  {
-    id: 12,
-    name: "Samsung Galaxy Buds Pro",
-    brand: "Samsung",
-    description: "Wireless Earbuds, Phantom Black",
-    type: "accessory",
-    condition: "good",
-    price: 120.0,
-    stock: 12,
-    status: "available",
-    image: "https://via.placeholder.com/300x300?text=Galaxy+Buds+Pro",
-    dateAdded: new Date(2023, 10, 25),
-  },
-];
-
 // Cart functionality
 let cart = JSON.parse(localStorage.getItem("recyclingCart")) || [];
 let currentFilters = {
@@ -375,34 +215,60 @@ function searchInventory() {
 
 // Filter inventory based on current filters
 function filterInventory() {
-  return inventoryData.filter((item) => {
-    // Filter by device type
-    const typeMatch =
-      currentFilters.deviceTypes.length === 0 ||
-      currentFilters.deviceTypes.some((type) =>
-        item.type.includes(type.toLowerCase())
-      );
+  let filteredItems = getInventoryData();
+  const searchTerm = document
+    .getElementById("inventorySearch")
+    .value.toLowerCase();
 
-    // Filter by condition
-    const conditionMatch =
-      currentFilters.conditions.length === 0 ||
-      currentFilters.conditions.some((condition) => {
+  // Filter by search query
+  if (searchTerm) {
+    filteredItems = filteredItems.filter((item) => {
+      return (
+        item.name.toLowerCase().includes(searchTerm) ||
+        item.brand.toLowerCase().includes(searchTerm) ||
+        item.description.toLowerCase().includes(searchTerm) ||
+        item.type.toLowerCase().includes(searchTerm)
+      );
+    });
+  }
+
+  // Filter by device type
+  if (currentFilters.deviceTypes.length > 0) {
+    filteredItems = filteredItems.filter((item) => {
+      return currentFilters.deviceTypes.some((type) =>
+        item.type.toLowerCase().includes(type)
+      );
+    });
+  }
+
+  // Filter by condition
+  if (currentFilters.conditions.length > 0) {
+    filteredItems = filteredItems.filter((item) => {
+      const conditionMatch = currentFilters.conditions.some((condition) => {
         if (condition === "likeNew") return item.condition === "like-new";
         return item.condition === condition.toLowerCase();
       });
+      return conditionMatch;
+    });
+  }
 
-    // Filter by brand
-    const brandMatch =
-      currentFilters.brands.length === 0 ||
-      currentFilters.brands.some(
-        (brand) => item.brand.toLowerCase() === brand.toLowerCase()
+  // Filter by brand
+  if (currentFilters.brands.length > 0) {
+    filteredItems = filteredItems.filter((item) => {
+      return currentFilters.brands.some((brand) =>
+        item.brand.toLowerCase().includes(brand)
       );
+    });
+  }
 
-    // Filter by price
-    const priceMatch = item.price <= currentFilters.maxPrice;
+  // Filter by price
+  if (currentFilters.maxPrice) {
+    filteredItems = filteredItems.filter(
+      (item) => item.price <= currentFilters.maxPrice
+    );
+  }
 
-    return typeMatch && conditionMatch && brandMatch && priceMatch;
-  });
+  return filteredItems;
 }
 
 // Sort inventory based on current sort

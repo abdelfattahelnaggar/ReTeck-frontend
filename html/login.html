@@ -715,6 +715,8 @@
                     href="#"
                     class="text-decoration-none text-success"
                     aria-label="Reset password"
+                    data-bs-toggle="modal"
+                    data-bs-target="#forgotPasswordModal"
                   >
                     <i class="fas fa-lock me-1"></i>Forgot your password?
                   </a>
@@ -762,6 +764,64 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div
+      class="modal fade"
+      id="forgotPasswordModal"
+      tabindex="-1"
+      aria-labelledby="forgotPasswordModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="forgotPasswordModalLabel">
+              <i class="fas fa-key me-2"></i>Reset Password
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div id="forgotPasswordMessage" class="d-none"></div>
+            <form id="forgotPasswordForm">
+              <p class="text-muted">
+                Enter your email address and we'll send you a link to reset your
+                password.
+              </p>
+              <div class="mb-3">
+                <label for="resetEmail" class="form-label">Email address</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light">
+                    <i class="fas fa-envelope text-muted"></i>
+                  </span>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="resetEmail"
+                    placeholder="Enter your email"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="d-grid">
+                <button
+                  type="submit"
+                  class="btn btn-success"
+                  id="sendResetLinkBtn"
+                >
+                  <i class="fas fa-paper-plane me-2"></i>Send Reset Link
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
