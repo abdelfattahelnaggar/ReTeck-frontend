@@ -1,7 +1,7 @@
 // Quotes Management Functions
 
 // Add custom styles for the quote action buttons
-const quoteActionButtonsStyle = document.createElement('style');
+const quoteActionButtonsStyle = document.createElement("style");
 quoteActionButtonsStyle.textContent = `
   .btn-user-action {
     width: 38px;
@@ -73,10 +73,12 @@ quoteActionButtonsStyle.textContent = `
 document.head.appendChild(quoteActionButtonsStyle);
 
 // Track the current filter globally
-let currentQuotesFilter = 'all';
+let currentQuotesFilter = "all";
 
 function loadAllQuotes(statusFilter = null) {
   const tableBody = document.getElementById("allQuotesTableBody");
+  const cardContainer = document.getElementById("allQuotesCardContainer");
+
   if (!tableBody) return;
 
   // Use the provided filter or the last used one
@@ -88,13 +90,20 @@ function loadAllQuotes(statusFilter = null) {
   // Clear existing rows
   tableBody.innerHTML = "";
 
+  // Clear card container if it exists
+  if (cardContainer) {
+    cardContainer.innerHTML = "";
+  }
+
   // Get all quotes from all users
   let allQuotes = getAllQuotes();
 
   // Apply filter if not 'all'
-  if (filterToUse && filterToUse !== 'all') {
+  if (filterToUse && filterToUse !== "all") {
     const normalized = filterToUse.toLowerCase();
-    allQuotes = allQuotes.filter(q => (q.status || '').toLowerCase() === normalized);
+    allQuotes = allQuotes.filter(
+      (q) => (q.status || "").toLowerCase() === normalized
+    );
   }
 
   // Sort by date (newest first)
@@ -104,6 +113,11 @@ function loadAllQuotes(statusFilter = null) {
   allQuotes.forEach((quote) => {
     const row = createQuoteTableRow(quote, false);
     tableBody.appendChild(row);
+
+    // Create cards for mobile view if container exists
+    if (cardContainer && typeof createQuoteCard === "function") {
+      cardContainer.appendChild(createQuoteCard(quote));
+    }
   });
 
   // Initialize DataTable if jQuery is available
@@ -123,9 +137,9 @@ function loadAllQuotes(statusFilter = null) {
           first: "<i class='fas fa-angle-double-left'></i>",
           last: "<i class='fas fa-angle-double-right'></i>",
           next: "<i class='fas fa-angle-right'></i>",
-          previous: "<i class='fas fa-angle-left'></i>"
-        }
-      }
+          previous: "<i class='fas fa-angle-left'></i>",
+        },
+      },
       // Do NOT call initializeQuoteFilters here!
     });
     // Initialize tooltips
@@ -206,7 +220,7 @@ function createQuoteTableRow(quote, isCompact) {
 // Get all quotes from all users
 function getAllQuotes() {
   console.log("Getting all quotes");
-  
+
   // Static dummy data for testing
   return [
     {
@@ -221,15 +235,13 @@ function getAllQuotes() {
       customerName: "John Doe",
       phone: "555-123-4567",
       specs: {
-        "Storage": "256GB",
-        "Color": "Sierra Blue",
+        Storage: "256GB",
+        Color: "Sierra Blue",
         "Screen Condition": "Excellent, no scratches",
         "Battery Health": "92%",
-        "Accessories": "Original charger and box"
+        Accessories: "Original charger and box",
       },
-      images: [
-        "../images/placeholder-device.jpg"
-      ]
+      images: ["../images/placeholder-device.jpg"],
     },
     {
       id: "QUO_002",
@@ -243,21 +255,19 @@ function getAllQuotes() {
       customerName: "Sarah Miller",
       phone: "555-987-6543",
       specs: {
-        "Processor": "M1 Pro",
-        "RAM": "16GB",
-        "Storage": "512GB SSD",
-        "Display": "14-inch Liquid Retina XDR",
-        "Condition Notes": "Like new, minimal use"
+        Processor: "M1 Pro",
+        RAM: "16GB",
+        Storage: "512GB SSD",
+        Display: "14-inch Liquid Retina XDR",
+        "Condition Notes": "Like new, minimal use",
       },
-      images: [
-        "../images/placeholder-device.jpg"
-      ],
+      images: ["../images/placeholder-device.jpg"],
       quote: {
         amount: 8500,
         date: "2023-09-09T10:30:00",
         validDays: 7,
-        note: "Excellent condition MacBook with original packaging and all accessories."
-      }
+        note: "Excellent condition MacBook with original packaging and all accessories.",
+      },
     },
     // Additional quotes would be here...
     {
@@ -272,21 +282,19 @@ function getAllQuotes() {
       customerName: "Daniel Rodriguez",
       phone: "555-456-7890",
       specs: {
-        "Storage": "256GB",
-        "Color": "Space Gray",
-        "Display": "12.9-inch Liquid Retina XDR",
-        "Accessories": "Apple Pencil 2nd gen and Smart Keyboard Folio"
+        Storage: "256GB",
+        Color: "Space Gray",
+        Display: "12.9-inch Liquid Retina XDR",
+        Accessories: "Apple Pencil 2nd gen and Smart Keyboard Folio",
       },
-      images: [
-        "../images/placeholder-device.jpg"
-      ],
+      images: ["../images/placeholder-device.jpg"],
       quote: {
         amount: 7800,
         date: "2023-08-09T10:15:00",
         validDays: 10,
-        note: "Premium tablet with accessories, some minor wear on the edges."
-      }
-    }
+        note: "Premium tablet with accessories, some minor wear on the edges.",
+      },
+    },
   ];
 }
 
@@ -507,14 +515,14 @@ function showProvideQuoteModal(quote) {
   const quoteAmount = document.getElementById("quoteAmount");
   const quoteNote = document.getElementById("quoteNote");
   const quoteValidDays = document.getElementById("quoteValidDays");
-  
+
   // Set request ID if the element exists
   if (quoteRequestId) {
     quoteRequestId.value = typeof quote === "string" ? quote : quote.id;
   } else {
     console.error("quoteRequestId element not found");
   }
-  
+
   // Store the customer email in a data attribute for later use
   const submitBtn = document.getElementById("submitQuoteBtn");
   if (submitBtn) {
@@ -523,7 +531,7 @@ function showProvideQuoteModal(quote) {
 
   // Get the provide quote modal
   const modal = document.getElementById("provideQuoteModal");
-  
+
   if (!modal) {
     // Modal doesn't exist, create it
     createProvideQuoteModal(quote);
@@ -601,19 +609,19 @@ function createProvideQuoteModal(quote) {
       </div>
     </div>
   `;
-  
+
   // Add the modal to the document
-  document.body.insertAdjacentHTML('beforeend', modalHTML);
-  
+  document.body.insertAdjacentHTML("beforeend", modalHTML);
+
   // Get the modal element and show it
   const modal = document.getElementById("provideQuoteModal");
   const bsModal = new bootstrap.Modal(modal);
   bsModal.show();
-  
+
   // Add event listener for form submission
   const submitBtn = document.getElementById("submitQuoteBtn");
   if (submitBtn) {
-    submitBtn.addEventListener("click", function() {
+    submitBtn.addEventListener("click", function () {
       handleQuoteFormSubmission(this);
     });
   }
@@ -623,25 +631,27 @@ function createProvideQuoteModal(quote) {
 function handleQuoteFormSubmission(submitButton) {
   // Get customer email from button's data attribute
   const customerEmail = submitButton.getAttribute("data-customer-email");
-      const requestId = document.getElementById("quoteRequestId").value;
-      const amount = parseFloat(document.getElementById("quoteAmount").value);
-      const note = document.getElementById("quoteNote").value;
+  const requestId = document.getElementById("quoteRequestId").value;
+  const amount = parseFloat(document.getElementById("quoteAmount").value);
+  const note = document.getElementById("quoteNote").value;
 
-      if (!requestId || isNaN(amount) || amount <= 0) {
+  if (!requestId || isNaN(amount) || amount <= 0) {
     alert("Please enter a valid points amount");
-        return;
-      }
+    return;
+  }
 
   if (!customerEmail) {
     alert("Customer email not found. Please try again.");
     return;
   }
-  
+
   // Submit the quote
   submitQuote(requestId, customerEmail, amount, note);
-  
+
   // Close the modal
-  const modal = bootstrap.Modal.getInstance(document.getElementById("provideQuoteModal"));
+  const modal = bootstrap.Modal.getInstance(
+    document.getElementById("provideQuoteModal")
+  );
   if (modal) {
     modal.hide();
   }
@@ -652,8 +662,8 @@ function setupQuoteForm() {
   console.log("Setting up quote form");
 
   // Listen for any existing or future submit buttons
-  document.addEventListener('click', function(e) {
-    if (e.target && e.target.id === 'submitQuoteBtn') {
+  document.addEventListener("click", function (e) {
+    if (e.target && e.target.id === "submitQuoteBtn") {
       e.preventDefault();
       handleQuoteFormSubmission(e.target);
     }
@@ -731,93 +741,97 @@ function markAsCompleted(requestId, customerEmail) {
 // Setup quote status filter
 function setupQuoteStatusFilter() {
   console.log("Setting up quote filters");
-  
+
   // First ensure we have all the filter buttons with correct data attributes
-  const filterContainer = document.querySelector('.btn-filter-container');
-  
+  const filterContainer = document.querySelector(".btn-filter-container");
+
   if (filterContainer) {
     // Check if we need to add the Rejected filter button
-    const rejectedFilterBtn = document.querySelector('.quote-filter[data-filter="Rejected"]');
+    const rejectedFilterBtn = document.querySelector(
+      '.quote-filter[data-filter="Rejected"]'
+    );
     if (!rejectedFilterBtn) {
       // Add the Rejected filter button if it doesn't exist
-      const btnGroup = filterContainer.querySelector('.btn-group');
+      const btnGroup = filterContainer.querySelector(".btn-group");
       if (btnGroup) {
-        const rejectedBtn = document.createElement('button');
-        rejectedBtn.className = 'btn btn-sm quote-filter';
-        rejectedBtn.setAttribute('data-filter', 'Rejected');
+        const rejectedBtn = document.createElement("button");
+        rejectedBtn.className = "btn btn-sm quote-filter";
+        rejectedBtn.setAttribute("data-filter", "Rejected");
         rejectedBtn.innerHTML = '<i class="fas fa-times me-1"></i>Rejected';
         btnGroup.appendChild(rejectedBtn);
-        
+
         console.log("Added missing Rejected filter button");
       }
     }
   }
-  
+
   // Now get all filter buttons including any newly added ones
-  const filterButtons = document.querySelectorAll('.quote-filter');
-  
+  const filterButtons = document.querySelectorAll(".quote-filter");
+
   if (filterButtons.length > 0) {
     console.log(`Found ${filterButtons.length} filter buttons`);
-    
+
     // Add click event listeners to all filter buttons
-    filterButtons.forEach(btn => {
+    filterButtons.forEach((btn) => {
       // Remove any existing event listeners by cloning
       const newBtn = btn.cloneNode(true);
       btn.parentNode.replaceChild(newBtn, btn);
-      
+
       // Add event listener to the cloned button
-      newBtn.addEventListener('click', function(e) {
+      newBtn.addEventListener("click", function (e) {
         e.preventDefault();
         e.stopPropagation();
-        
-        const filterValue = this.getAttribute('data-filter');
+
+        const filterValue = this.getAttribute("data-filter");
         console.log(`Filter button clicked: ${filterValue}`);
-        
+
         // Remove active class from all buttons
-        document.querySelectorAll('.quote-filter').forEach(btn => {
-          btn.classList.remove('active');
+        document.querySelectorAll(".quote-filter").forEach((btn) => {
+          btn.classList.remove("active");
         });
-        
+
         // Add active class to clicked button
-        this.classList.add('active');
-        
+        this.classList.add("active");
+
         console.log(`Filtering quotes by: ${filterValue}`);
-        
+
         // Apply filter
         applyQuotesFilter(filterValue);
-        
+
         // Add animation to the button
-        this.classList.add('pulse-animation');
+        this.classList.add("pulse-animation");
         setTimeout(() => {
-          this.classList.remove('pulse-animation');
+          this.classList.remove("pulse-animation");
         }, 1000);
       });
     });
-    
+
     // Initialize with "All" filter
-    const allFilterBtn = document.querySelector('.quote-filter[data-filter="all"]');
+    const allFilterBtn = document.querySelector(
+      '.quote-filter[data-filter="all"]'
+    );
     if (allFilterBtn) {
-      allFilterBtn.classList.add('active');
+      allFilterBtn.classList.add("active");
       // Make sure we apply the "all" filter initially
       setTimeout(() => {
-        applyQuotesFilter('all');
+        applyQuotesFilter("all");
       }, 100);
     }
   } else {
     console.warn("No filter buttons found with class 'quote-filter'");
     // Fallback to old select-based filter
-  const filterSelect = document.getElementById("quoteStatusFilter");
+    const filterSelect = document.getElementById("quoteStatusFilter");
 
-  if (filterSelect) {
-      filterSelect.addEventListener("change", function() {
-      const status = this.value;
+    if (filterSelect) {
+      filterSelect.addEventListener("change", function () {
+        const status = this.value;
         applyQuotesFilter(status);
       });
     } else {
       console.warn("No filter select found with id 'quoteStatusFilter'");
     }
   }
-  
+
   // Update filter counts
   updateFilterCounts();
 }
@@ -832,11 +846,11 @@ function applyQuotesFilter(filterValue) {
   // Update the filter counts to reflect the current state
   updateFilterCounts();
   // Update active state on filter buttons
-  document.querySelectorAll('.quote-filter').forEach(btn => {
-    if (btn.getAttribute('data-filter') === filterValue) {
-      btn.classList.add('active');
+  document.querySelectorAll(".quote-filter").forEach((btn) => {
+    if (btn.getAttribute("data-filter") === filterValue) {
+      btn.classList.add("active");
     } else {
-      btn.classList.remove('active');
+      btn.classList.remove("active");
     }
   });
 }
@@ -844,10 +858,10 @@ function applyQuotesFilter(filterValue) {
 // Update filter counts
 function updateFilterCounts() {
   console.log("Updating filter counts");
-  
+
   // Get all quotes
   const allQuotes = getAllQuotes();
-  
+
   // Count by status
   const counts = {
     all: allQuotes.length,
@@ -855,51 +869,53 @@ function updateFilterCounts() {
     Quoted: 0,
     Accepted: 0,
     Completed: 0,
-    Rejected: 0
+    Rejected: 0,
   };
-  
+
   // Count each status
-  allQuotes.forEach(quote => {
+  allQuotes.forEach((quote) => {
     if (counts.hasOwnProperty(quote.status)) {
       counts[quote.status]++;
     }
   });
-  
+
   console.log("Quote counts by status:", counts);
-  
+
   // Update filter buttons with counts if they have count elements
-  Object.keys(counts).forEach(status => {
-    const filterBtn = document.querySelector(`.quote-filter[data-filter="${status}"]`);
+  Object.keys(counts).forEach((status) => {
+    const filterBtn = document.querySelector(
+      `.quote-filter[data-filter="${status}"]`
+    );
     if (filterBtn) {
       console.log(`Updating count for ${status} filter: ${counts[status]}`);
-      
+
       // Check if there's a count badge
-      let countBadge = filterBtn.querySelector('.filter-count');
-      
+      let countBadge = filterBtn.querySelector(".filter-count");
+
       // If not, create one
       if (!countBadge) {
-        countBadge = document.createElement('span');
-        countBadge.className = 'filter-count ms-1';
+        countBadge = document.createElement("span");
+        countBadge.className = "filter-count ms-1";
         filterBtn.appendChild(countBadge);
       }
-      
+
       // Update the count with animation if it changed
       const oldCount = parseInt(countBadge.textContent) || 0;
       if (oldCount !== counts[status]) {
-        countBadge.classList.add('count-changed');
+        countBadge.classList.add("count-changed");
         setTimeout(() => {
-          countBadge.classList.remove('count-changed');
+          countBadge.classList.remove("count-changed");
         }, 500);
       }
-      
+
       // Update the count
       countBadge.textContent = counts[status];
-      
+
       // Add a special class if count is 0
       if (counts[status] === 0) {
-        countBadge.classList.add('empty');
+        countBadge.classList.add("empty");
       } else {
-        countBadge.classList.remove('empty');
+        countBadge.classList.remove("empty");
       }
     }
   });
@@ -907,12 +923,13 @@ function updateFilterCounts() {
 
 // Update the quotes section title based on filter
 function updateFilterTitle(filterValue) {
-  const titleElement = document.querySelector('#quotesSection .card-header h5');
+  const titleElement = document.querySelector("#quotesSection .card-header h5");
   if (!titleElement) return;
-  
+
   // Update the title based on filter
-  if (filterValue === 'all') {
-    titleElement.innerHTML = '<i class="fas fa-file-invoice-dollar"></i> All Quote Requests';
+  if (filterValue === "all") {
+    titleElement.innerHTML =
+      '<i class="fas fa-file-invoice-dollar"></i> All Quote Requests';
   } else {
     const iconClass = getStatusIconClass(filterValue);
     titleElement.innerHTML = `<i class="${iconClass}"></i> ${filterValue} Quote Requests`;
@@ -922,12 +939,18 @@ function updateFilterTitle(filterValue) {
 // Get appropriate icon class for status
 function getStatusIconClass(status) {
   switch (status) {
-    case 'Pending': return 'fas fa-clock';
-    case 'Quoted': return 'fas fa-dollar-sign';
-    case 'Accepted': return 'fas fa-check';
-    case 'Completed': return 'fas fa-check-double';
-    case 'Rejected': return 'fas fa-times';
-    default: return 'fas fa-file-invoice-dollar';
+    case "Pending":
+      return "fas fa-clock";
+    case "Quoted":
+      return "fas fa-dollar-sign";
+    case "Accepted":
+      return "fas fa-check";
+    case "Completed":
+      return "fas fa-check-double";
+    case "Rejected":
+      return "fas fa-times";
+    default:
+      return "fas fa-file-invoice-dollar";
   }
 }
 
@@ -990,6 +1013,72 @@ function submitQuote(requestId, customerEmail, amount, note) {
   alert("Points offer submitted successfully!");
 }
 
+// Create a mobile-friendly card for a quote
+function createQuoteCard(quote) {
+  // Create card wrapper
+  const card = document.createElement("div");
+  card.className = "quote-card";
+  card.setAttribute("data-status", quote.status);
+
+  // Format date
+  const quoteDate = new Date(quote.date);
+  const formattedDate = quoteDate.toLocaleDateString();
+
+  // Get initials for avatar
+  const customerName = quote.customerName || quote.customerEmail || "Unknown";
+  const initials = getInitialsFromName(
+    customerName.charAt(0),
+    customerName.split(" ").length > 1
+      ? customerName.split(" ")[1].charAt(0)
+      : ""
+  );
+
+  // Create card HTML structure
+  card.innerHTML = `
+    <div class="quote-card-header">
+      <div class="quote-card-device">
+        <i class="fas fa-mobile-alt me-2"></i>${
+          quote.device || "Unknown Device"
+        }
+      </div>
+      <span class="badge badge-${quote.status.toLowerCase()}">${
+    quote.status
+  }</span>
+    </div>
+    <div class="quote-card-body">
+      <div class="quote-card-customer">
+        <div class="quote-card-customer-avatar">${initials}</div>
+        <div class="quote-card-customer-name">${customerName}</div>
+      </div>
+      <div class="quote-card-info">
+        <div class="quote-card-date">
+          <i class="far fa-calendar-alt me-1"></i>${formattedDate}
+        </div>
+      </div>
+    </div>
+    <div class="quote-card-footer">
+      <div class="quote-card-actions">
+        <button class="btn btn-sm btn-outline-primary" onclick="showQuoteDetails('${
+          quote.id
+        }')">
+          <i class="fas fa-eye me-1"></i>View
+        </button>
+        ${
+          quote.status === "Pending"
+            ? `
+          <button class="btn btn-sm btn-outline-success" onclick="showProvideQuoteModal('${quote.id}')">
+            <i class="fas fa-coins me-1"></i>Quote
+          </button>
+        `
+            : ""
+        }
+      </div>
+    </div>
+  `;
+
+  return card;
+}
+
 // Export functions
 window.loadAllQuotes = loadAllQuotes;
 window.initializeQuoteFilters = initializeQuoteFilters;
@@ -1007,14 +1096,4 @@ window.updateFilterCounts = updateFilterCounts;
 window.updateFilterTitle = updateFilterTitle;
 window.getStatusIconClass = getStatusIconClass;
 window.submitQuote = submitQuote;
-
-// On DOMContentLoaded, initialize filters ONCE
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    initializeQuoteFilters();
-    loadAllQuotes('all');
-  });
-} else {
-  initializeQuoteFilters();
-  loadAllQuotes('all');
-} 
+window.createQuoteCard = createQuoteCard;

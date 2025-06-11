@@ -108,4 +108,4 @@ window.updateAdminInfo = updateAdminInfo;
 window.getInitials = getInitials;
 window.setupLogout = setupLogout;
 window.validatePassword = validatePassword;
-window.hashPassword = hashPassword; 
+window.hashPassword = hashPassword;
