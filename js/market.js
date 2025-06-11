@@ -15,6 +15,15 @@ let currentCategory = "all";
 let cart = JSON.parse(localStorage.getItem("marketCart")) || [];
 
 /**
+ * Initialize the market page
+ */
+function initializeMarket() {
+  console.log("Market page initialized");
+  // This function was missing and is now implemented as a stub
+  // Any market initialization code should go here
+}
+
+/**
  * Enhanced voucher discount calculation for flexible partial discount system
  * @param {number} cartTotal - Total amount of cart
  * @param {number} voucherValue - Available voucher balance
@@ -89,7 +98,7 @@ const checkoutConfirmModal = new bootstrap.Modal(
 // Initialize when document is ready
 document.addEventListener("DOMContentLoaded", function () {
   // Load products from the centralized data source
-  allProducts = getInventoryData();
+  allProducts = productData;
 
   // Initialize the market page
   initializeMarket();

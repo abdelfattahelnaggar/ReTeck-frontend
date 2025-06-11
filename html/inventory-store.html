@@ -100,18 +100,44 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         border-radius: var(--border-radius);
         overflow: hidden;
+        background-color: white;
+        transition: all 0.3s ease;
+      }
+
+      .inventory-header .input-group:focus-within {
+        box-shadow: 0 6px 15px rgba(13, 110, 253, 0.25);
+        transform: translateY(-2px);
       }
 
       .inventory-header .input-group input {
         border: none;
-        padding: 0.625rem 1rem;
+        padding: 0.75rem 1rem;
         font-size: 1rem;
+        background-color: transparent;
       }
 
       .inventory-header .input-group .btn {
-        padding-left: 1.25rem;
-        padding-right: 1.25rem;
+        padding: 0.5rem 1rem;
         border: none;
+        background-color: var(--primary-color);
+        color: white;
+        font-weight: 500;
+        transition: all 0.2s ease;
+      }
+
+      .inventory-header .input-group .btn:hover {
+        background-color: var(--primary-dark);
+      }
+
+      .inventory-header .input-group .btn-light {
+        background-color: #f8f9fa;
+        color: #6c757d;
+        border-right: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .inventory-header .input-group .btn-light:hover {
+        background-color: #e9ecef;
+        color: #495057;
       }
 
       /* Filter sidebar */
@@ -180,27 +206,31 @@
       /* Inventory cards */
       .inventory-card {
         border: none;
-        border-radius: var(--border-radius);
-        box-shadow: var(--card-shadow);
-        transition: all 0.3s ease;
+        border-radius: 16px;
+        box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px,
+          rgba(17, 17, 26, 0.05) 0px 8px 32px;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         height: 100%;
         overflow: hidden;
         background: white;
         display: flex;
         flex-direction: column;
+        position: relative;
       }
 
       .inventory-card:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--hover-shadow);
+        transform: translateY(-12px);
+        box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px,
+          rgba(17, 17, 26, 0.1) 0px 16px 56px;
       }
 
       .inventory-card .card-img-top {
         height: 200px;
         object-fit: contain;
         background-color: #f8f9fa;
-        padding: 1.5rem;
+        padding: 2rem;
         transition: all 0.3s ease;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
       }
 
       .inventory-card:hover .card-img-top {
@@ -213,17 +243,17 @@
         display: flex;
         flex-direction: column;
         flex-grow: 1;
+        position: relative;
       }
 
       .inventory-card .card-title {
         font-weight: 700;
         font-size: 1.15rem;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.25rem;
         color: #2c3e50;
-        height: 2.5rem;
         overflow: hidden;
         display: -webkit-box;
-        -webkit-line-clamp: 2;
+        -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;
       }
 
@@ -232,211 +262,101 @@
         color: #6c757d;
         margin-bottom: 0.75rem;
         font-weight: 500;
+        display: flex;
+        align-items: center;
+      }
+
+      .inventory-card .card-subtitle::before {
+        content: "";
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: var(--primary-color);
+        margin-right: 8px;
       }
 
       .inventory-card .card-text {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         margin-bottom: 1rem;
-        color: #495057;
-        height: 3rem;
+        color: #6c757d;
+        height: 2.5rem;
         overflow: hidden;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
+        line-height: 1.4;
       }
 
       /* Badge container to ensure consistent height */
       .inventory-card .badge-container {
-        height: 2rem;
         margin-bottom: 1rem;
         display: flex;
         flex-wrap: wrap;
         align-items: center;
+        gap: 0.5rem;
       }
 
       /* Inventory badge for device conditions and types */
       .inventory-badge {
-        font-size: 0.75rem;
-        padding: 0.35rem 0.75rem;
-        margin-right: 0.5rem;
-        margin-bottom: 0.5rem;
+        font-size: 0.7rem;
+        padding: 0.25rem 0.6rem;
         display: inline-block;
-        border-radius: 50rem;
+        border-radius: 6px;
         font-weight: 600;
         letter-spacing: 0.3px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
-
-      /* Status badges for inventory items */
-      .inventory-status {
-        position: absolute;
-        top: 12px;
-        right: 12px;
-        padding: 0.35rem 0.75rem;
-        border-radius: 50rem;
-        font-size: 0.75rem;
-        font-weight: 600;
-        z-index: 10;
-        letter-spacing: 0.3px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      }
-
-      .inventory-status.available {
-        background-color: rgba(25, 135, 84, 0.15);
-        color: #198754;
-        border: 1px solid rgba(25, 135, 84, 0.3);
-      }
-
-      .inventory-status.pending {
-        background-color: rgba(255, 193, 7, 0.15);
-        color: #ffc107;
-        border: 1px solid rgba(255, 193, 7, 0.3);
-      }
-
-      /* Inventory price styling */
-      .inventory-price {
-        font-weight: 700;
-        font-size: 1.25rem;
-        color: var(--primary-color);
-        margin-bottom: 1.25rem;
-      }
-
-      /* Add to cart button */
-      .inventory-card .btn-primary {
-        border-radius: 50rem;
-        padding: 0.5rem 1rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        background: linear-gradient(
-          90deg,
-          var(--primary-color),
-          var(--primary-dark)
-        );
-        border: none;
-        box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
-      }
-
-      .inventory-card .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(13, 110, 253, 0.3);
-      }
-
-      .inventory-card .btn-secondary {
-        border-radius: 50rem;
-        padding: 0.5rem 1rem;
-        font-weight: 600;
-      }
-
-      /* Sort dropdown styling */
-      .sort-dropdown .dropdown-toggle {
-        background-color: white;
-        border: 1px solid #e9ecef;
-        color: #495057;
-        border-radius: 50rem;
-        padding: 0.5rem 1rem;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-      }
-
-      .sort-dropdown .dropdown-toggle:focus {
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-      }
-
-      .sort-dropdown .dropdown-menu {
-        border-radius: var(--border-radius);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        border: none;
-        padding: 0.5rem;
-      }
-
-      .sort-dropdown .dropdown-item {
-        border-radius: calc(var(--border-radius) - 0.25rem);
-        padding: 0.5rem 1rem;
-        margin-bottom: 0.25rem;
-      }
-
-      .sort-dropdown .dropdown-item:hover {
-        background-color: var(--primary-light);
-        color: var(--primary-dark);
-      }
-
-      /* Pagination styling */
-      .pagination {
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        border-radius: 50rem;
-        overflow: hidden;
-      }
-
-      .pagination .page-item:first-child .page-link {
-        border-top-left-radius: 50rem;
-        border-bottom-left-radius: 50rem;
-      }
-
-      .pagination .page-item:last-child .page-link {
-        border-top-right-radius: 50rem;
-        border-bottom-right-radius: 50rem;
-      }
-
-      .pagination .page-item.active .page-link {
-        background-color: var(--primary-color);
-        border-color: var(--primary-color);
-        font-weight: 600;
-        box-shadow: 0 2px 5px rgba(13, 110, 253, 0.2);
-      }
-
-      .pagination .page-link {
-        color: var(--primary-color);
-        border: none;
-        padding: 0.5rem 1rem;
-      }
-
-      .pagination .page-link:focus {
         box-shadow: none;
-      }
-
-      /* Badge styles for device conditions */
-      .badge-new {
-        background-color: var(--success-color);
-        color: white;
-      }
-
-      .badge-like-new {
-        background-color: #20c997;
-        color: white;
-      }
-
-      .badge-good {
-        background-color: #0dcaf0;
-        color: white;
-      }
-
-      .badge-fair {
-        background-color: var(--warning-color);
-        color: #212529;
-      }
-
-      .badge-poor {
-        background-color: #fd7e14;
-        color: white;
+        text-transform: uppercase;
       }
 
       /* Stock badge styles */
       .stock-badge {
         position: absolute;
-        top: 12px;
-        left: 12px;
+        top: 16px;
+        right: 16px;
         background-color: rgba(13, 110, 253, 0.9);
         color: white;
         padding: 0.35rem 0.75rem;
-        border-radius: 50rem;
-        font-size: 0.75rem;
+        border-radius: 8px;
+        font-size: 0.7rem;
         font-weight: 600;
         z-index: 10;
-        letter-spacing: 0.3px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
       }
 
       .stock-badge.low {
         background-color: rgba(220, 53, 69, 0.9);
+      }
+
+      .stock-badge.processing {
+        background-color: rgba(255, 193, 7, 0.9);
+        color: #212529;
+      }
+
+      /* Inventory price styling */
+      .inventory-price {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: var(--primary-color);
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+      }
+
+      .inventory-price::before {
+        content: "";
+        flex-grow: 1;
+        height: 1px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          rgba(0, 0, 0, 0.1),
+          transparent
+        );
+        margin-right: 15px;
       }
 
       /* Empty search result styling */
@@ -573,6 +493,32 @@
           gap: 1rem;
         }
       }
+
+      /* Badge styles for device conditions */
+      .badge-new {
+        background-color: var(--success-color);
+        color: white;
+      }
+
+      .badge-like-new {
+        background-color: #20c997;
+        color: white;
+      }
+
+      .badge-good {
+        background-color: #0dcaf0;
+        color: white;
+      }
+
+      .badge-fair {
+        background-color: var(--warning-color);
+        color: #212529;
+      }
+
+      .badge-poor {
+        background-color: #fd7e14;
+        color: white;
+      }
     </style>
   </head>
   <body>
@@ -665,19 +611,63 @@
           </div>
           <div class="col-md-6">
             <div class="input-group">
+              <button
+                class="btn btn-light dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                title="Search in category"
+              >
+                <i class="fas fa-tag me-1"></i
+                ><span class="d-none d-md-inline">Category</span>
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="#" data-category="all"
+                    >All Categories</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#" data-category="smartphones"
+                    >Smartphones</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#" data-category="laptops"
+                    >Laptops</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#" data-category="tablets"
+                    >Tablets</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#" data-category="desktops"
+                    >Desktops</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#" data-category="accessories"
+                    >Accessories</a
+                  >
+                </li>
+              </ul>
               <input
                 type="text"
                 class="form-control"
-                placeholder="Search devices..."
+                placeholder="Search devices by name, brand, specs..."
                 id="inventorySearch"
+                aria-label="Search inventory"
               />
               <button
-                class="btn btn-light"
+                class="btn btn-primary"
                 type="button"
                 id="searchButton"
                 title="Search inventory"
               >
-                <i class="fas fa-search"></i>
+                <i class="fas fa-search me-md-1"></i
+                ><span class="d-none d-md-inline">Search</span>
               </button>
             </div>
           </div>
@@ -963,8 +953,7 @@
             <!-- Item 1 -->
             <div class="inventory-grid-item">
               <div class="card inventory-card position-relative">
-                <span class="inventory-status available">Available</span>
-                <span class="stock-badge">In Stock: 5</span>
+                <span class="stock-badge" style="right: 16px">In Stock: 5</span>
                 <img
                   src="https://via.placeholder.com/300x300?text=iPhone+13"
                   class="card-img-top"
@@ -992,8 +981,7 @@
             <!-- Item 2 -->
             <div class="inventory-grid-item">
               <div class="card inventory-card position-relative">
-                <span class="inventory-status available">Available</span>
-                <span class="stock-badge">In Stock: 3</span>
+                <span class="stock-badge" style="right: 16px">In Stock: 3</span>
                 <img
                   src="https://via.placeholder.com/300x300?text=Samsung+Galaxy+S21"
                   class="card-img-top"
@@ -1019,8 +1007,9 @@
             <!-- Item 3 -->
             <div class="inventory-grid-item">
               <div class="card inventory-card position-relative">
-                <span class="inventory-status available">Available</span>
-                <span class="stock-badge low">In Stock: 1</span>
+                <span class="stock-badge low" style="right: 16px"
+                  >In Stock: 1</span
+                >
                 <img
                   src="https://via.placeholder.com/300x300?text=MacBook+Pro"
                   class="card-img-top"
@@ -1046,8 +1035,7 @@
             <!-- Item 4 -->
             <div class="inventory-grid-item">
               <div class="card inventory-card position-relative">
-                <span class="inventory-status available">Available</span>
-                <span class="stock-badge">In Stock: 8</span>
+                <span class="stock-badge" style="right: 16px">In Stock: 8</span>
                 <img
                   src="https://via.placeholder.com/300x300?text=iPad+Air"
                   class="card-img-top"
@@ -1073,8 +1061,7 @@
             <!-- Item 5 -->
             <div class="inventory-grid-item">
               <div class="card inventory-card position-relative">
-                <span class="inventory-status available">Available</span>
-                <span class="stock-badge">In Stock: 4</span>
+                <span class="stock-badge" style="right: 16px">In Stock: 4</span>
                 <img
                   src="https://via.placeholder.com/300x300?text=Samsung+Galaxy+Tab+S7"
                   class="card-img-top"
@@ -1102,8 +1089,9 @@
             <!-- Item 6 -->
             <div class="inventory-grid-item">
               <div class="card inventory-card position-relative">
-                <span class="inventory-status pending">Processing</span>
-                <span class="stock-badge">In Stock: 2</span>
+                <span class="stock-badge processing" style="right: 16px"
+                  >Processing: 2</span
+                >
                 <img
                   src="https://via.placeholder.com/300x300?text=iPhone+12+Mini"
                   class="card-img-top"
@@ -1125,6 +1113,19 @@
                 </div>
               </div>
             </div>
+          </div>
+
+          <!-- No results message -->
+          <div id="noResults" class="empty-result" style="display: none">
+            <i class="fas fa-search-minus fa-3x mb-3"></i>
+            <h3>No Devices Found</h3>
+            <p>
+              We couldn't find any devices matching your search and filter
+              criteria. Try adjusting your selections.
+            </p>
+            <button class="btn btn-primary" id="clearSearchAndFiltersBtn">
+              Reset Search & Filters
+            </button>
           </div>
 
           <!-- Pagination -->
@@ -1263,116 +1264,7 @@
     <!-- Custom JavaScript -->
     <script src="../js/main.js"></script>
     <script src="../js/auth.js"></script>
-
-    <script>
-      // Initialize price range display
-      const priceRange = document.getElementById("priceRange");
-      const priceRangeValue = document.getElementById("priceRangeValue");
-
-      priceRange.addEventListener("input", function () {
-        priceRangeValue.textContent = "$" + this.value;
-      });
-
-      // Sort dropdown functionality
-      const sortLinks = document.querySelectorAll("[data-sort]");
-      const currentSort = document.getElementById("currentSort");
-
-      sortLinks.forEach((link) => {
-        link.addEventListener("click", function (e) {
-          e.preventDefault();
-          const sortValue = this.dataset.sort;
-          currentSort.textContent = this.textContent;
-
-          // Here you would implement the actual sorting logic
-          console.log("Sorting by:", sortValue);
-
-          // For demo purposes, we'll just log the action
-          // In a real implementation, you would re-order the items
-        });
-      });
-
-      // Filter functionality
-      document
-        .getElementById("applyFilters")
-        .addEventListener("click", function () {
-          // Here you would implement the actual filtering logic
-          console.log("Applying filters");
-
-          // For demo purposes, we'll just log the selected filters
-          const deviceTypes = Array.from(
-            document.querySelectorAll('[id^="filter"][id$="s"]:checked')
-          ).map((checkbox) => checkbox.value);
-
-          const conditions = Array.from(
-            document.querySelectorAll(
-              '[id^="filter"][id$="w"]:checked, [id^="filter"][id$="d"]:checked, [id^="filter"][id$="r"]:checked'
-            )
-          ).map((checkbox) => checkbox.value);
-
-          const brands = Array.from(
-            document.querySelectorAll(
-              '[id^="filter"][id$="e"]:checked, [id^="filter"][id$="g"]:checked, [id^="filter"][id$="l"]:checked, [id^="filter"][id$="p"]:checked, [id^="filter"][id$="r"]:checked'
-            )
-          ).map((checkbox) => checkbox.value);
-
-          const priceMax = priceRange.value;
-
-          console.log("Device Types:", deviceTypes);
-          console.log("Conditions:", conditions);
-          console.log("Brands:", brands);
-          console.log("Max Price:", priceMax);
-        });
-
-      // Reset filters
-      document
-        .getElementById("resetFilters")
-        .addEventListener("click", function () {
-          // Reset all checkboxes to their default values
-          document.querySelectorAll(".form-check-input").forEach((checkbox) => {
-            if (
-              checkbox.id === "filterSmartphones" ||
-              checkbox.id === "filterLaptops" ||
-              checkbox.id === "filterTablets" ||
-              checkbox.id === "filterNew" ||
-              checkbox.id === "filterLikeNew" ||
-              checkbox.id === "filterGood" ||
-              checkbox.id === "filterApple" ||
-              checkbox.id === "filterSamsung"
-            ) {
-              checkbox.checked = true;
-            } else {
-              checkbox.checked = false;
-            }
-          });
-
-          // Reset price range
-          priceRange.value = 500;
-          priceRangeValue.textContent = "$500";
-
-          console.log("Filters reset");
-        });
-
-      // Search functionality
-      document
-        .getElementById("searchButton")
-        .addEventListener("click", function () {
-          const searchQuery = document
-            .getElementById("inventorySearch")
-            .value.trim();
-          if (searchQuery) {
-            console.log("Searching for:", searchQuery);
-            // Implement actual search logic here
-          }
-        });
-
-      // Allow search on Enter key
-      document
-        .getElementById("inventorySearch")
-        .addEventListener("keyup", function (e) {
-          if (e.key === "Enter") {
-            document.getElementById("searchButton").click();
-          }
-        });
-    </script>
+    <script src="../js/data.js"></script>
+    <script src="../js/company/inventory.js"></script>
   </body>
 </html>
