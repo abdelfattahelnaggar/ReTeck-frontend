@@ -36,6 +36,18 @@ function loadProfileData() {
     document.getElementById("profileCompanyAddress").textContent =
       companyData.profile?.address || "N/A";
 
+    // Update company logo
+    const companyLogo = document.getElementById("companyLogo");
+    const companyIcon = document.getElementById("companyIcon");
+    if (companyData.profile?.logo) {
+      companyLogo.src = companyData.profile.logo;
+      companyLogo.style.display = "block";
+      companyIcon.style.display = "none";
+    } else {
+      companyLogo.style.display = "none";
+      companyIcon.style.display = "block";
+    }
+
     // Update Company Overview section
     // Format and display joined date
     const joinedDate = new Date(companyData.createDate || new Date());
@@ -67,6 +79,44 @@ function loadProfileData() {
 
     // Update company name in navbar and dropdown
     updateCompanyNav(companyData.profile?.company);
+
+    // Update navbar logo
+    const logoUrl = companyData.profile?.logo;
+    const navLogo = document.getElementById("navCompanyLogo");
+    const navIcon = document.getElementById("navCompanyIcon");
+    if (logoUrl && navLogo && navIcon) {
+      navLogo.src = logoUrl;
+      navLogo.style.display = "block";
+      navIcon.style.display = "none";
+    }
+
+    // Update dropdown logo
+    const dropdownLogo = document.getElementById("dropdownCompanyLogo");
+    const dropdownIcon = document.getElementById("dropdownCompanyIcon");
+    if (logoUrl && dropdownLogo && dropdownIcon) {
+      dropdownLogo.src = logoUrl;
+      dropdownLogo.style.display = "block";
+      dropdownIcon.style.display = "none";
+    }
+  }
+
+  const editOverlay = document.getElementById("editOverlay");
+  const imageUpload = document.getElementById("imageUpload");
+
+  if (editOverlay && imageUpload) {
+    editOverlay.addEventListener("click", () => imageUpload.click());
+    imageUpload.addEventListener("change", handleImageUpload);
+  }
+
+  const editModal = document.getElementById("editProfileModal");
+  if (editModal) {
+    editModal.addEventListener("hidden.bs.modal", function () {
+      const form = document.getElementById("companyProfileForm");
+      form
+        .querySelectorAll(".is-invalid")
+        .forEach((el) => el.classList.remove("is-invalid"));
+      form.reset();
+    });
   }
 }
 
@@ -80,19 +130,16 @@ function setupEventListeners() {
   if (logoutBtn) {
     logoutBtn.addEventListener("click", function (e) {
       e.preventDefault();
-      localStorage.removeItem("userEmail");
-      window.location.href = "../login.html";
+      const logoutModal = new bootstrap.Modal(
+        document.getElementById("logoutConfirmModal")
+      );
+      logoutModal.show();
     });
   }
 
-  const editModal = document.getElementById("editProfileModal");
-  if (editModal) {
-    editModal.addEventListener("hidden.bs.modal", function () {
-      const form = document.getElementById("companyProfileForm");
-      form
-        .querySelectorAll(".is-invalid")
-        .forEach((el) => el.classList.remove("is-invalid"));
-    });
+  const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
+  if (confirmLogoutBtn) {
+    confirmLogoutBtn.addEventListener("click", logout);
   }
 
   // Set up reset password modal
@@ -111,6 +158,15 @@ function setupEventListeners() {
       form.reset();
     });
   }
+}
+
+function logout() {
+  // Clear all session-related data from localStorage
+  localStorage.removeItem("userEmail");
+  localStorage.removeItem("userRole");
+  localStorage.removeItem("isLoggedIn");
+  // Redirect to login page
+  window.location.href = "login.html";
 }
 
 function saveProfile() {
@@ -351,4 +407,50 @@ function resetPassword() {
       "danger"
     );
   }
+}
+
+function handleImageUpload(event) {
+  const file = event.target.files[0];
+  if (!file) {
+    return;
+  }
+
+  if (!file.type.startsWith("image/")) {
+    showPrettyAlert(
+      "Please select a valid image file (PNG, JPG, etc.).",
+      "warning"
+    );
+    return;
+  }
+
+  if (file.size > 2 * 1024 * 1024) {
+    // 2MB limit
+    showPrettyAlert("Image size cannot exceed 2MB.", "warning");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const imageData = e.target.result;
+    const userEmail = localStorage.getItem("userEmail");
+    let users = JSON.parse(localStorage.getItem("users")) || {};
+
+    if (users[userEmail]) {
+      if (!users[userEmail].profile) {
+        users[userEmail].profile = {};
+      }
+      users[userEmail].profile.logo = imageData;
+      localStorage.setItem("users", JSON.stringify(users));
+
+      // Update the UI immediately
+      document.getElementById("companyLogo").src = imageData;
+      document.getElementById("companyLogo").style.display = "block";
+      document.getElementById("companyIcon").style.display = "none";
+
+      showPrettyAlert("Logo updated successfully!", "success");
+    } else {
+      showPrettyAlert("User not found. Could not save logo.", "danger");
+    }
+  };
+  reader.readAsDataURL(file);
 }

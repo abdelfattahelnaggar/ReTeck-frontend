@@ -3,8 +3,7 @@
  * Handles all functionality for the inventory store page
  */
 
-// Cart functionality
-let cart = JSON.parse(localStorage.getItem("recyclingCart")) || [];
+// Inventory state management
 let currentFilters = {
   deviceTypes: [],
   conditions: [],
@@ -31,9 +30,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Load initial inventory
   loadInventory();
-
-  // Update cart badge
-  updateCartBadge();
 });
 
 // Setup event listeners
@@ -52,12 +48,28 @@ function setupEventListeners() {
   document
     .getElementById("searchButton")
     .addEventListener("click", searchInventory);
+
+  // Add event listener for Enter key in search field
   document
     .getElementById("inventorySearch")
     .addEventListener("keyup", function (e) {
       if (e.key === "Enter") {
         searchInventory();
       }
+    });
+
+  document.getElementById("logoutBtn").addEventListener("click", function (e) {
+    e.preventDefault();
+    const logoutModal = new bootstrap.Modal(
+      document.getElementById("logoutConfirmModal")
+    );
+    logoutModal.show();
+  });
+
+  document
+    .getElementById("confirmLogoutBtn")
+    .addEventListener("click", function () {
+      logout();
     });
 
   // Sort dropdown functionality
@@ -101,47 +113,60 @@ function loadUserData() {
   }
 
   // User is logged in as a company, proceed to load their data
-  const userData =
-    JSON.parse(localStorage.getItem(`userData_${userEmail}`)) || {};
+  const users = JSON.parse(localStorage.getItem("users")) || {};
+  const companyData = users[userEmail];
 
-  // Update UI with company data
-  document.getElementById("userName").textContent =
-    userData.companyInfo?.companyName || "Company";
-  document.getElementById("dropdownUserName").textContent =
-    userData.companyInfo?.companyName || "Company";
-  document.getElementById("dropdownUserEmail").textContent =
-    userEmail || "company@recycling.com";
+  if (companyData) {
+    // Update UI with company data
+    document.getElementById("companyName").textContent =
+      companyData.profile?.company || "Company";
+    document.getElementById("dropdownCompanyName").textContent =
+      companyData.profile?.company || "Company";
+    document.getElementById("dropdownCompanyEmail").textContent =
+      userEmail || "company@recycling.com";
 
-  // Ensure the user profile is visible
-  document.getElementById("userProfile").style.display = "block";
+    // Update company logo in navbar and dropdown
+    const logoUrl = companyData.profile?.logo;
+    if (logoUrl) {
+      const navLogo = document.getElementById("navCompanyLogo");
+      const navIcon = document.getElementById("navCompanyIcon");
+      const dropdownLogo = document.getElementById("dropdownCompanyLogo");
+      const dropdownIcon = document.getElementById("dropdownCompanyIcon");
+
+      if (navLogo && navIcon) {
+        navLogo.src = logoUrl;
+        navLogo.style.display = "block";
+        navIcon.style.display = "none";
+      }
+      if (dropdownLogo && dropdownIcon) {
+        dropdownLogo.src = logoUrl;
+        dropdownLogo.style.display = "block";
+        dropdownIcon.style.display = "none";
+      }
+    }
+  }
 
   console.log("Company user authenticated successfully");
 
   // Return the user data for other functions to use if needed
-  return userData;
+  return companyData;
 }
 
 // Apply the selected filters
 function applyFilters() {
   // Get all the selected device types
   currentFilters.deviceTypes = Array.from(
-    document.querySelectorAll(
-      '[id^="filter"][id$="s"]:checked, [id^="filter"][id$="ps"]:checked, [id^="filter"][id$="ts"]:checked, [id^="filter"][id$="es"]:checked, [id^="filter"][id$="ies"]:checked'
-    )
+    document.querySelectorAll('input[name="deviceType"]:checked')
   ).map((checkbox) => checkbox.value);
 
   // Get all the selected conditions
   currentFilters.conditions = Array.from(
-    document.querySelectorAll(
-      '[id^="filter"][id$="New"]:checked, [id^="filter"][id$="ood"]:checked, [id^="filter"][id$="air"]:checked, [id^="filter"][id$="oor"]:checked'
-    )
+    document.querySelectorAll('input[name="condition"]:checked')
   ).map((checkbox) => checkbox.value);
 
   // Get all the selected brands
   currentFilters.brands = Array.from(
-    document.querySelectorAll(
-      '[id^="filter"][id$="le"]:checked, [id^="filter"][id$="ng"]:checked, [id^="filter"][id$="ll"]:checked, [id^="filter"][id$="Hp"]:checked, [id^="filter"][id$="er"]:checked'
-    )
+    document.querySelectorAll('input[name="brand"]:checked')
   ).map((checkbox) => checkbox.value);
 
   // Get the price range
@@ -186,31 +211,17 @@ function resetFilters() {
 
 // Search inventory
 function searchInventory() {
-  const searchQuery = document
-    .getElementById("inventorySearch")
-    .value.trim()
-    .toLowerCase();
+  console.log("Search function triggered");
 
-  if (!searchQuery) {
-    loadInventory();
-    return;
-  }
-
-  // Filter items by search query
-  const filteredItems = inventoryData.filter((item) => {
-    return (
-      item.name.toLowerCase().includes(searchQuery) ||
-      item.brand.toLowerCase().includes(searchQuery) ||
-      item.description.toLowerCase().includes(searchQuery) ||
-      item.type.toLowerCase().includes(searchQuery)
-    );
-  });
+  // Get the search query
+  const searchQuery = document.getElementById("inventorySearch").value.trim();
+  console.log("Search query:", searchQuery);
 
   // Reset to first page when searching
   currentPage = 1;
 
-  // Render filtered items
-  renderInventoryItems(filteredItems);
+  // Load inventory, which will apply the search query along with other filters
+  loadInventory();
 }
 
 // Filter inventory based on current filters
@@ -235,29 +246,36 @@ function filterInventory() {
   // Filter by device type
   if (currentFilters.deviceTypes.length > 0) {
     filteredItems = filteredItems.filter((item) => {
-      return currentFilters.deviceTypes.some((type) =>
-        item.type.toLowerCase().includes(type)
-      );
+      return currentFilters.deviceTypes.includes(item.type.toLowerCase());
     });
   }
 
   // Filter by condition
   if (currentFilters.conditions.length > 0) {
     filteredItems = filteredItems.filter((item) => {
-      const conditionMatch = currentFilters.conditions.some((condition) => {
-        if (condition === "likeNew") return item.condition === "like-new";
-        return item.condition === condition.toLowerCase();
+      return currentFilters.conditions.some((condition) => {
+        if (condition === "likeNew") {
+          return item.condition === "like-new";
+        }
+        return item.condition === condition;
       });
-      return conditionMatch;
     });
   }
 
   // Filter by brand
   if (currentFilters.brands.length > 0) {
+    const mainBrands = ["apple", "samsung", "dell", "hp"];
+    const selectsOther = currentFilters.brands.includes("other");
+
     filteredItems = filteredItems.filter((item) => {
-      return currentFilters.brands.some((brand) =>
-        item.brand.toLowerCase().includes(brand)
-      );
+      const itemBrand = item.brand.toLowerCase();
+      if (currentFilters.brands.includes(itemBrand)) {
+        return true;
+      }
+      if (selectsOther && !mainBrands.includes(itemBrand)) {
+        return true;
+      }
+      return false;
     });
   }
 
@@ -347,7 +365,9 @@ function renderInventoryItems(items) {
     document
       .getElementById("clearSearchButton")
       .addEventListener("click", function () {
+        // Clear the search input
         document.getElementById("inventorySearch").value = "";
+        // Reset all filters to default
         resetFilters();
       });
 
@@ -372,9 +392,6 @@ function renderInventoryItems(items) {
 
     itemElement.innerHTML = `
       <div class="card inventory-card position-relative">
-        <span class="inventory-status ${item.status}">${
-      item.status === "available" ? "Available" : "Processing"
-    }</span>
         <span class="stock-badge ${stockClass}">In Stock: ${item.stock}</span>
         <img src="${item.image}" class="card-img-top" alt="${item.name}">
         <div class="card-body">
@@ -391,24 +408,12 @@ function renderInventoryItems(items) {
           </div>
           <div class="card-actions">
             <div class="inventory-price">$${item.price.toFixed(2)}</div>
-            ${
-              item.status === "available"
-                ? `<button class="btn btn-primary w-100 add-to-cart-btn" data-id="${item.id}">Add to Cart</button>`
-                : `<button class="btn btn-secondary w-100 disabled">Coming Soon</button>`
-            }
           </div>
         </div>
       </div>
     `;
 
     inventoryItemsContainer.appendChild(itemElement);
-  });
-
-  // Add event listeners to Add to Cart buttons
-  document.querySelectorAll(".add-to-cart-btn").forEach((button) => {
-    button.addEventListener("click", function () {
-      addToCart(parseInt(this.dataset.id));
-    });
   });
 
   // Update pagination
@@ -494,110 +499,14 @@ function updatePagination(totalPages) {
   });
 }
 
-// Add item to cart
-function addToCart(itemId) {
-  const item = inventoryData.find((item) => item.id === itemId);
-
-  if (!item) return;
-
-  // Check if item already in cart
-  const existingItem = cart.find((cartItem) => cartItem.id === itemId);
-
-  if (existingItem) {
-    // Increase quantity if already in cart
-    if (existingItem.quantity < item.stock) {
-      existingItem.quantity += 1;
-      showToast(`Added another ${item.name} to your cart.`);
-    } else {
-      showToast(
-        `Sorry, maximum available stock (${item.stock}) reached for ${item.name}.`,
-        "warning"
-      );
-      return;
-    }
-  } else {
-    // Add new item to cart
-    cart.push({
-      id: item.id,
-      name: item.name,
-      brand: item.brand,
-      price: item.price,
-      image: item.image,
-      quantity: 1,
-      maxStock: item.stock,
-    });
-    showToast(`${item.name} added to your cart!`);
-  }
-
-  // Save cart to localStorage
-  localStorage.setItem("recyclingCart", JSON.stringify(cart));
-
-  // Update cart badge
-  updateCartBadge();
-}
-
-// Update cart badge count
-function updateCartBadge() {
-  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
-  const cartBadge = document.querySelector(".badge.bg-danger");
-
-  if (cartBadge) {
-    cartBadge.textContent = cartCount;
-    cartBadge.style.display = cartCount > 0 ? "inline-block" : "none";
-  }
-}
-
-// Show toast notification
-function showToast(message, type = "success") {
-  // Create toast container if it doesn't exist
-  let toastContainer = document.querySelector(".toast-container");
-
-  if (!toastContainer) {
-    toastContainer = document.createElement("div");
-    toastContainer.className =
-      "toast-container position-fixed bottom-0 end-0 p-3";
-    document.body.appendChild(toastContainer);
-  }
-
-  // Create toast element
-  const toastId = "toast-" + Date.now();
-  const toast = document.createElement("div");
-  toast.className = `toast align-items-center text-white bg-${type} border-0`;
-  toast.setAttribute("role", "alert");
-  toast.setAttribute("aria-live", "assertive");
-  toast.setAttribute("aria-atomic", "true");
-  toast.setAttribute("id", toastId);
-
-  // Create toast content
-  const icon =
-    type === "success" ? "fas fa-check-circle" : "fas fa-exclamation-circle";
-  toast.innerHTML = `
-    <div class="d-flex">
-      <div class="toast-body">
-        <i class="${icon} me-2"></i> ${message}
-      </div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-    </div>
-  `;
-
-  // Add toast to container
-  toastContainer.appendChild(toast);
-
-  // Initialize and show toast
-  const bsToast = new bootstrap.Toast(toast, {
-    autohide: true,
-    delay: 3000,
-  });
-  bsToast.show();
-
-  // Remove toast after it's hidden
-  toast.addEventListener("hidden.bs.toast", function () {
-    toast.remove();
-  });
-}
-
 // Logout function
 function logout() {
-  localStorage.removeItem("recyclingUser");
+  // Clear all session-related data
+  localStorage.removeItem("userEmail");
+  localStorage.removeItem("userRole");
+  localStorage.removeItem("isLoggedIn");
+  localStorage.removeItem("recyclingCart"); // Clear cart on logout
+
+  // Redirect to the login page
   window.location.href = "login.html";
 }

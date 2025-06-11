@@ -380,7 +380,18 @@
                 aria-expanded="false"
               >
                 <span class="user-avatar-small me-2 bg-white text-primary">
-                  <i class="fas fa-building"></i>
+                  <img
+                    id="navCompanyLogo"
+                    alt="Logo"
+                    class="rounded-circle"
+                    style="
+                      width: 100%;
+                      height: 100%;
+                      object-fit: cover;
+                      display: none;
+                    "
+                  />
+                  <i id="navCompanyIcon" class="fas fa-building"></i>
                 </span>
                 <span class="user-name" id="companyName">Company</span>
               </button>
@@ -390,7 +401,21 @@
               >
                 <div class="user-dropdown-header">
                   <div class="user-dropdown-avatar bg-primary">
-                    <i class="fas fa-building text-white"></i>
+                    <img
+                      id="dropdownCompanyLogo"
+                      alt="Logo"
+                      class="rounded-circle"
+                      style="
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        display: none;
+                      "
+                    />
+                    <i
+                      id="dropdownCompanyIcon"
+                      class="fas fa-building text-white"
+                    ></i>
                   </div>
                   <div class="user-dropdown-info">
                     <div class="name" id="dropdownCompanyName">
@@ -435,11 +460,28 @@
           <div class="profile-card profile-main-card">
             <div class="profile-avatar-container">
               <div class="profile-avatar">
-                <i class="fas fa-building icon"></i>
-                <div class="edit-overlay">
+                <img
+                  id="companyLogo"
+                  alt="Company Logo"
+                  class="rounded-circle"
+                  style="
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    display: none;
+                  "
+                />
+                <i id="companyIcon" class="fas fa-building icon"></i>
+                <div class="edit-overlay" id="editOverlay">
                   <i class="fas fa-camera"></i> Change
                 </div>
               </div>
+              <input
+                type="file"
+                id="imageUpload"
+                accept="image/*"
+                style="display: none"
+              />
             </div>
             <div class="card-body">
               <h2 class="card-title mb-1" id="profileCompanyName">
@@ -724,6 +766,44 @@
               id="savePasswordChanges"
             >
               <i class="fas fa-key me-2"></i>Reset Password
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Logout Confirmation Modal -->
+    <div
+      class="modal fade"
+      id="logoutConfirmModal"
+      tabindex="-1"
+      aria-labelledby="logoutConfirmModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="logoutConfirmModalLabel">
+              Confirm Logout
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">Are you sure you want to log out?</div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="button" class="btn btn-danger" id="confirmLogoutBtn">
+              Logout
             </button>
           </div>
         </div>
