@@ -99,13 +99,11 @@ function updateDashboardCharts() {
 // Load recent quotes for dashboard
 function loadRecentQuotes() {
   const tableBody = document.getElementById("recentQuotesTableBody");
-  const cardContainer = document.getElementById("recentQuotesCardContainer");
 
-  if (!tableBody || !cardContainer) return;
+  if (!tableBody) return;
 
   // Clear existing content
   tableBody.innerHTML = "";
-  cardContainer.innerHTML = "";
 
   // Get all quotes from all users
   const allQuotes = getAllQuotes();
@@ -115,68 +113,68 @@ function loadRecentQuotes() {
     .sort((a, b) => new Date(b.date) - new Date(a.date))
     .slice(0, 5);
 
+  if (recentQuotes.length === 0) {
+    const emptyMessage = `
+      <div class="col-12">
+        <div class="empty-state text-center py-5">
+          <i class="fas fa-file-invoice-dollar fa-3x text-muted mb-3"></i>
+          <h5 class="text-muted">No Recent Quotes</h5>
+          <p class="text-muted">New quote requests will appear here.</p>
+        </div>
+      </div>
+    `;
+    tableBody.innerHTML = `<tr><td colspan="5">${emptyMessage}</td></tr>`;
+    return;
+  }
+
   // Add rows to table for desktop view
   recentQuotes.forEach((quote) => {
     const row = createQuoteTableRow(quote, true);
     tableBody.appendChild(row);
   });
-
-  // Add cards for mobile view
-  recentQuotes.forEach((quote) => {
-    cardContainer.appendChild(createQuoteCard(quote));
-  });
 }
 
-// Create a mobile-friendly card for a quote
-function createQuoteCard(quote) {
-  // Create card wrapper
-  const card = document.createElement("div");
-  card.className = "quote-card";
-  card.setAttribute("data-status", quote.status);
+// Create a table row for a quote
+function createQuoteTableRow(quote, isDashboard = false) {
+  const formattedDate = new Date(quote.date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+  const statusBadge = getStatusBadge(quote.status);
 
-  // Format date
-  const quoteDate = new Date(quote.date);
-  const formattedDate = quoteDate.toLocaleDateString();
-
-  // Get initials for avatar
-  const customerName = quote.customerName || quote.customerEmail || "Unknown";
-  const initials = getInitials(customerName);
-
-  // Create card HTML structure
-  card.innerHTML = `
-    <div class="quote-card-header">
-      <div class="quote-card-device">
-        <i class="fas fa-mobile-alt me-2"></i>${
-          quote.device || "Unknown Device"
-        }
-      </div>
-      <span class="badge badge-${quote.status.toLowerCase()}">${
-    quote.status
-  }</span>
-    </div>
-    <div class="quote-card-body">
-      <div class="quote-card-customer">
-        <div class="quote-card-customer-avatar">${initials}</div>
-        <div class="quote-card-customer-name">${customerName}</div>
-      </div>
-      <div class="quote-card-info">
-        <div class="quote-card-date">
-          <i class="far fa-calendar-alt me-1"></i>${formattedDate}
+  const row = document.createElement("tr");
+  row.innerHTML = `
+    <td class="align-middle">
+        <div class="d-flex align-items-center">
+            <div class="user-avatar me-3" style="background-color: ${getAvatarColor(
+              quote.customerName
+            )};">
+                ${getInitials(quote.customerName)}
+            </div>
+            <div>
+                <div class="fw-bold">${
+                  quote.customerName || "Unknown User"
+                }</div>
+                <div class="text-muted small">${quote.customerEmail || ""}</div>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="quote-card-footer">
-      <div class="quote-card-actions">
-        <button class="btn btn-sm btn-outline-primary" onclick="showQuoteDetails('${
+    </td>
+    <td class="align-middle">
+        <i class="${getDeviceIcon(quote.deviceCategory)} me-2 text-muted"></i>
+        ${quote.device || "N/A"}
+    </td>
+    <td class="align-middle">${formattedDate}</td>
+    <td class="align-middle">${statusBadge}</td>
+    <td class="align-middle text-end">
+        <button class="btn btn-sm btn-outline-primary view-quote-btn" onclick="showQuoteDetails('${
           quote.id
         }')">
-          <i class="fas fa-eye me-1"></i>View
+            <i class="fas fa-eye me-1"></i>Details
         </button>
-      </div>
-    </div>
+    </td>
   `;
-
-  return card;
+  return row;
 }
 
 // Helper function to get initials from name
@@ -194,4 +192,3 @@ window.initDashboard = initDashboard;
 window.loadDashboardStats = loadDashboardStats;
 window.updateDashboardCharts = updateDashboardCharts;
 window.loadRecentQuotes = loadRecentQuotes;
-window.createQuoteCard = createQuoteCard;

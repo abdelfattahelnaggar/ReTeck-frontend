@@ -3,6 +3,9 @@
 function initCustomerMarket() {
   console.log("Customer Market section initialized.");
 
+  // Clear existing products
+  localStorage.removeItem("customerMarketProducts");
+
   loadMarketProducts();
 
   // Set up event listeners for search and filtering
@@ -183,7 +186,7 @@ function createProductCard(product) {
   col.innerHTML = `
         <div class="product-card">
             <div class="product-image-container">
-                <img src="${
+                    <img src="${
                   product.image ||
                   "https://placehold.co/600x400/cccccc/ffffff?text=No+Image"
                 }" alt="${product.name}" class="product-image">
@@ -200,8 +203,8 @@ function createProductCard(product) {
             <div class="product-actions">
                 <button class="btn btn-sm btn-primary edit-product-btn"><i class="fas fa-edit me-1"></i>Edit</button>
                 <button class="btn btn-sm btn-danger delete-product-btn"><i class="fas fa-trash me-1"></i>Delete</button>
-            </div>
-        </div>
+                    </div>
+                </div>
     `;
 
   // Event listeners are now handled by delegation in initCustomerMarket
@@ -254,68 +257,11 @@ function populateCategoryFilter(products) {
 }
 
 function getCustomerMarketProducts() {
-  const dummyProducts = [
-    {
-      id: 3,
-      name: "Wireless Mouse",
-      category: "Accessories",
-      price: 450,
-      stock: 50,
-      description: "Ergonomic wireless mouse with long battery life.",
-      image: "../images/mouse.png",
-    },
-    {
-      id: 4,
-      name: "Bluetooth Speaker",
-      category: "Electronics",
-      price: 800,
-      stock: 30,
-      description: "Portable and waterproof Bluetooth speaker with rich bass.",
-      image: "../images/speaker.png",
-    },
-    {
-      id: 5,
-      name: "Ergonomic Keyboard",
-      category: "Accessories",
-      price: 1200,
-      stock: 20,
-      description: "Split ergonomic keyboard for comfortable typing.",
-      image: "../images/keyboard.png",
-    },
-    {
-      id: 6,
-      name: "10,000mAh Power Bank",
-      category: "Accessories",
-      price: 600,
-      stock: 40,
-      description: "Slim and fast-charging power bank for all your devices.",
-      image: "../images/powerbank.png",
-    },
-    {
-      id: 7,
-      name: "HD Webcam",
-      category: "Electronics",
-      price: 950,
-      stock: 18,
-      description: "1080p HD webcam with built-in microphone for clear calls.",
-      image: "../images/webcam.png",
-    },
-    {
-      id: 8,
-      name: "Laptop Stand",
-      category: "Accessories",
-      price: 400,
-      stock: 35,
-      description: "Adjustable aluminum laptop stand to improve posture.",
-      image: "../images/laptopstand.png",
-    },
-  ];
-
   try {
     const storedProducts = localStorage.getItem("customerMarketProducts");
-    return storedProducts ? JSON.parse(storedProducts) : dummyProducts;
+    return storedProducts ? JSON.parse(storedProducts) : [];
   } catch (e) {
-    return dummyProducts;
+    return [];
   }
 }
 
@@ -393,8 +339,8 @@ function openEditProductModal(product) {
         "Error",
         "Could not open edit form. Please refresh the page."
       );
-      return;
-    }
+    return;
+  }
 
     const form = document.getElementById("editMarketProductForm");
     if (!form) {

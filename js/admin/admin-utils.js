@@ -381,6 +381,65 @@ function getInitialsFromName(firstName, lastName) {
   return initials || "U";
 }
 
+// Get initials from a full name
+function getInitials(name) {
+  if (!name || typeof name !== "string") return "?";
+  const parts = name.trim().split(" ");
+  if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+  return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+}
+
+// Generate a consistent color for avatars based on the name
+function getAvatarColor(name) {
+  if (!name || typeof name !== "string") return "#cccccc";
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const color = (hash & 0x00ffffff).toString(16).toUpperCase();
+  return "#" + "00000".substring(0, 6 - color.length) + color;
+}
+
+// Get a styled badge for a given status
+function getStatusBadge(status) {
+  let badgeClass = "bg-secondary";
+  let icon = "fa-info-circle";
+
+  switch (status) {
+    case "Pending":
+      badgeClass = "bg-warning text-dark";
+      icon = "fa-clock";
+      break;
+    case "Quoted":
+      badgeClass = "bg-info text-dark";
+      icon = "fa-coins";
+      break;
+    case "Completed":
+      badgeClass = "bg-success";
+      icon = "fa-check-circle";
+      break;
+    case "Rejected":
+      badgeClass = "bg-danger";
+      icon = "fa-times-circle";
+      break;
+  }
+  return `<span class="badge ${badgeClass} status-badge"><i class="fas ${icon} me-1"></i>${status}</span>`;
+}
+
+// Get an icon for a given device category
+function getDeviceIcon(category) {
+  switch (category) {
+    case "Smartphone":
+      return "fas fa-mobile-alt";
+    case "Laptop":
+      return "fas fa-laptop";
+    case "Tablet":
+      return "fas fa-tablet-alt";
+    default:
+      return "fas fa-microchip";
+  }
+}
+
 // Function to show a custom confirmation modal
 function showConfirmationModal(title, message, onConfirm) {
   // Remove any existing modals
@@ -440,5 +499,9 @@ window.setupNavigation = setupNavigation;
 window.enlargeImage = enlargeImage;
 window.animateCounter = animateCounter;
 window.getInitialsFromName = getInitialsFromName;
+window.getInitials = getInitials;
+window.getAvatarColor = getAvatarColor;
+window.getStatusBadge = getStatusBadge;
+window.getDeviceIcon = getDeviceIcon;
 window.showConfirmationModal = showConfirmationModal;
 window.setupScrollToTop = setupScrollToTop;
