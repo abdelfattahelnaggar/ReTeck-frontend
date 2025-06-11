@@ -1,18 +1,178 @@
 // Inventory Administrators Management Functions
 
+// Add notification styles
+const notificationStyle = document.createElement("style");
+notificationStyle.textContent = `
+  .notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 350px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    padding: 16px;
+    z-index: 1050;
+    transform: translateX(120%);
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.4s ease;
+    opacity: 0;
+    border-left: 4px solid transparent;
+  }
+  
+  .notification-visible {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  
+  .notification-hiding {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+  
+  .notification-icon {
+    margin-right: 15px;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  
+  .notification-content {
+    flex-grow: 1;
+  }
+  
+  .notification-content .title {
+    font-weight: 600;
+    margin-bottom: 4px;
+    font-size: 15px;
+  }
+
+  .notification-content .message {
+    font-size: 14px;
+    color: #6c757d;
+  }
+  
+  .notification-close {
+    background: transparent;
+    border: none;
+    color: #adb5bd;
+    cursor: pointer;
+    font-size: 18px;
+    transition: color 0.2s;
+    align-self: flex-start;
+  }
+  
+  .notification-close:hover {
+    color: #495057;
+  }
+
+  .notification-warning {
+    background-color: #fffaf0;
+    border-left-color: #ffc107;
+  }
+  .notification-warning .notification-icon {
+    color: #ffc107;
+  }
+  .notification-warning .notification-content .title {
+    color: #856404;
+  }
+  .notification-warning .notification-content .message {
+    color: #9e8130;
+  }
+  
+  .notification-success {
+    background-color: #f0fff4;
+    border-left-color: #28a745;
+  }
+  .notification-success .notification-icon {
+    color: #28a745;
+  }
+  .notification-success .notification-content .title {
+    color: #155724;
+  }
+  .notification-success .notification-content .message {
+    color: #1b6d2e;
+  }
+  
+  .selected-device-info {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    border: 1px solid #e9ecef;
+    margin-bottom: 20px;
+  }
+  
+  .selected-device-info h6 {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 8px;
+  }
+  
+  .selected-device-info .badge {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.6rem;
+    margin-bottom: 10px;
+  }
+`;
+document.head.appendChild(notificationStyle);
+
 function initInventoryAdmins() {
   console.log("Inventory Admins section initialized.");
 
-  // Use Bootstrap's event system to prepare the modal before it's shown
   const addDeviceModalEl = document.getElementById("addDeviceModal");
   if (addDeviceModalEl) {
     addDeviceModalEl.addEventListener("show.bs.modal", () => {
-      populateInventoryDropdown();
-      document.getElementById("addDeviceForm").reset();
-      // Clear any dynamically added spec fields from previous use
+      // Reset common form elements first
+      const form = document.getElementById("addDeviceForm");
+      if (form) form.reset();
       document.getElementById("marketSpecificationsContainer").innerHTML = "";
-      // Clear image previews
       document.getElementById("marketImagePreviewContainer").innerHTML = "";
+
+      // Check if the modal was triggered with a specific device
+      const deviceData = addDeviceModalEl.dataset.device;
+      if (deviceData) {
+        // If yes, set up the modal for that specific device
+        const device = JSON.parse(deviceData);
+        setupModalForSpecificDevice(device);
+      } else {
+        // If no, set up the modal for a generic "add" with a dropdown
+        setupModalForGenericAdd();
+      }
+    });
+
+    addDeviceModalEl.addEventListener("hidden.bs.modal", () => {
+      // Clean up the modal state after it's closed to ensure it's fresh for next time
+      delete addDeviceModalEl.dataset.device;
+
+      const deviceSelectContainer = document.querySelector(
+        "#addDeviceForm .col-12:first-child"
+      );
+      if (
+        deviceSelectContainer &&
+        !deviceSelectContainer.querySelector("select")
+      ) {
+        deviceSelectContainer.innerHTML = `
+              <label for="inventoryDeviceSelect" class="form-label">Select Device from Inventory</label>
+              <select id="inventoryDeviceSelect" class="form-select" required>
+                <option selected disabled value="">Loading inventory...</option>
+              </select>
+          `;
+      }
+
+      // Restore modal title and button text to their defaults
+      const modalTitle = document.querySelector("#addDeviceModal .modal-title");
+      if (modalTitle) {
+        modalTitle.innerHTML = `<i class="fas fa-store me-2"></i>Add Device to Market`;
+      }
+      const submitButton = document.querySelector(
+        '#addDeviceModal .modal-footer button[type="submit"]'
+      );
+      if (submitButton) {
+        submitButton.innerHTML = '<i class="fas fa-save me-1"></i>Save Device';
+      }
     });
   }
 
@@ -46,7 +206,12 @@ function initInventoryAdmins() {
     editDeviceForm.addEventListener("submit", handleEditMarketDeviceSubmit);
   }
 
+  // Load both market inventory and recycled devices tables
   loadMarketInventory();
+  loadRecycledDevices();
+
+  // Initialize recycled devices filters
+  initializeRecycledDevicesFilters();
 }
 
 async function populateInventoryDropdown() {
@@ -149,7 +314,17 @@ function handleAddMarketDeviceSubmit(event) {
     document.getElementById("addDeviceModal")
   );
   addDeviceModal.hide();
+
+  // Show success notification
+  showNotification(
+    "success",
+    "Device Added",
+    `${selectedDevice.brand} ${selectedDevice.model} has been added to the market.`
+  );
+
+  // Refresh both tables
   loadMarketInventory();
+  loadRecycledDevices();
 }
 
 function loadMarketInventory() {
@@ -594,4 +769,422 @@ function addSpecificationField(containerId, key = "", value = "") {
     .addEventListener("click", (e) => {
       e.target.closest(".spec-row").remove();
     });
+}
+
+// Function to load and display recycled devices
+function loadRecycledDevices() {
+  const tableBody = document.getElementById("recycledDevicesTableBody");
+  if (!tableBody) return;
+
+  // Clear existing rows
+  tableBody.innerHTML = "";
+
+  // Get all devices (using the same function as the inventory table)
+  const devices = getDevices();
+
+  if (devices.length === 0) {
+    tableBody.innerHTML = `<tr><td colspan="7" class="text-center p-4">No recycled devices found.</td></tr>`;
+    return;
+  }
+
+  // Add rows to table
+  devices.forEach((device) => {
+    const row = createRecycledDeviceTableRow(device);
+    tableBody.appendChild(row);
+  });
+
+  // Update recycled devices statistics
+  updateRecycledDevicesStats(devices);
+
+  // Initialize DataTable if jQuery is available
+  if (typeof $ !== "undefined") {
+    if ($.fn.dataTable.isDataTable("#recycledDevicesTable")) {
+      $("#recycledDevicesTable").DataTable().destroy();
+    }
+
+    $("#recycledDevicesTable").DataTable({
+      order: [[3, "desc"]], // Order by received date
+      responsive: true,
+      language: {
+        search: "<i class='fas fa-search'></i>",
+        searchPlaceholder: "Search devices...",
+        paginate: {
+          next: '<i class="fas fa-chevron-right"></i>',
+          previous: '<i class="fas fa-chevron-left"></i>',
+        },
+      },
+    });
+  }
+}
+
+// Create table row for a recycled device
+function createRecycledDeviceTableRow(device) {
+  const row = document.createElement("tr");
+  row.setAttribute("data-device-id", device.id);
+  row.setAttribute("data-device-type", device.type);
+
+  const deviceIcon = getDeviceIcon(device.type);
+  const categoryBadgeClass = getCategoryBadgeClass(device.type);
+  const conditionBadgeClass = getConditionBadgeClass(device.condition);
+
+  // Format date to display nicely
+  const receivedDate = new Date(device.receivedDate);
+  const formattedDate = receivedDate.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+
+  row.innerHTML = `
+    <td>
+      <div class="d-flex align-items-center">
+        <i class="${deviceIcon} me-2 text-primary"></i>
+        <div>
+          <div class="fw-bold">${device.brand} ${device.model}</div>
+          <div class="small text-muted">${device.specs.storage || "N/A"}</div>
+        </div>
+      </div>
+    </td>
+    <td><span class="badge ${categoryBadgeClass}">${device.type}</span></td>
+    <td><span class="badge ${conditionBadgeClass}">${
+    device.condition
+  }</span></td>
+    <td>${formattedDate}</td>
+    <td>
+      <div class="d-flex align-items-center">
+        <div class="user-avatar small me-2">
+          <div class="avatar-text">${device.user.firstName.charAt(
+            0
+          )}${device.user.lastName.charAt(0)}</div>
+        </div>
+        <div>
+          <div class="small fw-bold">${device.user.firstName} ${
+    device.user.lastName
+  }</div>
+          <div class="small text-muted">${device.user.email}</div>
+        </div>
+      </div>
+    </td>
+    <td>
+      <span class="badge bg-success">${device.pointsAwarded || 0}</span>
+    </td>
+    <td>
+      <div class="d-flex gap-1">
+        <button class="btn btn-sm btn-outline-primary" onclick="showDeviceDetails('${
+          device.id
+        }')">
+          <i class="fas fa-eye me-1"></i>View
+        </button>
+        <button class="btn btn-sm btn-outline-success" onclick="addRecycledDeviceToMarket('${
+          device.id
+        }')">
+          <i class="fas fa-store me-1"></i>Add to Market
+        </button>
+      </div>
+    </td>
+  `;
+
+  return row;
+}
+
+// Initialize recycled devices filters
+function initializeRecycledDevicesFilters() {
+  const filterButtons = document.querySelectorAll(".recycled-filter");
+
+  filterButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      const filterValue = this.getAttribute("data-filter");
+
+      // Update active state
+      filterButtons.forEach((btn) => btn.classList.remove("active"));
+      this.classList.add("active");
+
+      // Apply the filter
+      applyRecycledDevicesFilter(filterValue);
+    });
+  });
+
+  // Set "All" filter as active by default
+  const allFilterBtn = document.querySelector(
+    '.recycled-filter[data-filter="all"]'
+  );
+  if (allFilterBtn) {
+    allFilterBtn.classList.add("active");
+  }
+}
+
+// Apply filter to recycled devices table
+function applyRecycledDevicesFilter(filterValue) {
+  const rows = document.querySelectorAll("#recycledDevicesTableBody tr");
+
+  rows.forEach((row) => {
+    const deviceType = row.getAttribute("data-device-type");
+
+    if (
+      filterValue === "all" ||
+      deviceType === filterValue ||
+      (filterValue === "Other" &&
+        !["Smartphone", "Laptop", "Tablet"].includes(deviceType))
+    ) {
+      row.style.display = "";
+    } else {
+      row.style.display = "none";
+    }
+  });
+}
+
+// Update recycled devices statistics
+function updateRecycledDevicesStats(devices) {
+  // Count devices by type
+  const phonesCount = devices.filter((d) => d.type === "Smartphone").length;
+  const laptopsCount = devices.filter((d) => d.type === "Laptop").length;
+  const tabletsCount = devices.filter((d) => d.type === "Tablet").length;
+  const otherCount = devices.filter(
+    (d) => !["Smartphone", "Laptop", "Tablet"].includes(d.type)
+  ).length;
+
+  // Update count elements with animation
+  const phoneCountEl = document.getElementById("recycledPhonesCount");
+  const laptopCountEl = document.getElementById("recycledLaptopsCount");
+  const tabletCountEl = document.getElementById("recycledTabletsCount");
+  const otherCountEl = document.getElementById("recycledOtherCount");
+
+  if (phoneCountEl) animateCounter(phoneCountEl, 0, phonesCount);
+  if (laptopCountEl) animateCounter(laptopCountEl, 0, laptopsCount);
+  if (tabletCountEl) animateCounter(tabletCountEl, 0, tabletsCount);
+  if (otherCountEl) animateCounter(otherCountEl, 0, otherCount);
+}
+
+// Helper function for device icons
+function getDeviceIcon(type) {
+  switch (type) {
+    case "Smartphone":
+      return "fas fa-mobile-alt";
+    case "Laptop":
+      return "fas fa-laptop";
+    case "Tablet":
+      return "fas fa-tablet-alt";
+    default:
+      return "fas fa-microchip";
+  }
+}
+
+// Helper function for condition badges
+function getConditionBadgeClass(condition) {
+  switch (condition) {
+    case "Excellent":
+      return "bg-success";
+    case "Good":
+      return "bg-info";
+    case "Fair":
+      return "bg-warning";
+    case "Poor":
+      return "bg-danger";
+    default:
+      return "bg-secondary";
+  }
+}
+
+// Function to add recycled device to market
+function addRecycledDeviceToMarket(deviceId) {
+  // Find the device in the inventory
+  const devices = getDevices();
+  const device = devices.find((d) => d.id === deviceId);
+
+  if (!device) {
+    console.error("Device not found:", deviceId);
+    return;
+  }
+
+  // Check if the device is already in the market
+  const marketDevices = getMarketDevices();
+  const isAlreadyInMarket = marketDevices.some(
+    (md) => md.originalId === deviceId
+  );
+
+  if (isAlreadyInMarket) {
+    showNotification(
+      "warning",
+      "Already in Market",
+      "This device is already listed in the market inventory."
+    );
+    return;
+  }
+
+  // Attach device data to the modal and show it
+  const modalEl = document.getElementById("addDeviceModal");
+  modalEl.dataset.device = JSON.stringify(device);
+
+  const modal = new bootstrap.Modal(modalEl);
+  if (modal) modal.show();
+}
+
+function setupModalForGenericAdd() {
+  // This function prepares the modal for adding a new device from the inventory list
+  populateInventoryDropdown();
+}
+
+// Open the modal for adding a device to the market with prefilled data
+function setupModalForSpecificDevice(device) {
+  // This function prepares the modal for a specific device, hiding the dropdown
+
+  // Replace the dropdown with device info display
+  const deviceSelectContainer = document.querySelector(
+    "#addDeviceForm .col-12:first-child"
+  );
+  if (deviceSelectContainer) {
+    deviceSelectContainer.innerHTML = `
+      <div class="selected-device-info mb-3">
+        <h6 class="mb-3">Device Information</h6>
+        <div class="d-flex align-items-center mb-2">
+          <i class="${getDeviceIcon(device.type)} text-primary me-2 fa-lg"></i>
+          <div class="fw-bold">${device.brand} ${device.model}</div>
+        </div>
+        <div class="d-flex justify-content-between">
+          <span class="badge ${getCategoryBadgeClass(device.type)}">${
+      device.type
+    }</span>
+          <span class="badge ${getConditionBadgeClass(device.condition)}">${
+      device.condition
+    }</span>
+          <span class="text-muted small">${device.specs.storage || ""}</span>
+        </div>
+        <input type="hidden" id="inventoryDeviceSelect" value="${device.id}">
+      </div>
+    `;
+  }
+
+  // Set a suggested price based on device condition and type
+  const priceInput = document.getElementById("devicePrice");
+  if (priceInput) {
+    let suggestedPrice = 0;
+
+    switch (device.type) {
+      case "Smartphone":
+        suggestedPrice =
+          device.condition === "Excellent"
+            ? 2500
+            : device.condition === "Good"
+            ? 1800
+            : device.condition === "Fair"
+            ? 1200
+            : 800;
+        break;
+      case "Laptop":
+        suggestedPrice =
+          device.condition === "Excellent"
+            ? 6000
+            : device.condition === "Good"
+            ? 4500
+            : device.condition === "Fair"
+            ? 3000
+            : 1500;
+        break;
+      case "Tablet":
+        suggestedPrice =
+          device.condition === "Excellent"
+            ? 3500
+            : device.condition === "Good"
+            ? 2500
+            : device.condition === "Fair"
+            ? 1800
+            : 1000;
+        break;
+      default:
+        suggestedPrice =
+          device.condition === "Excellent"
+            ? 1500
+            : device.condition === "Good"
+            ? 1000
+            : device.condition === "Fair"
+            ? 800
+            : 500;
+    }
+
+    if (device.pointsAwarded) {
+      suggestedPrice = Math.max(suggestedPrice, device.pointsAwarded * 2);
+    }
+
+    priceInput.value = suggestedPrice;
+  }
+
+  // Set quantity to 1 by default
+  const quantityInput = document.getElementById("deviceQuantity");
+  if (quantityInput) {
+    quantityInput.value = 1;
+  }
+
+  // Add some default description
+  const descriptionInput = document.getElementById("deviceDescription");
+  if (descriptionInput) {
+    descriptionInput.value = `Recycled ${device.brand} ${
+      device.model
+    } in ${device.condition.toLowerCase()} condition. All functionality has been tested and verified.`;
+  }
+
+  // Update the modal title and submit button for this context
+  const modalTitle = document.querySelector("#addDeviceModal .modal-title");
+  if (modalTitle) {
+    modalTitle.innerHTML = `<i class="fas fa-store me-2"></i>Add Recycled Device to Market`;
+  }
+  const submitButton = document.querySelector(
+    '#addDeviceModal .modal-footer button[type="submit"]'
+  );
+  if (submitButton) {
+    submitButton.innerHTML =
+      '<i class="fas fa-check-circle me-1"></i>Add to Market';
+  }
+}
+
+// Helper function to show notifications
+function showNotification(type, title, message) {
+  // Create notification element
+  const notificationEl = document.createElement("div");
+  notificationEl.className = `notification notification-${type}`;
+  notificationEl.innerHTML = `
+    <div class="notification-icon">
+      <i class="fas fa-${
+        type === "success"
+          ? "check-circle"
+          : type === "warning"
+          ? "exclamation-triangle"
+          : "info-circle"
+      }"></i>
+    </div>
+    <div class="notification-content">
+      <div class="title">${title}</div>
+      <div class="message">${message}</div>
+    </div>
+    <button class="notification-close"><i class="fas fa-times"></i></button>
+  `;
+
+  // Add to document
+  document.body.appendChild(notificationEl);
+
+  // Add event listener to close button
+  notificationEl
+    .querySelector(".notification-close")
+    .addEventListener("click", () => {
+      notificationEl.classList.add("notification-hiding");
+      setTimeout(() => {
+        notificationEl.remove();
+      }, 300);
+    });
+
+  // Add the visible class to trigger animation
+  setTimeout(() => {
+    notificationEl.classList.add("notification-visible");
+  }, 10);
+
+  // Auto-close after 5 seconds
+  setTimeout(() => {
+    if (document.body.contains(notificationEl)) {
+      notificationEl.classList.add("notification-hiding");
+      setTimeout(() => {
+        if (document.body.contains(notificationEl)) {
+          notificationEl.remove();
+        }
+      }, 300);
+    }
+  }, 5000);
 }
