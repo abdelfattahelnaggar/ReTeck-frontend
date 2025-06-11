@@ -300,202 +300,135 @@ function getAllQuotes() {
 
 // Show quote details in modal
 function showQuoteDetails(quote) {
-  // Get modal elements
+  // Populate the modal with quote details
   const modal = document.getElementById("quoteDetailsModal");
-  const modalCustomerName = document.getElementById("modalCustomerName");
-  const modalCustomerEmail = document.getElementById("modalCustomerEmail");
-  const modalCustomerPhone = document.getElementById("modalCustomerPhone");
-  const modalDeviceCategory = document.getElementById("modalDeviceCategory");
-  const modalDeviceName = document.getElementById("modalDeviceName");
-  const modalDeviceCondition = document.getElementById("modalDeviceCondition");
-  const modalRequestStatus = document.getElementById("modalRequestStatus");
-  const modalRequestDate = document.getElementById("modalRequestDate");
-  const modalDeviceSpecs = document.getElementById("modalDeviceSpecs");
-  const modalDeviceImages = document.getElementById("modalDeviceImages");
 
-  // Clear previous images
-  if (modalDeviceImages) {
-    modalDeviceImages.innerHTML = "";
+  // Customer Info
+  const customerNameEl = modal.querySelector("#modalCustomerName");
+  if (customerNameEl) {
+    const avatar = `<div class="user-avatar me-3" style="background-color: ${getAvatarColor(
+      quote.customerName
+    )};">${getInitials(quote.customerName)}</div>`;
+    customerNameEl.innerHTML = `${avatar}<div><div class="fw-bold">${
+      quote.customerName || "N/A"
+    }</div><div class="text-muted small">${
+      quote.customerEmail || ""
+    }</div></div>`;
   }
 
-  if (modalDeviceSpecs) {
-    modalDeviceSpecs.innerHTML = "";
+  // Device Info
+  const deviceNameEl = modal.querySelector("#modalDeviceName");
+  if (deviceNameEl) {
+    const deviceIcon = `<i class="${getDeviceIcon(
+      quote.deviceCategory
+    )} fa-fw me-2 text-primary"></i>`;
+    deviceNameEl.innerHTML = `${deviceIcon}${quote.device || "N/A"}`;
   }
+  const deviceConditionEl = modal.querySelector("#modalDeviceCondition");
+  if (deviceConditionEl)
+    deviceConditionEl.textContent = quote.condition || "N/A";
 
-  // Set customer information
-  if (modalCustomerName)
-    modalCustomerName.textContent = quote.customerName || "N/A";
-  if (modalCustomerEmail)
-    modalCustomerEmail.textContent = quote.customerEmail || "N/A";
-  if (modalCustomerPhone) modalCustomerPhone.textContent = quote.phone || "N/A";
+  // Request Info
+  const requestDateEl = modal.querySelector("#modalRequestDate");
+  if (requestDateEl)
+    requestDateEl.textContent = new Date(quote.date).toLocaleString();
+  const requestStatusEl = modal.querySelector("#modalRequestStatus");
+  if (requestStatusEl) requestStatusEl.innerHTML = getStatusBadge(quote.status);
 
-  // Set device information
-  if (modalDeviceCategory)
-    modalDeviceCategory.textContent = quote.type || "N/A";
-  if (modalDeviceName) modalDeviceName.textContent = quote.device || "N/A";
-  if (modalDeviceCondition)
-    modalDeviceCondition.textContent = quote.condition || "N/A";
-
-  // Set request information
-  if (modalRequestStatus) {
-    modalRequestStatus.textContent = quote.status;
-    modalRequestStatus.className = `badge badge-${quote.status.toLowerCase()}`;
-  }
-
-  if (modalRequestDate) {
-    const requestDate = new Date(quote.date).toLocaleDateString();
-    modalRequestDate.textContent = requestDate;
-  }
-
-  // Add device specs if available
-  if (modalDeviceSpecs && quote.specs) {
-    const specsList = document.createElement("div");
-    specsList.className = "specs-list mt-3";
-
-    Object.entries(quote.specs).forEach(([key, value]) => {
-      if (value) {
-        const specItem = document.createElement("div");
-        specItem.className = "detail-item";
-
-        const specLabel = document.createElement("div");
-        specLabel.className = "detail-label";
-        specLabel.textContent = key + ":";
-
-        const specValue = document.createElement("div");
-        specValue.className = "detail-value";
-        specValue.textContent = value;
-
-        specItem.appendChild(specLabel);
-        specItem.appendChild(specValue);
-        specsList.appendChild(specItem);
+  // Device Specs
+  const specsContainer = modal.querySelector("#modalDeviceSpecs");
+  if (specsContainer) {
+    specsContainer.innerHTML = ""; // Clear old specs
+    if (quote.specs && Object.keys(quote.specs).length > 0) {
+      const list = document.createElement("ul");
+      list.className = "list-group list-group-flush";
+      for (const [key, value] of Object.entries(quote.specs)) {
+        const item = document.createElement("li");
+        item.className =
+          "list-group-item d-flex justify-content-between align-items-center";
+        item.innerHTML = `<span>${key.replace(
+          /([A-Z])/g,
+          " $1"
+        )}</span><span class="badge bg-light text-dark">${value}</span>`;
+        list.appendChild(item);
       }
-    });
-
-    modalDeviceSpecs.appendChild(specsList);
+      specsContainer.appendChild(list);
+    } else {
+      specsContainer.innerHTML =
+        '<p class="text-muted">No specifications provided.</p>';
+    }
   }
 
-  // Add device images if available
-  if (modalDeviceImages && quote.images && quote.images.length > 0) {
-    const imageGallery = document.createElement("div");
-    imageGallery.className = "row mt-3";
-
-    quote.images.forEach((image, index) => {
-      const col = document.createElement("div");
-      col.className = "col-md-3 col-6 mb-3";
-
-      const imgContainer = document.createElement("div");
-      imgContainer.className = "device-image-thumbnail";
-      imgContainer.style.cursor = "pointer";
-      imgContainer.onclick = () => enlargeImage(image);
-
-      const img = document.createElement("img");
-      img.src = image;
-      img.alt = `Device image ${index + 1}`;
-      img.className = "img-fluid rounded";
-      img.loading = "lazy"; // Add lazy loading
-
-      imgContainer.appendChild(img);
-      col.appendChild(imgContainer);
-      imageGallery.appendChild(col);
-    });
-
-    modalDeviceImages.appendChild(imageGallery);
+  // Device Images
+  const imagesContainer = modal.querySelector("#modalDeviceImages");
+  if (imagesContainer) {
+    imagesContainer.innerHTML = ""; // Clear old images
+    if (quote.images && quote.images.length > 0) {
+      quote.images.forEach((imgSrc) => {
+        const img = document.createElement("img");
+        img.src = imgSrc;
+        img.className = "img-thumbnail me-2 mb-2";
+        img.style.width = "100px";
+        img.style.height = "100px";
+        img.style.cursor = "pointer";
+        img.onclick = () => enlargeImage(imgSrc);
+        imagesContainer.appendChild(img);
+      });
+    } else {
+      imagesContainer.innerHTML =
+        '<p class="text-muted">No images provided.</p>';
+    }
   }
 
-  // Handle quote sections based on status
-  const quoteFormSection = document.getElementById("quoteFormSection");
-  const existingQuoteSection = document.getElementById("existingQuoteSection");
-  const markCompletedBtn = document.getElementById("markCompletedBtn");
-
-  // Hide both sections initially
-  if (quoteFormSection) quoteFormSection.classList.add("d-none");
-  if (existingQuoteSection) existingQuoteSection.classList.add("d-none");
-  if (markCompletedBtn) markCompletedBtn.classList.add("d-none");
+  // Handle quote form visibility and pre-filling
+  const quoteFormSection = modal.querySelector("#quoteFormSection");
+  const existingQuoteSection = modal.querySelector("#existingQuoteSection");
+  const markCompletedBtn = modal.querySelector("#markCompletedBtn");
 
   if (quote.status === "Pending") {
-    // Show quote form for pending requests
     if (quoteFormSection) quoteFormSection.classList.remove("d-none");
+    if (existingQuoteSection) existingQuoteSection.classList.add("d-none");
+    if (markCompletedBtn) markCompletedBtn.classList.add("d-none");
 
-    // Set the quote request ID in the form
-    const quoteAmount = document.getElementById("quoteAmount");
-    const quoteNotes = document.getElementById("quoteNotes");
-    const submitQuoteBtn = document.getElementById("submitQuoteBtn");
+    const quoteAmountInput = modal.querySelector("#quoteAmount");
+    if (quoteAmountInput) quoteAmountInput.value = "";
+    const quoteNotesInput = modal.querySelector("#quoteNotes");
+    if (quoteNotesInput) quoteNotesInput.value = "";
 
-    if (submitQuoteBtn) {
-      // Remove any existing event listeners
-      const newSubmitBtn = submitQuoteBtn.cloneNode(true);
-      submitQuoteBtn.parentNode.replaceChild(newSubmitBtn, submitQuoteBtn);
-
-      // Add new event listener
-      newSubmitBtn.addEventListener("click", function (e) {
-        e.preventDefault();
-
-        if (
-          !quoteAmount ||
-          !quoteAmount.value ||
-          parseFloat(quoteAmount.value) <= 0
-        ) {
-          alert("Please enter a valid points amount");
-          return;
-        }
-
-        // Submit quote logic here
-        submitQuote(
-          quote.id,
-          quote.customerEmail,
-          parseFloat(quoteAmount.value),
-          quoteNotes ? quoteNotes.value : ""
-        );
-      });
+    // Setup submit button
+    const submitBtn = modal.querySelector("#submitQuoteBtn");
+    if (submitBtn) {
+      submitBtn.onclick = () =>
+        submitQuote(quote.id, quote.customerEmail, quoteAmountInput.value);
     }
-  } else if (quote.quote) {
-    // Show existing quote information
+  } else {
+    if (quoteFormSection) quoteFormSection.classList.add("d-none");
     if (existingQuoteSection) existingQuoteSection.classList.remove("d-none");
 
-    const modalExistingAmount = document.getElementById("modalExistingAmount");
-    const modalQuoteDate = document.getElementById("modalQuoteDate");
-    const modalValidUntil = document.getElementById("modalValidUntil");
-    const modalExistingNotes = document.getElementById("modalExistingNotes");
+    // Populate existing quote details
+    modal.querySelector("#modalExistingAmount").textContent =
+      quote.points || "N/A";
+    modal.querySelector("#modalQuoteDate").textContent = quote.quoteDate
+      ? new Date(quote.quoteDate).toLocaleString()
+      : "N/A";
+    modal.querySelector("#modalValidUntil").textContent = "N/A"; // Not in data
+    modal.querySelector("#modalExistingNotes").textContent =
+      quote.notes || "No notes.";
 
-    if (modalExistingAmount)
-      modalExistingAmount.textContent = Math.round(quote.quote.amount);
-
-    if (modalQuoteDate && quote.quote.date) {
-      modalQuoteDate.textContent = new Date(
-        quote.quote.date
-      ).toLocaleDateString();
-    }
-
-    if (modalValidUntil && quote.quote.date && quote.quote.validDays) {
-      const validUntil = new Date(quote.quote.date);
-      validUntil.setDate(validUntil.getDate() + quote.quote.validDays);
-      modalValidUntil.textContent = validUntil.toLocaleDateString();
-    }
-
-    if (modalExistingNotes)
-      modalExistingNotes.textContent = quote.quote.note || "No notes provided";
-
-    // Show mark as completed button for accepted quotes
-    if (quote.status === "Accepted" && markCompletedBtn) {
-      markCompletedBtn.classList.remove("d-none");
-
-      // Remove any existing event listeners
-      const newMarkCompletedBtn = markCompletedBtn.cloneNode(true);
-      markCompletedBtn.parentNode.replaceChild(
-        newMarkCompletedBtn,
-        markCompletedBtn
-      );
-
-      // Add new event listener
-      newMarkCompletedBtn.addEventListener("click", function () {
-        markAsCompleted(quote.id, quote.customerEmail);
-      });
+    if (quote.status === "Accepted") {
+      if (markCompletedBtn) {
+        markCompletedBtn.classList.remove("d-none");
+        markCompletedBtn.onclick = () =>
+          markAsCompleted(quote.id, quote.customerEmail);
+      }
+    } else {
+      if (markCompletedBtn) markCompletedBtn.classList.add("d-none");
     }
   }
 
-  // Show modal
-  const modalInstance = new bootstrap.Modal(modal);
-  modalInstance.show();
+  // Show the modal
+  const bsModal = new bootstrap.Modal(modal);
+  bsModal.show();
 }
 
 // Show provide quote modal

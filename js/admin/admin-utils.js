@@ -60,148 +60,77 @@ function setupScrollToTop() {
 
 // Setup navigation
 function setupNavigation() {
-  setupMobileSidebar(); // Initialize mobile sidebar functionality
-  setupScrollToTop(); // Initialize scroll to top button
-
   const navLinks = document.querySelectorAll(".sidebar-menu a[data-section]");
   const sections = document.querySelectorAll(".content-section");
   const pageTitle = document.getElementById("pageTitle");
 
-  console.log(
-    "Setting up navigation with links:",
-    navLinks.length,
-    "and sections:",
-    sections.length
-  );
+  const showSection = (sectionId) => {
+    // 1. Hide all content sections
+    sections.forEach((section) => {
+      section.classList.add("d-none");
+    });
 
-  // Map available sections for debugging
-  const availableSections = Array.from(sections).map((section) => section.id);
-  console.log("Available sections:", availableSections);
-
-  // Add a helper class to make navigation links more visible
-  navLinks.forEach((link) => {
-    link.classList.add("nav-link-interactive");
-  });
-
-  navLinks.forEach((link) => {
-    const sectionId = link.getAttribute("data-section");
-    console.log("Setting up listener for:", sectionId);
-
-    // Check if the target section exists
+    // 2. Show the target section
     const targetSection = document.getElementById(`${sectionId}Section`);
-    if (!targetSection) {
-      console.warn(
-        `Warning: Target section "${sectionId}Section" not found in the DOM`
-      );
-    }
+    if (targetSection) {
+      targetSection.classList.remove("d-none");
 
+      // 3. Update the page title
+      if (pageTitle) {
+        // Create a user-friendly title from the section ID (e.g., 'customer-market' -> 'Customer Market')
+        const title = sectionId
+          .replace(/-/g, " ")
+          .replace(/\b\w/g, (l) => l.toUpperCase());
+        pageTitle.textContent = title;
+      }
+
+      // 4. Initialize the specific JS module for the section
+      switch (`${sectionId}Section`) {
+        case "inventory-adminsSection":
+          if (typeof initInventoryAdmins === "function") initInventoryAdmins();
+          break;
+        case "customer-marketSection":
+          if (typeof initCustomerMarket === "function") initCustomerMarket();
+          break;
+        // Add other sections that need initialization here
+      }
+    } else {
+      console.error(
+        `Navigation Error: Section "${sectionId}Section" not found.`
+      );
+      // Fallback to the dashboard if the target doesn't exist
+      document.getElementById("dashboardSection")?.classList.remove("d-none");
+      if (pageTitle) pageTitle.textContent = "Dashboard";
+    }
+  };
+
+  navLinks.forEach((link) => {
     link.addEventListener("click", function (e) {
       e.preventDefault();
-      e.stopPropagation(); // Prevent event bubbling
-
       const sectionId = this.getAttribute("data-section");
-      console.log("Navigation clicked:", sectionId);
 
-      // Update active link with visual feedback
-      navLinks.forEach((link) => {
-        link.classList.remove("active");
-        link.classList.remove("pulse-animation"); // Remove any existing animations
-      });
+      // Update active state on the sidebar link
+      navLinks.forEach((l) => l.classList.remove("active"));
       this.classList.add("active");
-      this.classList.add("pulse-animation"); // Add a subtle animation for feedback
 
-      // Update URL hash for better navigation (allows browser back button)
-      window.location.hash = sectionId;
-
-      // Show selected section
-      let sectionFound = false;
-      sections.forEach((section) => {
-        if (section.id === `${sectionId}Section`) {
-          section.classList.remove("d-none");
-          console.log("Showing section:", section.id);
-          sectionFound = true;
-
-          // Add animation class for smooth transition
-          section.classList.add("section-fade-in");
-          setTimeout(() => {
-            section.classList.remove("section-fade-in");
-          }, 500);
-
-          // Update page title
-          if (pageTitle) {
-            pageTitle.textContent =
-              sectionId.charAt(0).toUpperCase() + sectionId.slice(1);
-          }
-
-          // If inventory section is shown, refresh the inventory data
-          if (sectionId === "inventory") {
-            console.log("Refreshing inventory data");
-            loadInventory();
-          }
-
-          // If inventory admins section is shown, initialize it
-          if (sectionId === "inventory-admins") {
-            console.log("Initializing inventory admins section");
-            if (typeof initInventoryAdmins === "function") {
-              initInventoryAdmins();
-            }
-          }
-
-          // If customer market section is shown, initialize it
-          if (sectionId === "customer-market") {
-            console.log("Initializing customer market section");
-            if (typeof initCustomerMarket === "function") {
-              initCustomerMarket();
-            }
-          }
-
-          // If settings section is shown, set up the form
-          if (sectionId === "settings") {
-            console.log("Initializing settings section");
-            if (typeof setupSettingsForm === "function") {
-              setupSettingsForm();
-            }
-          }
-        } else {
-          section.classList.add("d-none");
-        }
-      });
-
-      if (!sectionFound) {
-        console.error(`Error: Section "${sectionId}Section" not found`);
-        // Fallback to dashboard
-        const dashboardSection = document.getElementById("dashboardSection");
-        if (dashboardSection) {
-          dashboardSection.classList.remove("d-none");
-          if (pageTitle) {
-            pageTitle.textContent = "Dashboard";
-          }
-        }
-      }
+      // Show the section
+      showSection(sectionId);
     });
   });
 
-  // Check for URL hash to determine initial section
-  if (window.location.hash) {
-    const sectionId = window.location.hash.substring(1); // Remove the # character
-    const sectionLink = document.querySelector(
-      `.sidebar-menu a[data-section="${sectionId}"]`
-    );
-    if (sectionLink) {
-      console.log("Loading section from URL hash:", sectionId);
-      sectionLink.click();
-      return;
-    }
-  }
+  // Handle initial page load based on the URL hash, or default to dashboard
+  const currentHash = window.location.hash.substring(1);
+  const initialSection = document.querySelector(
+    `[data-section="${currentHash}"]`
+  )
+    ? currentHash
+    : "dashboard";
 
-  // Initialize with dashboard section visible if no section is active
-  const hasActiveSection = Array.from(navLinks).some((link) =>
-    link.classList.contains("active")
-  );
-  if (!hasActiveSection && navLinks.length > 0) {
-    console.log("No active section found, defaulting to dashboard");
-    navLinks[0].click();
-  }
+  // Set the initial active link and show the correct section
+  document
+    .querySelector(`[data-section="${initialSection}"]`)
+    ?.classList.add("active");
+  showSection(initialSection);
 }
 
 // Function to enlarge an image in a modal view
