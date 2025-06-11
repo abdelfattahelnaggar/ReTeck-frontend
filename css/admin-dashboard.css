@@ -3167,12 +3167,12 @@ body {
     min-height: var(--header-height);
     padding: 0.75rem 1rem;
   }
-  
+
   /* Adjust content padding for sticky header */
   .admin-content {
     padding-top: 1.5rem;
   }
-  
+
   /* Make sidebar toggle button more touch-friendly */
   #sidebarToggle {
     width: 40px;
@@ -3188,17 +3188,17 @@ body {
     border: none;
     transition: all 0.3s ease;
   }
-  
-  #sidebarToggle:hover, 
+
+  #sidebarToggle:hover,
   #sidebarToggle:focus {
     background-color: rgba(67, 97, 238, 0.2);
     transform: scale(1.05);
   }
-  
+
   #sidebarToggle i {
     font-size: 1.2rem;
   }
-  
+
   /* Add scroll to top button */
   .scroll-to-top {
     position: fixed;
@@ -3207,7 +3207,11 @@ body {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(
+      135deg,
+      var(--primary-color),
+      var(--secondary-color)
+    );
     color: white;
     display: flex;
     align-items: center;
@@ -3218,12 +3222,12 @@ body {
     transition: all 0.3s ease;
     z-index: 999;
   }
-  
+
   .scroll-to-top.visible {
     opacity: 1;
     visibility: visible;
   }
-  
+
   .scroll-to-top i {
     font-size: 1.2rem;
   }
@@ -3235,6 +3239,23 @@ body {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  padding: 10px 5px;
+}
+
+@media (max-width: 768px) {
+  .quotes-card-container {
+    padding: 10px 0;
+  }
+
+  /* Hide the table completely on mobile */
+  #quotesSection .table-responsive.d-none {
+    display: none !important;
+  }
+
+  /* Show cards in mobile */
+  #quotesSection .quotes-card-container {
+    display: flex !important;
+  }
 }
 
 .quote-card {
@@ -3244,6 +3265,7 @@ body {
   overflow: hidden;
   transition: all 0.3s ease;
   border-left: 4px solid #4361ee;
+  margin-bottom: 10px;
 }
 
 .quote-card:hover {
@@ -3301,3 +3323,45 @@ body {
 
 .quote-card-date {
   color: #666;
+}
+
+.quote-card-footer {
+  padding: 12px 15px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.quote-card-actions {
+  display: flex;
+  gap: 10px;
+}
+
+@media (max-width: 400px) {
+  .quote-card-actions {
+    flex-direction: column;
+  }
+
+  .quote-card-actions .btn {
+    width: 100%;
+  }
+}
+
+/* Border colors for quote cards based on status */
+.quote-card[data-status="Pending"] {
+  border-left-color: #f72585;
+}
+
+.quote-card[data-status="Quoted"] {
+  border-left-color: #4361ee;
+}
+
+.quote-card[data-status="Accepted"] {
+  border-left-color: #4cc9f0;
+}
+
+.quote-card[data-status="Completed"] {
+  border-left-color: #4895ef;
+}
+
+.quote-card[data-status="Rejected"] {
+  border-left-color: #ff5a5f;
+}
