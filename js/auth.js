@@ -65,27 +65,37 @@ function togglePassword(inputId) {
 function checkAuthRedirect() {
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
   const userRole = localStorage.getItem("userRole");
-  const currentPage = window.location.pathname.split("/").pop();
-  const isAboutUsPage = currentPage === "about-us.html";
-  const isAdminPage = currentPage === "admin-dashboard.html";
-  const isInventoryStorePage = currentPage === "inventory-store.html";
+  const currentPage = window.location.pathname.split("/").pop() || "index.html";
 
-  // Don't redirect if on about-us page
-  if (isAboutUsPage) {
+  // Pages that are accessible to non-logged-in users
+  const publicPages = [
+    "login.html",
+    "signup.html",
+    "about-us.html",
+    "faq.html",
+  ];
+
+  // If user is not logged in and tries to access a protected page
+  if (!isLoggedIn && !publicPages.includes(currentPage)) {
+    window.location.href = "login.html";
     return;
   }
 
+  // Logic for logged-in users
   if (isLoggedIn) {
+    const isAdminPage = currentPage === "admin-dashboard.html";
+    const isInventoryStorePage = currentPage === "inventory-store.html";
+
     // If on login or signup page, redirect based on role
     if (currentPage === "login.html" || currentPage === "signup.html") {
       if (userRole === "admin") {
         window.location.href = "admin-dashboard.html";
       } else if (userRole === "company") {
-        // Redirect company users to inventory store
         window.location.href = "inventory-store.html";
       } else {
         window.location.href = "index.html";
       }
+      return;
     }
 
     // If admin tries to access customer pages, redirect to admin dashboard
@@ -99,26 +109,15 @@ function checkAuthRedirect() {
       window.location.href = "admin-dashboard.html";
     }
 
-    // If customer tries to access admin pages, redirect to home
+    // If a non-admin user tries to access the admin dashboard
     if (userRole !== "admin" && isAdminPage) {
       window.location.href = "index.html";
     }
 
-    // If non-company user tries to access inventory store, redirect to home
+    // If a non-company user tries to access the inventory store
     if (userRole !== "company" && isInventoryStorePage) {
       window.location.href =
         "index.html?access=denied&message=Only recycling companies can access the inventory store";
-    }
-  } else {
-    // If not logged in and trying to access admin page, redirect to login
-    if (isAdminPage) {
-      window.location.href = "login.html";
-    }
-
-    // If not logged in and trying to access inventory store, redirect to login
-    if (isInventoryStorePage) {
-      window.location.href =
-        "login.html?redirect=inventory-store.html&message=Please log in as a recycling company to access the inventory store";
     }
   }
 }
@@ -627,7 +626,7 @@ function showNotification(message, type = "success") {
 
 // Setup logout functionality
 function setupLogout() {
-  const logoutLinks = document.querySelectorAll(".logout-link");
+  const logoutLinks = document.querySelectorAll('[data-action="logout"]');
   logoutLinks.forEach((link) => {
     link.addEventListener("click", function (e) {
       e.preventDefault();
@@ -655,7 +654,7 @@ function setupLogout() {
 
       // Redirect to home page
       setTimeout(() => {
-        window.location.href = "../index.html";
+        window.location.href = "index.html";
       }, 1000);
     });
   });
@@ -666,63 +665,59 @@ function updateNavigation() {
   const authButtons = document.getElementById("authButtons");
   const userProfile = document.getElementById("userProfile");
   const authRequired = document.querySelectorAll(".auth-required");
-
-  // Get email from localStorage
   const userEmail = localStorage.getItem("userEmail");
+
+  // Define which links should be disabled when logged out
+  const protectedLinkSelectors = [
+    '.navbar-nav a[href="index.html"]',
+    '.navbar-nav a[href="market.html"]',
+    '.navbar-nav a[href="contact-us.html"]',
+    '.navbar-nav a[href="profile.html"]',
+    "#servicesDropdown", // The main services dropdown toggle
+    '.navbar-nav a[href="recycle-phone.html"]',
+    '.navbar-nav a[href="recycle-laptop.html"]',
+    '.navbar-nav a[href="recycle-kitchen.html"]',
+    '.navbar-nav a[href="recycle-electronics.html"]',
+  ];
+  const protectedLinks = document.querySelectorAll(
+    protectedLinkSelectors.join(", ")
+  );
 
   if (userEmail) {
     // User is logged in
     if (authButtons) authButtons.classList.add("d-none");
     if (userProfile) userProfile.classList.remove("d-none");
-
-    // Show auth-required elements
     authRequired.forEach((el) => el.classList.remove("d-none"));
+
+    // Ensure all links are enabled
+    protectedLinks.forEach((link) => {
+      link.classList.remove("disabled-link");
+      link.removeAttribute("aria-disabled");
+    });
 
     // Update user profile information
     const userData = getUserData(userEmail);
-
     if (userData) {
-      // Update username in dropdown
       const userName = document.querySelector(".user-name");
       const dropdownUserName = document.getElementById("dropdownUserName");
       const dropdownUserEmail = document.getElementById("dropdownUserEmail");
 
-      if (userName) {
-        const name = getUserDisplayName(userData);
-        userName.textContent = name;
-      }
+      if (userName) userName.textContent = getUserDisplayName(userData);
+      if (dropdownUserName)
+        dropdownUserName.textContent = getUserDisplayName(userData);
+      if (dropdownUserEmail) dropdownUserEmail.textContent = userEmail;
 
-      if (dropdownUserName) {
-        const name = getUserDisplayName(userData);
-        dropdownUserName.textContent = name;
-      }
-
-      if (dropdownUserEmail) {
-        dropdownUserEmail.textContent = userEmail;
-      }
-
-      // Update avatar in dropdown
       updateUserAvatar(userData);
 
-      // Update points in navbar if the element exists
       const pointsDisplay = document.querySelector(".points-display-navbar");
       if (pointsDisplay) {
         const pointsValue = document.getElementById("navbarPoints");
-        if (pointsValue) {
+        if (pointsValue)
           pointsValue.textContent = userData.profile?.points || 0;
-        }
-
-        // Make the points display clickable to navigate to profile page
         if (!pointsDisplay.hasAttribute("data-click-initialized")) {
           pointsDisplay.style.cursor = "pointer";
-          pointsDisplay.addEventListener("click", function () {
-            // Check if we're in a subfolder (html/) or the root
-            const currentPath = window.location.pathname;
-            if (currentPath.includes("/html/")) {
-              window.location.href = "profile.html";
-            } else {
-              window.location.href = "html/profile.html";
-            }
+          pointsDisplay.addEventListener("click", () => {
+            window.location.href = "profile.html";
           });
           pointsDisplay.setAttribute("data-click-initialized", "true");
         }
@@ -732,9 +727,13 @@ function updateNavigation() {
     // User is not logged in
     if (authButtons) authButtons.classList.remove("d-none");
     if (userProfile) userProfile.classList.add("d-none");
-
-    // Hide auth-required elements
     authRequired.forEach((el) => el.classList.add("d-none"));
+
+    // Disable protected links
+    protectedLinks.forEach((link) => {
+      link.classList.add("disabled-link");
+      link.setAttribute("aria-disabled", "true");
+    });
   }
 }
 

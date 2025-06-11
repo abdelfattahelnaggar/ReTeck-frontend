@@ -1204,6 +1204,8 @@ body::before {
 /* Navbar responsiveness */
 .navbar {
   padding: 0;
+  /* Ensure navbar and its dropdowns appear above the login card which has a transform property */
+  z-index: 1020;
 }
 
 .navbar-toggler {

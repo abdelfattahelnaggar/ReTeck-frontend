@@ -370,78 +370,57 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Form submission handler
+  // Handle form submission
   function handleFormSubmit(e) {
     e.preventDefault();
     const form = e.target;
-    const formId = form.id;
 
-    // Get common form data
-    const formData = {
-      fullName: form.querySelector("#fullName").value,
-      email: form.querySelector("#email").value,
-      phone: form.querySelector("#phone").value,
-      zipCode: form.querySelector("#zipCode").value,
-      description: form.querySelector("#description").value,
-      shippingMethod:
-        form.querySelector('input[name="shippingMethod"]:checked')?.value ||
-        "visit",
-    };
+    // Check if user is logged in
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    if (!isLoggedIn) {
+      // Save the form data to localStorage to pre-fill after login
+      const formData = new FormData(form);
+      const formObject = Object.fromEntries(formData.entries());
+      localStorage.setItem(
+        "pendingRecycleRequest",
+        JSON.stringify({
+          formId: form.id,
+          data: formObject,
+        })
+      );
 
-    // Add shipping details based on selected method
-    if (formData.shippingMethod === "pickup") {
-      formData.pickupDetails = {
-        address: form.querySelector("#pickupAddress")?.value,
-        addressLine2: form.querySelector("#pickupAddressLine2")?.value,
-        city: form.querySelector("#pickupCity")?.value,
-        state: form.querySelector("#pickupState")?.value,
-        zip: form.querySelector("#pickupZip")?.value,
-        instructions: form.querySelector("#pickupInstructions")?.value,
-        preferredDate: form.querySelector("#preferredDate")?.value,
-        coordinates: {
-          latitude: form.querySelector(".map-lat")?.value || null,
-          longitude: form.querySelector(".map-lng")?.value || null,
-        },
-      };
+      // Redirect to login page
+      window.location.href = "login.html?reason=quote_required";
+      return;
     }
 
-    // Get checkboxes data (they won't appear in FormData if not checked)
-    const checkboxes = form.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach((checkbox) => {
-      if (checkbox.id !== "termsAgreed") {
-        // Exclude terms agreement checkbox
-        formData[checkbox.id] = checkbox.checked;
+    // Show loading state
+    const submitButton = form.querySelector('button[type="submit"]');
+    const originalButtonText = submitButton.innerHTML;
+    submitButton.innerHTML =
+      '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
+    submitButton.disabled = true;
+
+    // Simulate form submission delay
+    setTimeout(() => {
+      // Here you would normally send the data to a server
+      console.log("Form submitted:", form.id);
+
+      // Reset button state
+      submitButton.innerHTML = originalButtonText;
+      submitButton.disabled = false;
+
+      // Show success message
+      showSuccessMessage(form.id);
+
+      // Optional: Reset the form
+      form.reset();
+
+      // Reset any specific UI elements if needed
+      if (form.id === "recyclePhoneForm") {
+        // e.g., reset specific select pickers or previews
       }
-    });
-
-    // Log the form data
-    console.log("Form Data:", formData);
-
-    // Show success message
-    showSuccessMessage(formId);
-
-    // Reset the form
-    form.reset();
-
-    // Reset any image previews
-    const previewContainer = form.querySelector("#imagePreviewContainer");
-    if (previewContainer) {
-      previewContainer.innerHTML = "";
-    }
-
-    // Reset map marker to default position if map exists
-    if (mapInstances[formId]) {
-      const defaultPosition = new google.maps.LatLng(30.0444, 31.2357);
-      mapInstances[formId].marker.setPosition(defaultPosition);
-      mapInstances[formId].map.setCenter(defaultPosition);
-      mapInstances[formId].latInput.value = "30.044400";
-      mapInstances[formId].lngInput.value = "31.235700";
-      mapInstances[formId].locationDisplay.textContent = "30.044400, 31.235700";
-      mapInstances[formId].locationDisplay.classList.remove("text-success");
-      mapInstances[formId].locationDisplay.classList.add("text-muted");
-    }
-
-    return false;
+    }, 1500);
   }
 
   // Register form submit handlers if form exists on page

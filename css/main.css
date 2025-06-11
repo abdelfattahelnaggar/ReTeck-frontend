@@ -77,7 +77,9 @@
 /*navbar*/
 
 body {
-  font-family: "Arial", sans-serif;
+  font-family: "Poppins", sans-serif;
+  background-color: #f8f9fa;
+  color: #333;
   overflow-x: hidden;
   width: 100%;
   margin: 0;
@@ -1373,4 +1375,19 @@ body.modal-open {
   .notification {
     transform: translateZ(0);
   }
+}
+
+/* Styles for disabled navigation links for non-logged-in users */
+.navbar-nav .nav-link.disabled-link,
+.navbar-nav .dropdown-item.disabled-link {
+  color: #6c757d !important;
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.navbar-nav .nav-link.disabled-link:hover,
+.navbar-nav .dropdown-item.disabled-link:hover {
+  background-color: transparent !important;
+  color: #6c757d !important;
 }
