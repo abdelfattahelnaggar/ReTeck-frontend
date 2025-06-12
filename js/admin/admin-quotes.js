@@ -501,7 +501,11 @@ function createProvideQuoteModal(quote) {
                     placeholder="Enter points amount"
                     min="1"
                     step="1"
+                    pattern="[0-9]*"
+                    inputmode="numeric"
                     required
+                    onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                    onchange="this.value = Math.floor(Math.abs(this.value))"
                   />
                 </div>
                 <div class="form-text">Enter the number of points to offer for this device</div>
@@ -558,6 +562,38 @@ function createProvideQuoteModal(quote) {
       handleQuoteFormSubmission(this);
     });
   }
+
+  // Add input validation for the points amount
+  const quoteAmount = document.getElementById("quoteAmount");
+  if (quoteAmount) {
+    // Add invalid feedback element
+    const invalidFeedback = document.createElement("div");
+    invalidFeedback.className = "invalid-feedback";
+    invalidFeedback.textContent =
+      "Please enter a valid whole number greater than 0";
+    quoteAmount.parentNode.appendChild(invalidFeedback);
+
+    // Add event listener for input validation
+    quoteAmount.addEventListener("input", function () {
+      const value = this.value.trim();
+      const numValue = parseInt(value);
+
+      if (
+        value === "" ||
+        isNaN(numValue) ||
+        numValue <= 0 ||
+        numValue !== parseFloat(value)
+      ) {
+        this.classList.add("is-invalid");
+        this.classList.remove("is-valid");
+        submitBtn.disabled = true;
+      } else {
+        this.classList.remove("is-invalid");
+        this.classList.add("is-valid");
+        submitBtn.disabled = false;
+      }
+    });
+  }
 }
 
 // Handle the quote form submission
@@ -565,11 +601,20 @@ function handleQuoteFormSubmission(submitButton) {
   // Get customer email from button's data attribute
   const customerEmail = submitButton.getAttribute("data-customer-email");
   const requestId = document.getElementById("quoteRequestId").value;
-  const amount = parseFloat(document.getElementById("quoteAmount").value);
+  const amountInput = document.getElementById("quoteAmount");
+  const amount = parseInt(amountInput.value);
   const note = document.getElementById("quoteNote").value;
 
-  if (!requestId || isNaN(amount) || amount <= 0) {
+  // Enhanced validation
+  if (
+    !requestId ||
+    isNaN(amount) ||
+    amount <= 0 ||
+    amount !== parseFloat(amountInput.value)
+  ) {
     alert("Please enter a valid points amount");
+    amountInput.focus();
+    amountInput.classList.add("is-invalid");
     return;
   }
 
@@ -577,6 +622,9 @@ function handleQuoteFormSubmission(submitButton) {
     alert("Customer email not found. Please try again.");
     return;
   }
+
+  // Clear any validation styling
+  amountInput.classList.remove("is-invalid");
 
   // Submit the quote
   submitQuote(requestId, customerEmail, amount, note);
