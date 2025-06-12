@@ -328,8 +328,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const pickupSelected = document.querySelector(
       'input[name="shippingMethod"][value="pickup"]'
     ).checked;
-    const pickupDetails = document.querySelector(".pickup-details");
-    const visitDetails = document.querySelector(".visit-details");
+    const form = document
+      .querySelector('input[name="shippingMethod"]:checked')
+      .closest("form");
+    const pickupDetails = form.querySelector(".pickup-details");
+    const visitDetails = form.querySelector(".visit-details");
 
     if (pickupSelected) {
       pickupDetails.classList.remove("d-none");
