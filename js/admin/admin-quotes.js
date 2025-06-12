@@ -164,6 +164,9 @@ function initializeQuoteFilters() {
 function createQuoteTableRow(quote, isCompact) {
   const row = document.createElement("tr");
 
+  // Add request ID as data attribute for easy targeting
+  row.setAttribute("data-request-id", quote.id);
+
   // Create customer cell
   const customerCell = document.createElement("td");
   customerCell.textContent = quote.customerName || quote.customerEmail;
@@ -979,19 +982,96 @@ function submitQuote(requestId, customerEmail, amount, note) {
 
   // Close modal
   const modal = bootstrap.Modal.getInstance(
-    document.getElementById("quoteDetailsModal")
+    document.getElementById("provideQuoteModal")
   );
   if (modal) {
     modal.hide();
   }
 
-  // Refresh quotes data
-  loadAllQuotes();
-  loadRecentQuotes();
-  loadDashboardStats();
+  // Update UI without refreshing the page
+  updateQuoteRowUI(requestId, "Quoted", amount);
+
+  // Refresh quotes data in the background
+  setTimeout(() => {
+    loadAllQuotes();
+    loadRecentQuotes();
+    loadDashboardStats();
+  }, 500);
 
   // Show success message
   alert("Points offer submitted successfully!");
+}
+
+// Update the UI for a specific quote row
+function updateQuoteRowUI(requestId, newStatus, pointsAmount) {
+  // Find the row in both tables (recent quotes and all quotes)
+  const tables = ["recentQuotesTableBody", "allQuotesTableBody"];
+
+  tables.forEach((tableId) => {
+    const tableBody = document.getElementById(tableId);
+    if (!tableBody) return;
+
+    // Find the row with this requestId
+    const rows = tableBody.querySelectorAll("tr");
+    rows.forEach((row) => {
+      // Check if this row contains the requestId
+      if (row.getAttribute("data-request-id") === requestId) {
+        // Update status cell
+        const statusCell = row.querySelector("td:nth-child(4)");
+        if (statusCell) {
+          const statusBadge = statusCell.querySelector(".badge");
+          if (statusBadge) {
+            statusBadge.textContent = newStatus;
+            // Remove all badge classes
+            statusBadge.className = "badge";
+            // Add appropriate class based on new status
+            statusBadge.classList.add(`badge-${newStatus.toLowerCase()}`);
+          }
+        }
+
+        // Hide the "Provide Points Offer" button
+        const actionsCell = row.querySelector("td:last-child");
+        if (actionsCell) {
+          const quoteBtn = actionsCell.querySelector(".quote-action");
+          if (quoteBtn) {
+            quoteBtn.style.display = "none";
+          }
+        }
+      }
+    });
+  });
+
+  // Also update any mobile cards if they exist
+  const cardContainers = [
+    "recentQuotesCardContainer",
+    "allQuotesCardContainer",
+  ];
+
+  cardContainers.forEach((containerId) => {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const cards = container.querySelectorAll(".quote-card");
+    cards.forEach((card) => {
+      if (card.getAttribute("data-request-id") === requestId) {
+        // Update status badge
+        const statusBadge = card.querySelector(".badge");
+        if (statusBadge) {
+          statusBadge.textContent = newStatus;
+          // Remove all badge classes
+          statusBadge.className = "badge";
+          // Add appropriate class
+          statusBadge.classList.add(`badge-${newStatus.toLowerCase()}`);
+        }
+
+        // Hide quote button
+        const quoteBtn = card.querySelector("button:nth-child(2)");
+        if (quoteBtn) {
+          quoteBtn.style.display = "none";
+        }
+      }
+    });
+  });
 }
 
 // Create a mobile-friendly card for a quote
@@ -1000,6 +1080,7 @@ function createQuoteCard(quote) {
   const card = document.createElement("div");
   card.className = "quote-card";
   card.setAttribute("data-status", quote.status);
+  card.setAttribute("data-request-id", quote.id);
 
   // Format date
   const quoteDate = new Date(quote.date);
@@ -1078,3 +1159,4 @@ window.updateFilterTitle = updateFilterTitle;
 window.getStatusIconClass = getStatusIconClass;
 window.submitQuote = submitQuote;
 window.createQuoteCard = createQuoteCard;
+window.updateQuoteRowUI = updateQuoteRowUI;
